@@ -2,7 +2,7 @@
     "name": "mayze",
     "version": "0.0.1",
     "description": "Pour le meilleur clan!",
-    "main": "index.js",
+    "main": "server.js",
     "scripts": {
       "start": "node ."
     },
