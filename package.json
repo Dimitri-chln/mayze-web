@@ -1,10 +1,10 @@
 {
-    "name": "mayze",
-    "version": "0.0.1",
+    "name": "mayze-web",
+    "version": "0.0.2",
     "description": "Pour le meilleur clan!",
     "main": "server.js",
     "scripts": {
-      "start": "node ."
+      "start": "node server.js"
     },
     "engines": {
       "node": "12.x"
@@ -14,4 +14,5 @@
       "url": "https://github.com/Dimitri-chln/mayze-web.git"
     },
     "license": "MIT"
-}
+  }
+  
