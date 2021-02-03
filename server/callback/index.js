@@ -1,4 +1,9 @@
-function redirectHome() {
+function generateClientToken() {
+	if (!localStorage.getItem('mayze_client_token'))
+		localStorage.setItem('mayze_client_token', generateRandomString());
+}
+
+function redirect() {
 	const queryParams = new URLSearchParams(location.search);
 
 	if (queryParams.has('code')) {
@@ -10,28 +15,32 @@ function redirectHome() {
 			return alert('Connexion refusée');
 		}
 
-		const data = {
-			client_id: '703161067982946334',
-			client_secret: '',
-			grant_type: 'authorization_code',
-			redirect_uri: 'https://mayze-v2.herokuapp.com/callback',
-			code: code,
-			scope: 'identify guilds',
-		};
+		fetch(`/api/token?code=${code}&client_token=${localStorage.getItem('mayze_client_token')}`, {
+			method: 'GET'
+		});
 
-		fetch('https://discord.com/api/oauth2/token', {
-			method: 'POST',
-			body: new URLSearchParams(data),
-			headers: {
-				'Content-type': 'application/x-www-form-urlencoded'
-			}
-		})
-			.then(res => res.json())
-			.then(console.log);
+		location.href = sessionStorage.getItem('callback_location') || '/';
+
+		sessionStorage.removeItem('state');
+		sessionStorage.removeItem('callback_location');
 	}
+}
 
-	// location.href = sessionStorage.getItem('callback_location') || '/';
+function forceRedirect() {
+	location.href = sessionStorage.getItem('callback_location') || '/';
 
 	sessionStorage.removeItem('state');
 	sessionStorage.removeItem('callback_location');
+}
+
+function generateRandomString() {
+	const charList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrtsuvwxyz0123456789';
+	const rand = Math.floor(Math.random() * 10);
+	let randStr = '';
+
+	for (let i = 0; i < 40 + rand; i++) {
+		randStr += charList.charAt(Math.floor(Math.random() * charList.length));
+	}
+
+	return randStr;
 }
