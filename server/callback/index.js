@@ -1,6 +1,6 @@
 function generateClientToken() {
-	if (!localStorage.getItem('mayze_client_token'))
-		localStorage.setItem('mayze_client_token', generateRandomString());
+	if (!localStorage.getItem('mayze_user_token'))
+		localStorage.setItem('mayze_user_token', generateRandomString());
 }
 
 function redirect() {
@@ -15,8 +15,8 @@ function redirect() {
 			return alert('Connexion refusée');
 		}
 
-		fetch(`/api/token?code=${code}&client_token=${localStorage.getItem('mayze_client_token')}`, {
-			method: 'GET'
+		fetch(`/api/discord/token?code=${code}&user_token=${localStorage.getItem('mayze_user_token')}`, {
+			method: 'POST'
 		});
 
 		location.href = sessionStorage.getItem('callback_location') || '/';

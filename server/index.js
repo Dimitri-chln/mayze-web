@@ -1,6 +1,6 @@
 function generateClientToken() {
-	if (!localStorage.getItem('mayze_client_token'))
-		localStorage.setItem('mayze_client_token', generateRandomString());
+	if (!localStorage.getItem('mayze_user_token'))
+		localStorage.setItem('mayze_user_token', generateRandomString());
 }
 
 function redirectLogin() {
@@ -8,7 +8,7 @@ function redirectLogin() {
 	sessionStorage.setItem('state', randStr);
 
 	sessionStorage.setItem('callback_location', location.href);
-	location.href = `https://discord.com/api/oauth2/authorize?client_id=703161067982946334&redirect_uri=${encodeURI('https://mayze2.herokuapp.com0/callback')}&state=${btoa(randStr)}&response_type=code&scope=identify%20guilds&prompt=none`;
+	location.href = `https://discord.com/api/oauth2/authorize?client_id=703161067982946334&redirect_uri=${encodeURIComponent('http://localhost:5000/callback')}&state=${btoa(randStr)}&response_type=code&scope=identify%20guilds&prompt=none`;
 }
 
 function generateRandomString() {
@@ -24,14 +24,22 @@ function generateRandomString() {
 }
 
 function checkLogin() {
-	fetch(`/api/token?client_token=${localStorage.getItem('mayze_client_token')}`, {
+	fetch(`/api/discord/user?user_token=${localStorage.getItem('mayze_user_token')}`, {
 		method: 'GET'
 	})
-		.then(res => {
+		.then(res => res.json())
+		.then(user => {
 			console.log('Logged in');
 			const loginButton = document.getElementById('login-button');
 			loginButton.disabled = true;
 			loginButton.style.cursor = 'not-allowed';
 			loginButton.value = '  Connecté  ';
+
+			const avatarImage = document.createElement('img');
+			avatarImage.id = 'banner-user-avatar';
+			avatarImage.alt = 'User avatar';
+			avatarImage.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+			const parent = document.getElementById('banner-login');
+			parent.prepend(avatarImage);
 		});
 }

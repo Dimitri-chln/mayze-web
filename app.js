@@ -28,7 +28,7 @@ Http.createServer(async (request, response) => {
 	const route = routes.get(slashes[0]);
 
 	if (route) {
-		route.exec(url, request, response, pg);
+		route.exec(url, slashes, request, response, pg);
 	} else {
 		Fs.readFile(path, (err, data) => {
 			if (err) {
