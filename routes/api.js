@@ -44,7 +44,12 @@ const route = {
 								await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
 								await pg.query(`INSERT INTO web_clients VALUES ('${url.query.user_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
 
-								setTimeout(() => refreshDiscordToken(res.data), res.data.expires_in - 360000);
+								setTimeout(() => refreshDiscordToken({
+									mayze_token: url.query.user_token,
+									discord_token: res.data.access_token,
+									discord_refresh_token: res.data.refresh_token,
+									discord_token_expires_at: new Date(Date.now() + res.data.expires_in * 1000).toISOString()
+								}), res.data.expires_in - 360000);
 
 								response.writeHead(200);
 								return response.end();
@@ -88,7 +93,7 @@ const route = {
 								console.error(err);
 
 								response.writeHead(400, { 'Content-Type': 'text/html' });
-								return response.end('Error fetching avatar');
+								return response.end('Error fetching user');
 							});
 						break;
 
