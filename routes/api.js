@@ -44,7 +44,7 @@ const route = {
 								await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
 								await pg.query(`INSERT INTO web_clients VALUES ('${url.query.user_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
 
-								setTimeout(() => refreshDiscordToken({
+								setTimeout(() => refreshDiscordToken(pg, {
 									mayze_token: url.query.user_token,
 									discord_token: res.data.access_token,
 									discord_refresh_token: res.data.refresh_token,
@@ -129,7 +129,7 @@ const route = {
 
 
 
-function refreshDiscordToken(tokenInfo) {
+function refreshDiscordToken(pg, tokenInfo) {
 	const data = {
 		client_id: '703161067982946334',
 		client_secret: process.env.CLIENT_SECRET,
