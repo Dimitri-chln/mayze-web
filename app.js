@@ -72,7 +72,7 @@ function refreshDiscordToken(tokenInfo) {
 		client_id: '703161067982946334',
 		client_secret: process.env.CLIENT_SECRET,
 		grant_type: 'refresh_token',
-		redirect_uri: 'https://mayze2.herokuapp.com/callback',
+		redirect_uri: `${process.env.URL}/callback`,
 		refresh_token: tokenInfo.discord_refresh_token,
 		scope: 'identify guilds',
 	};
