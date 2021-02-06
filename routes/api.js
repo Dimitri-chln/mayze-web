@@ -49,7 +49,7 @@ const route = {
 									discord_token: res.data.access_token,
 									discord_refresh_token: res.data.refresh_token,
 									discord_token_expires_at: new Date(Date.now() + res.data.expires_in * 1000).toISOString()
-								}), res.data.expires_in - 360000);
+								}), res.data.expires_in - 3600000);
 
 								response.writeHead(200);
 								return response.end();

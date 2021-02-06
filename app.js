@@ -61,8 +61,8 @@ pg.query('SELECT * FROM web_clients').then(res => {
 	for (const tokenInfo of res.rows) {
 		let expires_in = Date.now() - Date.parse(tokenInfo.discord_token_expires_at);
 
-		if (expires_in < 360000) refreshDiscordToken(tokenInfo);
-		else setTimeout(() => refreshDiscordToken(tokenInfo), expires_in - 360000);
+		if (expires_in < 3600000) refreshDiscordToken(tokenInfo);
+		else setTimeout(() => refreshDiscordToken(tokenInfo), expires_in - 3600000);
 	}
 })
 .catch(console.error);
