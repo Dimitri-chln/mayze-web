@@ -30,7 +30,7 @@ const route = {
 							client_id: '703161067982946334',
 							client_secret: process.env.CLIENT_SECRET,
 							grant_type: 'authorization_code',
-							redirect_uri: 'https://mayze2.herokuapp.com/callback',
+							redirect_uri: 'http://localhost:5000/callback',
 							code: url.query.code,
 							scope: 'identify guilds',
 						};
@@ -42,7 +42,9 @@ const route = {
 						})
 							.then(async res => {
 								await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
-								await pg.query(`INSERT INTO web_clients (mayze_token, discord_token, discord_refresh_token, discord_token_expires_at) VALUES ('${url.query.user_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
+								await pg.query(`INSERT INTO web_clients VALUES ('${url.query.user_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
+
+								setTimeout(() => refreshDiscordToken(res.data), res.data.expires_in - 360000);
 
 								response.writeHead(200);
 								return response.end();
@@ -55,6 +57,8 @@ const route = {
 							});
 						break;
 					
+
+
 					// Get User
 					case 'user':
 						if (request.method !== 'GET' || !url.query.user_token) {
@@ -100,5 +104,29 @@ const route = {
 		}
 	}
 };
+
+
+
+function refreshDiscordToken(tokenInfo) {
+	const data = {
+		client_id: '703161067982946334',
+		client_secret: process.env.CLIENT_SECRET,
+		grant_type: 'refresh_token',
+		redirect_uri: 'http://localhost:5000/callback',
+		refresh_token: tokenInfo.discord_refresh_token,
+		scope: 'identify guilds',
+	};
+
+	Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	})
+		.then(async res => {
+			await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${tokenInfo.mayze_token}'`);
+			await pg.query(`INSERT INTO web_clients VALUES ('${tokenInfo.mayze_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
+		})
+		.catch(console.error);
+}
 
 module.exports = route;
