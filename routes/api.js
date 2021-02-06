@@ -21,7 +21,7 @@ const route = {
 				switch (slashes[2]) {
 					// Create a new Discord access token
 					case 'token':
-						if (request.method !== 'POST' || !url.query.code || !url.query.user_token) {
+						if (request.method.toUpperCase() !== 'POST' || !url.query.code || !url.query.user_token) {
 							response.writeHead(400, { 'Content-Type': 'text/html' });
 							return response.end('400 Bad Request');
 						}
@@ -66,7 +66,7 @@ const route = {
 
 					// Get User
 					case 'user':
-						if (request.method !== 'GET' || !url.query.user_token) {
+						if (request.method.toUpperCase() !== 'GET' || !url.query.user_token) {
 							response.writeHead(400, { 'Content-Type': 'text/html' });
 							return response.end('400 Bad Request');
 						}
@@ -96,6 +96,23 @@ const route = {
 								return response.end('Error fetching user');
 							});
 						break;
+
+					
+
+					// Disconnect from Discord
+					case 'logout':
+						if (request.method.toUpperCase() !== 'POST' || !url.query.user_token) {
+							response.writeHead(400, { 'Content-Type': 'text/html' });
+							return response.end('400 Bad Request');
+						}
+
+						await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
+
+						response.writeHead(200);
+						response.end();
+						break;
+
+
 
 					default:
 						response.writeHead(404, { 'Content-Type': 'text/html' });
