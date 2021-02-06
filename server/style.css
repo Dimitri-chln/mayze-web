@@ -47,16 +47,17 @@ body {
 	justify-content: space-around;
 }
 
-#banner-categories a {
+#banner-categories h2, a {
 	display: block;
 	text-decoration: none;
 	color: white;
 	font-size: 2em;
     border-bottom: 2px solid transparent;
-    padding: 10px 0;
+	padding: 10px 0;
+	margin: 0;
 }
 
-#banner-categories a:hover {
+#banner-categories h2:hover, a:hover {
     color: orange;
     border-bottom: 2px solid gold;
 }
