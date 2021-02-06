@@ -48,11 +48,11 @@ console.log(`Listening on port ${process.env.PORT || 5000}`);
 
 
 // Ping the server every 10 minutes
-setInterval(() => {
-	Axios.get(process.env.URL).then(() => {
-		console.log("Pinging server...");
-	}).catch(err => console.error('Error pinging the server'));
-}, 600000);
+// setInterval(() => {
+// 	Axios.get(process.env.URL).then(() => {
+// 		console.log("Pinging server...");
+// 	}).catch(err => console.error('Error pinging the server'));
+// }, 600000);
 
 
 
