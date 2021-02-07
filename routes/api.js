@@ -39,13 +39,13 @@ const route = {
 						const res = await Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).catch(err => {
 							console.error(err);
 							response.writeHead(400, { 'Content-Type': 'text/html' });
-							return response.end('Error fetching token');
+							return response.end('Error retrieving token');
 						});
 
 						const user = await Axios.get('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${res.data.access_token}` } }).catch(err => {
 							console.error(err);
 							response.writeHead(400, { 'Content-Type': 'text/html' });
-							return response.end('Error fetching token');
+							return response.end('Error retrieving token');
 						});
 
 						const { 'rows': tokens } = await pg.query(`SELECT * FROM web_clients WHERE discord_user_id = '${user.data.id}'`);
@@ -96,7 +96,43 @@ const route = {
 								console.error(err);
 
 								response.writeHead(400, { 'Content-Type': 'text/html' });
-								return response.end('Error fetching user');
+								return response.end('Error retrieving user');
+							});
+						break;
+					}
+
+
+
+					// Retrieve user's guilds
+					case 'guilds': {
+						if (request.method.toUpperCase() !== 'GET' || !url.query.user_token) {
+							response.writeHead(400, { 'Content-Type': 'text/html' });
+							return response.end('400 Bad Request');
+						}
+
+						const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
+						if (!tokens.length) {
+							response.writeHead(404, { 'Content-Type': 'text/html' });
+							return response.end('404 Not Found');
+						}
+
+						const token = tokens[0].discord_token;
+
+						Axios.get('https://discord.com/api/users/@me/guilds', {
+							headers: {
+								Authorization: `Bearer ${token}`
+							}
+						})
+							.then(res => {
+								response.writeHead(200, { 'Content-Type': 'application/json' });
+								response.write(JSON.stringify(res.data));
+								return response.end();
+							})
+							.catch(err => {
+								console.error(err);
+
+								response.writeHead(400, { 'Content-Type': 'text/html' });
+								return response.end('Error retrieving guilds');
 							});
 						break;
 					}

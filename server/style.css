@@ -127,3 +127,22 @@ body {
 	background-color: #4e5d94;
 	transition-duration: 0.4s;
 }
+
+#is-member {
+	position: fixed;
+	top: 5.5em;
+	left: 1em;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	background-color: #7289da;
+	border: solid #4e5d94;
+	border-radius: 1em;
+	padding: 5px 7px;
+}
+
+#is-member p {
+	color: white;
+	height: 100%;
+	margin: 0;
+}
