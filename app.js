@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Https = require('https');
+const Http = require('http');
 const Url = require('url');
 const Fs = require('fs');
 const Path = require('path');
@@ -18,7 +18,7 @@ for (const file of routesFiles) {
 	routes.set(route.name, route);
 }
 
-Https.createServer(async (request, response) => {
+Http.createServer(async (request, response) => {
 	const url = Url.parse(request.url, true);
 	const slashes = url.pathname.split('/').slice(1);
 	const path = Path.extname(url.path)
