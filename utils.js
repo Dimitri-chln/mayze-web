@@ -1,4 +1,5 @@
 const Path = require('path');
+const Axios = require('axios').default;
 
 function getContentType(path) {
 	const ext = Path.extname(path);
@@ -31,4 +32,25 @@ function generateRandomString() {
 	return randStr;
 }
 
-module.exports = { getContentType, generateRandomString };
+function refreshDiscordToken(pg, user_token, refresh_token) {
+	const data = {
+		client_id: '703161067982946334',
+		client_secret: process.env.CLIENT_SECRET,
+		grant_type: 'refresh_token',
+		redirect_uri: `${process.env.URL}/callback`,
+		refresh_token,
+		scope: 'identify guilds',
+	};
+
+	Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		}
+	})
+		.then(async res => {
+			await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE '${user_token}' = ANY (mayze_tokens)`);
+		})
+		.catch(console.error);
+}
+
+module.exports = { getContentType, generateRandomString, refreshDiscordToken };

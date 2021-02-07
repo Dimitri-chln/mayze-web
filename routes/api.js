@@ -2,6 +2,7 @@ const { IncomingMessage, ServerResponse } = require('http');
 const { UrlWithParsedQuery } = require('url');
 const { Client } = require('pg');
 const Axios = require('axios').default;
+const { refreshDiscordToken } = require('../utils.js');
 
 const route = {
 	name: 'api',
@@ -20,7 +21,7 @@ const route = {
 				
 				switch (slashes[2]) {
 					// Create a new Discord access token
-					case 'token':
+					case 'token': {
 						if (request.method.toUpperCase() !== 'POST' || !url.query.code || !url.query.user_token) {
 							response.writeHead(400, { 'Content-Type': 'text/html' });
 							return response.end('400 Bad Request');
@@ -35,43 +36,45 @@ const route = {
 							scope: 'identify guilds',
 						};
 
-						Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), {
-							headers: {
-								'Content-Type': 'application/x-www-form-urlencoded'
-							}
-						})
-							.then(async res => {
-								await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
-								await pg.query(`INSERT INTO web_clients VALUES ('${url.query.user_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
+						const res = await Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).catch(err => {
+							console.error(err);
+							response.writeHead(400, { 'Content-Type': 'text/html' });
+							return response.end('Error fetching token');
+						});
 
-								setTimeout(() => refreshDiscordToken(pg, {
-									mayze_token: url.query.user_token,
-									discord_token: res.data.access_token,
-									discord_refresh_token: res.data.refresh_token,
-									discord_token_expires_at: new Date(Date.now() + res.data.expires_in * 1000).toISOString()
-								}), res.data.expires_in - 3600000);
+						const user = await Axios.get('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${res.data.access_token}` } }).catch(err => {
+							console.error(err);
+							response.writeHead(400, { 'Content-Type': 'text/html' });
+							return response.end('Error fetching token');
+						});
 
-								response.writeHead(200);
-								return response.end();
-							})
-							.catch(err => {
-								console.error(err);
+						const { 'rows': tokens } = await pg.query(`SELECT * FROM web_clients WHERE discord_user_id = '${user.data.id}'`);
 
-								response.writeHead(400, { 'Content-Type': 'text/html' });
-								return response.end('Error fetching token');
-							});
+						if (!tokens.length) {
+							await pg.query(`INSERT INTO web_clients VALUES ('${user.data.id}', '${res.data.access_token}', '{ "${url.query.user_token}" }', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
+						} else {
+							const new_mayze_tokens = tokens[0].mayze_tokens;
+							new_mayze_tokens.push(url.query.user_token);
+							await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_refresh_token = '${res.data.refresh_token}', mayze_tokens = '{ "${new_mayze_tokens.join('", "')}" }', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE discord_user_id = '${user.data.id}'`);
+						}						
+
+						setTimeout(() => refreshDiscordToken(pg, url.query.user_token, res.data.refresh_token), res.data.expires_in - 3600000);
+
+						response.writeHead(200);
+						response.end();
 						break;
+					}
 					
 
 
 					// Get User
-					case 'user':
+					case 'user': {
 						if (request.method.toUpperCase() !== 'GET' || !url.query.user_token) {
 							response.writeHead(400, { 'Content-Type': 'text/html' });
 							return response.end('400 Bad Request');
 						}
 
-						const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
+						const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
 						if (!tokens.length) {
 							response.writeHead(404, { 'Content-Type': 'text/html' });
 							return response.end('404 Not Found');
@@ -81,7 +84,7 @@ const route = {
 
 						Axios.get('https://discord.com/api/users/@me', {
 							headers: {
-								'Authorization': `Bearer ${token}`
+								Authorization: `Bearer ${token}`
 							}
 						})
 							.then(res => {
@@ -96,21 +99,28 @@ const route = {
 								return response.end('Error fetching user');
 							});
 						break;
+					}
 
 					
 
 					// Disconnect from Discord
-					case 'logout':
+					case 'logout': {
 						if (request.method.toUpperCase() !== 'POST' || !url.query.user_token) {
 							response.writeHead(400, { 'Content-Type': 'text/html' });
 							return response.end('400 Bad Request');
 						}
 
-						await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${url.query.user_token}'`);
+						const { 'rows': tokens } = await pg.query(`SELECT mayze_tokens FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
+						
+						if (tokens.length > 1)
+							await pg.query(`UPDATE web_clients SET mayze_tokens = '{ "${tokens[0].mayze_tokens.filter(t => t !== url.query.user_token).join('", "')}" }' WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
+						else if (tokens.length === 1)
+							await pg.query(`DELETE FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
 
 						response.writeHead(200);
 						response.end();
 						break;
+					}
 
 
 
@@ -126,29 +136,5 @@ const route = {
 		}
 	}
 };
-
-
-
-function refreshDiscordToken(pg, tokenInfo) {
-	const data = {
-		client_id: '703161067982946334',
-		client_secret: process.env.CLIENT_SECRET,
-		grant_type: 'refresh_token',
-		redirect_uri: `${process.env.URL}/callback`,
-		refresh_token: tokenInfo.discord_refresh_token,
-		scope: 'identify guilds',
-	};
-
-	Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		}
-	})
-		.then(async res => {
-			await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${tokenInfo.mayze_token}'`);
-			await pg.query(`INSERT INTO web_clients VALUES ('${tokenInfo.mayze_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
-		})
-		.catch(console.error);
-}
 
 module.exports = route;

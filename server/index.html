@@ -5,24 +5,25 @@
 		<title>Mayze</title>
 		<link rel="icon" href="favicon.ico" />
 		<link rel="stylesheet" href="style.css" />
-		<script defer src="index.js"></script>
+		<script type="module" src="module.mjs"></script>
+		<script defer src="index.js" charset="utf-8"></script>
 	</head>
 
-	<body onload="generateClientToken();checkLogin();">
+	<body>
 		<header id="banner" role="banner">
 			<div id="banner-main">
 				<img id="banner-icon" src="favicon.ico" alt="Logo" />
 				<h1 id="banner-title">Mayze</h1>
 			</div>
 			<nav id="banner-categories">
-				<div class="banner-category"><h2>Menu</h2>
-					<ul class="scrolling-menu">
-						<li><a href="/logout">Se déconnecter</a></li>
-					</ul>
-				</div>
 				<div class="banner-category"><h2>Serveur</h2>
 					<ul class="scrolling-menu">
 						<li><a href="/">Rien pour l'instant...</a></li>
+					</ul>
+				</div>
+				<div class="banner-category"><h2>Menu</h2>
+					<ul class="scrolling-menu">
+						<li><a href="/logout">Se déconnecter</a></li>
 					</ul>
 				</div>
 			</nav>

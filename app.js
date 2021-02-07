@@ -5,7 +5,7 @@ const Fs = require('fs');
 const Path = require('path');
 const Axios = require('axios').default;
 const { Client } = require('pg');
-const { getContentType } = require('./util');
+const { getContentType, refreshDiscordToken } = require('./utils');
 
 let pg = newPgClient();
 pg.connect().then(() => console.log("Connected to the database")).catch(console.error);
@@ -59,35 +59,13 @@ console.log(`Listening on port ${process.env.PORT || 5000}`);
 // Refresh Discord access tokens
 pg.query('SELECT * FROM web_clients').then(res => {
 	for (const tokenInfo of res.rows) {
-		let expires_in = Date.now() - Date.parse(tokenInfo.discord_token_expires_at);
+		let expires_in = Date.parse(tokenInfo.expires_at) - Date.now();
 
 		if (expires_in < 3600000) refreshDiscordToken(tokenInfo);
-		else setTimeout(() => refreshDiscordToken(tokenInfo), expires_in - 3600000);
+		else setTimeout(() => refreshDiscordToken(pg, tokenInfo.mayze_tokens[0], tokenInfo.refresh_token), expires_in - 3600000);
 	}
 })
 .catch(console.error);
-
-function refreshDiscordToken(tokenInfo) {
-	const data = {
-		client_id: '703161067982946334',
-		client_secret: process.env.CLIENT_SECRET,
-		grant_type: 'refresh_token',
-		redirect_uri: `${process.env.URL}/callback`,
-		refresh_token: tokenInfo.discord_refresh_token,
-		scope: 'identify guilds',
-	};
-
-	Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded'
-		}
-	})
-		.then(async res => {
-			await pg.query(`DELETE FROM web_clients WHERE mayze_token = '${tokenInfo.mayze_token}'`);
-			await pg.query(`INSERT INTO web_clients VALUES ('${tokenInfo.mayze_token}', '${res.data.access_token}', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
-		})
-		.catch(console.error);
-}
 
 
 
