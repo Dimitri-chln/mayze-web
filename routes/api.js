@@ -56,7 +56,7 @@ const route = {
 							const new_mayze_tokens = tokens[0].mayze_tokens;
 							new_mayze_tokens.push(url.query.user_token);
 							await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_refresh_token = '${res.data.refresh_token}', mayze_tokens = '{ "${new_mayze_tokens.join('", "')}" }', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE discord_user_id = '${user.data.id}'`);
-						}						
+						}				
 
 						setTimeout(() => refreshDiscordToken(pg, url.query.user_token, res.data.refresh_token), res.data.expires_in - 3600000);
 
