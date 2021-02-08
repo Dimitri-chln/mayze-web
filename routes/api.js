@@ -121,9 +121,8 @@ const route = {
 						const userID = tokens[0].discord_user_id;
 						const guild = discord.guilds.cache.get('689164798264606784');
 						const member = guild.members.cache.get(userID);
-						console.log(member);
 						
-						if (member) {
+						if (member && member.roles.cache.has('689169027922526235')) {
 							response.writeHead(200, { 'Content-Type': 'application/json' });
 							response.write(JSON.stringify(member));
 							response.end();
