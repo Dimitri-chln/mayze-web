@@ -28,14 +28,13 @@ function checkLogin() {
 			const isMember = document.getElementById('is-member').children.item(0);
 			isMember.innerHTML = 'Connexion...';
 
-			fetch(`/api/discord/guilds?user_token=${localStorage.getItem('mayze_user_token')}`, {
+			fetch(`/api/discord/member?user_token=${localStorage.getItem('mayze_user_token')}`, {
 				method: 'GET'
 			})
 				.then(async res => {
-					const guilds = await res.json().catch(() => {});
-					if (!guilds) return;
+					const member = await res.json().catch(() => {});
 
-					if (guilds.some(guild => guild.id === '689164798264606784')) {
+					if (member) {
 						isMember.innerHTML = '✨ Tu es membre de Mayze ! ✨';
 					} else {
 						isMember.innerHTML = 'Tu n\'es pas un membre de Mayze';

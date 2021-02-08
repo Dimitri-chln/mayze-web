@@ -4,8 +4,13 @@ const Url = require('url');
 const Fs = require('fs');
 const Path = require('path');
 const Axios = require('axios').default;
-const { Client } = require('pg');
+const Pg = require('pg');
+const Discord = require('discord.js');
 const { getContentType, refreshDiscordToken } = require('./utils');
+
+const discord = new Discord.Client({ disableEveryone: true, fetchAllMembers: true });
+discord.login(process.env.TOKEN);
+discord.on('ready', () => console.log('Connected to Discord'));
 
 let pg = newPgClient();
 pg.connect().then(() => console.log("Connected to the database")).catch(console.error);
@@ -28,7 +33,7 @@ Http.createServer(async (request, response) => {
 	const route = routes.get(slashes[0]);
 
 	if (route) {
-		route.exec(url, slashes, request, response, pg);
+		route.exec(url, slashes, request, response, discord, pg);
 	} else {
 		Fs.readFile(path, (err, data) => {
 			if (err) {
@@ -75,7 +80,7 @@ function newPgClient() {
 		connectionString: process.env.DATABASE_URL,
 		ssl: true
 	};
-	const pgClient = new Client(connectionString);
+	const pgClient = new Pg.Client(connectionString);
 
 	pgClient.on("error", err => {
 		console.error(err);

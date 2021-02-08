@@ -1,8 +1,9 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { UrlWithParsedQuery } = require('url');
-const { Client } = require('pg');
+const Pg = require('pg');
 const Axios = require('axios').default;
 const { refreshDiscordToken } = require('../utils.js');
+const Discord = require('discord.js');
 
 const route = {
 	name: 'api',
@@ -11,9 +12,10 @@ const route = {
 	 * @param {string[]} slashes 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {Client} pg 
+	 * @param {Discord.Client} discord 
+	 * @param {Pg.Client} pg 
 	 */
-	exec: async (url, slashes, request, response, pg) => {
+	exec: async (url, slashes, request, response, discord, pg) => {
 
 		switch (slashes[1]) {
 			// Get Discord data
@@ -33,7 +35,7 @@ const route = {
 							grant_type: 'authorization_code',
 							redirect_uri: `${process.env.URL}/callback`,
 							code: url.query.code,
-							scope: 'identify guilds',
+							scope: 'identify',
 						};
 
 						const res = await Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).catch(err => {
@@ -77,7 +79,7 @@ const route = {
 						const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
 						if (!tokens.length) {
 							response.writeHead(404, { 'Content-Type': 'text/html' });
-							return response.end('404 Not Found');
+							return response.end('404 Not Connected');
 						}
 
 						const token = tokens[0].discord_token;
@@ -90,50 +92,45 @@ const route = {
 							.then(res => {
 								response.writeHead(200, { 'Content-Type': 'application/json' });
 								response.write(JSON.stringify(res.data));
-								return response.end();
+								response.end();
 							})
 							.catch(err => {
 								console.error(err);
 
 								response.writeHead(400, { 'Content-Type': 'text/html' });
-								return response.end('Error retrieving user');
+								response.end('Error retrieving user');
 							});
 						break;
 					}
 
 
 
-					// Retrieve user's guilds
-					case 'guilds': {
+					// Get Mayze Member
+					case 'member': {
 						if (request.method.toUpperCase() !== 'GET' || !url.query.user_token) {
 							response.writeHead(400, { 'Content-Type': 'text/html' });
 							return response.end('400 Bad Request');
 						}
 
-						const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
+						const { 'rows': tokens } = await pg.query(`SELECT discord_user_id FROM web_clients WHERE '${url.query.user_token}' = ANY (mayze_tokens)`);
 						if (!tokens.length) {
 							response.writeHead(404, { 'Content-Type': 'text/html' });
-							return response.end('404 Not Found');
+							return response.end('404 Not Connected');
 						}
 
-						const token = tokens[0].discord_token;
-
-						Axios.get('https://discord.com/api/users/@me/guilds', {
-							headers: {
-								Authorization: `Bearer ${token}`
-							}
-						})
-							.then(res => {
-								response.writeHead(200, { 'Content-Type': 'application/json' });
-								response.write(JSON.stringify(res.data));
-								return response.end();
-							})
-							.catch(err => {
-								console.error(err);
-
-								response.writeHead(400, { 'Content-Type': 'text/html' });
-								return response.end('Error retrieving guilds');
-							});
+						const userID = tokens[0].discord_user_id;
+						const guild = discord.guilds.cache.get('689164798264606784');
+						const member = guild.members.cache.get(userID);
+						console.log(member);
+						
+						if (member) {
+							response.writeHead(200, { 'Content-Type': 'application/json' });
+							response.write(JSON.stringify(member));
+							response.end();
+						} else {
+							response.writeHead(404, { 'Content-Type': 'text/html' });
+							response.end('404 Not A Member');
+						}
 						break;
 					}
 

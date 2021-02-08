@@ -39,7 +39,7 @@ function refreshDiscordToken(pg, user_token, refresh_token) {
 		grant_type: 'refresh_token',
 		redirect_uri: `${process.env.URL}/callback`,
 		refresh_token,
-		scope: 'identify guilds',
+		scope: 'identify',
 	};
 
 	Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
