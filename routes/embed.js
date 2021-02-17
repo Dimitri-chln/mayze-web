@@ -25,7 +25,7 @@ const route = {
 				if (url.query.description) html += `<meta property="og:description" content="${url.query.description}"`;
 				if (url.query.thumbnail) html += `<meta property="og:image" content="${url.query.thumbnail}" />`;
 				else if (url.query.image) html += `<meta property="og:image" content="${url.query.thumbnail}" /><meta name="twitter:card" content="summary_large_image" />`;
-
+				console.log(url.query.image);
 				html += "</head></html>";
 
 				response.writeHead(200, { 'Content-Type': 'text/html '});
