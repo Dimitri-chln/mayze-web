@@ -22,6 +22,7 @@ const route = {
 
 				if (url.query.color) html += `<meta name="theme-color" content="#${url.query.color}" />`;
 				if (url.query.title) html += `<meta property="og:title" content="${url.query.title}" />`;
+				if (url.query.url) html += `<meta property="og:url" content="${url.query.url}"`;
 				if (url.query.description) html += `<meta property="og:description" content="${url.query.description}"`;
 				if (url.query.thumbnail) html += `<meta property="og:image" content="${url.query.thumbnail}" />`;
 				else if (url.query.image) html += `<meta property="og:image" content="${url.query.image}" /><meta name="twitter:card" content="summary_large_image" />`;
