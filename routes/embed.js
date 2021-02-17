@@ -20,7 +20,7 @@ const route = {
 			default:
 				let html = '<!DOCTYPE html><html prefix="og: https://ogp.me/ns#"><head><meta charset="utf-8" /><meta property="og:type" content="website" />';
 
-				if (url.query.color) html += `<meta name="theme-color" content="${url.query.color}" />`;
+				if (url.query.color) html += `<meta name="theme-color" content="#${url.query.color}" />`;
 				if (url.query.title) html += `<meta property="og:title" content="${url.query.title}" />`;
 				if (url.query.description) html += `<meta property="og:description" content="${url.query.description}"`;
 				if (url.query.thumbnail) html += `<meta property="og:image" content="${url.query.thumbnail}" />`;
