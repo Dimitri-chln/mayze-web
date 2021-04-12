@@ -1,7 +1,7 @@
 require('dotenv').config();
 const Http = require('http');
 const Url = require('url');
-const Fs = require('fs');
+const Fs = require('fs').promises;
 const Path = require('path');
 const Axios = require('axios').default;
 const Pg = require('pg');
@@ -16,39 +16,33 @@ let pg = newPgClient();
 pg.connect().then(() => console.log("Connected to the database")).catch(console.error);
 setInterval(reconnectPgClient, 3600000);
 
-const routes = new Map();
-const routesFiles = Fs.readdirSync('./routes').filter(file => file.endsWith('.js'));
-for (const file of routesFiles) {
-	const route = require(`./routes/${file}`);
-	routes.set(route.name, route);
-}
-
 Http.createServer(async (request, response) => {
-	const url = Url.parse(request.url, true);
-	const slashes = url.pathname.split('/').slice(1);
-	const path = Path.extname(url.path)
-		? 'server' + url.pathname
-		: 'server' + (url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`) + 'index.html';
+	const url = new Url.URL(request.url, process.env.URL);
 
-	const route = routes.get(slashes[0]);
-
+	const route = await findRoute(url.pathname);
 	if (route) {
-		route.exec(url, slashes, request, response, discord, pg);
+		if (route.name) route.run(url, request, response, discord, pg);
+		else {
+			response.writeHead(200, { 'Content-Type': 'text/html' });
+			response.write(route);
+			response.end();
+		}
+
 	} else {
-		Fs.readFile(path, (err, data) => {
-			if (err) {
+		Fs.readFile('./public' + url.pathname)
+			.then(buffer => {
+				response.writeHead(200, { 'Content-Type': getContentType(url.pathname) });
+				response.write(buffer);
+				response.end();
+			})
+			.catch(err => {
 				response.writeHead(404, { 'Content-Type': 'text/html' });
-				return response.end('404 Not Found');
-			} else {
-				response.writeHead(200, { 'Content-Type': getContentType(path) });
-				response.write(data);
-				return response.end();
-			}
-		});
+				response.end('404 Not Found');
+			});
 	}
 
-}).listen(process.env.PORT || 5000);
-console.log(`Listening on port ${process.env.PORT || 5000}`);
+}).listen(process.env.PORT || 8000);
+console.log(`Listening on port ${process.env.PORT || 8000}`);
 
 
 
@@ -62,15 +56,15 @@ console.log(`Listening on port ${process.env.PORT || 5000}`);
 
 
 // Refresh Discord access tokens
-pg.query('SELECT * FROM web_clients').then(res => {
-	for (const tokenInfo of res.rows) {
-		let expires_in = Date.parse(tokenInfo.expires_at) - Date.now();
+// pg.query('SELECT * FROM web_clients').then(res => {
+// 	for (const tokenInfo of res.rows) {
+// 		let expires_in = Date.parse(tokenInfo.expires_at) - Date.now();
 
-		if (expires_in < 3600000) refreshDiscordToken(tokenInfo);
-		else setTimeout(() => refreshDiscordToken(pg, tokenInfo.mayze_tokens[0], tokenInfo.refresh_token), expires_in - 3600000);
-	}
-})
-.catch(console.error);
+// 		if (expires_in < 3600000) refreshDiscordToken(tokenInfo);
+// 		else setTimeout(() => refreshDiscordToken(pg, tokenInfo.mayze_tokens[0], tokenInfo.refresh_token), expires_in - 3600000);
+// 	}
+// })
+// .catch(console.error);
 
 
 
@@ -95,4 +89,25 @@ function reconnectPgClient() {
 	pg.end().catch(console.error);
 	pg = newPgClient();
 	pg.connect().then(() => console.log("Connected to the database")).catch(console.error);
+}
+
+
+
+/**
+ * Find a route
+ * @param {string} path The path of the route
+ */
+async function findRoute(path) {
+	const fullPath = './routes' + path + (path.endsWith('/') ? '' : '/');
+	
+	try {
+		const buffer = require(fullPath + '/route.js');
+		return buffer;
+
+	} catch (err) {
+		const html = await Fs.readFile(fullPath + 'index.html').catch(err => {
+			if (err.code !== 'ENOENT') console.error(err);
+		});
+		return html;
+	}
 }
