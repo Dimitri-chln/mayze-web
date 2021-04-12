@@ -1,4 +1,4 @@
-import { generateClientToken, generateRandomString } from '../modules/utils.mjs';
+import { generateClientToken, generateRandomString } from '/modules/utils.mjs';
 
 generateClientToken();
 

@@ -1,4 +1,4 @@
-import { generateClientToken } from '../modules/utils.mjs';
+import { generateClientToken } from '/modules/utils.mjs';
 
 generateClientToken();
 
