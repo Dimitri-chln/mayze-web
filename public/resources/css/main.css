@@ -38,6 +38,11 @@ body {
 	margin: 5px 10px 5px 0;
 }
 
+a {
+	text-decoration: none;
+	color: white;
+}
+
 /* SCROLLING MENU */
 
 #banner-categories {
@@ -47,7 +52,7 @@ body {
 	justify-content: space-around;
 }
 
-#banner-categories h2, a {
+.banner-category h2 {
 	display: block;
 	text-decoration: none;
 	color: white;
@@ -57,7 +62,7 @@ body {
 	margin: 0;
 }
 
-#banner-categories h2:hover, a:hover {
+.banner-category h2:hover {
     color: orange;
     border-bottom: 2px solid gold;
 }
@@ -79,26 +84,15 @@ body {
 .scrolling-menu li {
     float: none;
 	text-align: center;
-	font-size: 0.7em;
-}
-
-.scrolling-menu a {
-    margin: 20px;
-    border-bottom: none;
+	font-size: 1.4em;
+	margin: 1em;
 }
 
 .scrolling-menu a:hover {
-    border-bottom: none;
+    color: orange;
 }
 
 /* END SCROLLING MENU */
-
-#banner-main {
-	display: flex;
-	background-color: #1a1e20;
-	height: 100%;
-	border-radius: 3em;
-}
 
 #banner-login {
 	display: flex;

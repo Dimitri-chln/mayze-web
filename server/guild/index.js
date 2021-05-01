@@ -1,3 +1,0 @@
-function forceRedirect() {
-	location.href = '/';
-}

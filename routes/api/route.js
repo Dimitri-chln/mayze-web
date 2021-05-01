@@ -6,7 +6,7 @@ const Fs = require('fs').promises;
 const Axios = require('axios').default;
 
 const route = {
-	name: 'logout',
+	name: 'api',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
@@ -16,7 +16,7 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-        if (request.method.toUpperCase() !== 'POST' || !url.searchParams.get('token')) {
+        if (request.method.toUpperCase() !== 'GET') {
             response.writeHead(400, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({
 				status: 400,
@@ -25,14 +25,12 @@ const route = {
 			return response.end();
         }
 
-        const { 'rows': tokens } = await pg.query(`SELECT mayze_tokens FROM web_clients WHERE '${url.searchParams.get('token')}' = ANY (mayze_tokens)`);
-        
-        if (tokens.length > 1)
-            await pg.query(`UPDATE web_clients SET mayze_tokens = '{ "${tokens[0].mayze_tokens.filter(t => t !== url.searchParams.get('token')).join('", "')}" }' WHERE '${url.searchParams.get('token')}' = ANY (mayze_tokens)`);
-        else if (tokens.length === 1)
-            await pg.query(`DELETE FROM web_clients WHERE '${url.searchParams.get('token')}' = ANY (mayze_tokens)`);
+		const d = {
+			version: 1
+		};
 
-        response.writeHead(200);
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify(d));
         response.end();
     }
 };

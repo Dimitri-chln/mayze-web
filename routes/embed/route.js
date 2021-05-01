@@ -12,12 +12,13 @@ const route = {
 	 * @param {ServerResponse} response 
 	 * @param {Discord.Client} discord 
 	 * @param {Pg.Client} pg 
+	 * @param {string} token
 	 */
-	run: async (url, request, response, discord, pg) => {
+	run: async (url, request, response, discord, pg, token) => {
 		
 		let html = '<!DOCTYPE html><html prefix="og: https://ogp.me/ns#"><head><meta charset="utf-8" /><meta property="og:type" content="website" />';
-
-		if (url.searchParams.getAll().length) {
+		
+		if (url.searchParams.toString()) {
 			if (url.searchParams.get('color')) html += `<meta name="theme-color" content="#${url.searchParams.get('color')}" />`;
 			if (url.searchParams.get('title')) html += `<meta property="og:title" content="${url.searchParams.get('title')}" />`;
 			if (url.searchParams.get('description')) html += `<meta property="og:description" content="${url.searchParams.get('description')}" />`;

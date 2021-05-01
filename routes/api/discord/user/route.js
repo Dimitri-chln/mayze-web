@@ -13,24 +13,33 @@ const route = {
 	 * @param {ServerResponse} response 
 	 * @param {Discord.Client} discord 
 	 * @param {Pg.Client} pg 
+	 * @param {string} token
 	 */
-	run: async (url, request, response, discord, pg) => {
-        if (request.method.toUpperCase() !== 'GET' || !url.searchParams.get('user_token')) {
-            response.writeHead(400, { 'Content-Type': 'text/html' });
-            return response.end('400 Bad Request');
+	run: async (url, request, response, discord, pg, token) => {
+        if (request.method.toUpperCase() !== 'GET' || !url.searchParams.get('token')) {
+            response.writeHead(400, { 'Content-Type': 'application/json' });
+            response.write(JSON.stringify({
+				status: 400,
+				message: 'Bad Request'
+			}));
+			return response.end();
         }
 
-        const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE '${url.searchParams.get('user_token')}' = ANY (mayze_tokens)`);
+        const { 'rows': tokens } = await pg.query(`SELECT discord_token FROM web_clients WHERE '${url.searchParams.get('token')}' = ANY (mayze_tokens)`);
         if (!tokens.length) {
-            response.writeHead(404, { 'Content-Type': 'text/html' });
-            return response.end('404 Not Connected');
+            response.writeHead(400, { 'Content-Type': 'application/json' });
+            response.write(JSON.stringify({
+				status: 401,
+				message: 'Not Connected'
+			}));
+			return response.end();
         }
 
-        const token = tokens[0].discord_token;
+        const { discord_token } = tokens[0];
 
         Axios.get('https://discord.com/api/users/@me', {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${discord_token}`
             }
         })
             .then(res => {

@@ -1,8 +1,6 @@
-import { generateClientToken } from '/modules/utils.mjs';
+import { getCookie } from '../../modules/cookie.mjs';
 
-generateClientToken();
-
-fetch(`/api/discord/logout?user_token=${localStorage.getItem('mayze_user_token')}`, {
+fetch(`/api/discord/logout?token=${getCookie('token')}`, {
 		method: 'POST'
 })
     .then(res => {

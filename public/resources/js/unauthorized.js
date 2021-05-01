@@ -1,0 +1,3 @@
+function redirect() {
+    location.href = '/';
+}

@@ -1,8 +1,7 @@
-import { generateClientToken, generateRandomString } from '/modules/utils.mjs';
+import { getCookie } from '../../modules/cookie.mjs';
+import { generateRandomString } from '../../modules/utils.mjs';
 
-generateClientToken();
-
-fetch(`/api/discord/user?user_token=${localStorage.getItem('mayze_user_token')}`, {
+fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	method: 'GET'
 })
 	.then(res => {

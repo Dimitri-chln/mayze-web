@@ -32,7 +32,7 @@ function generateRandomString() {
 	return randStr;
 }
 
-function refreshDiscordToken(pg, user_token, refresh_token) {
+function refreshDiscordToken(pg, token, refresh_token) {
 	const data = {
 		client_id: '703161067982946334',
 		client_secret: process.env.CLIENT_SECRET,
@@ -48,7 +48,7 @@ function refreshDiscordToken(pg, user_token, refresh_token) {
 		}
 	})
 		.then(async res => {
-			await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE '${user_token}' = ANY (mayze_tokens)`);
+			await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE '${token}' = ANY (mayze_tokens)`);
 		})
 		.catch(console.error);
 }

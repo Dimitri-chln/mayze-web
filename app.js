@@ -18,15 +18,13 @@ setInterval(reconnectPgClient, 3600000);
 
 Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, process.env.URL);
+	const res = await findRoute(url.pathname);
 
-	const route = await findRoute(url.pathname);
-	if (route) {
-		if (route.name) route.run(url, request, response, discord, pg);
-		else {
-			response.writeHead(200, { 'Content-Type': 'text/html' });
-			response.write(route);
-			response.end();
-		}
+	if (res.route) res.route.run(url, request, response, discord, pg, getToken(request));
+	else if (res.html) {
+		response.writeHead(200, { 'Content-Type': 'text/html' });
+		response.write(res.html);
+		response.end();
 
 	} else {
 		Fs.readFile('./public' + url.pathname)
@@ -101,13 +99,26 @@ async function findRoute(path) {
 	const fullPath = './routes' + path + (path.endsWith('/') ? '' : '/');
 	
 	try {
-		const buffer = require(fullPath + '/route.js');
-		return buffer;
+		const route = require(fullPath + 'route');
+		return { route };
 
 	} catch (err) {
 		const html = await Fs.readFile(fullPath + 'index.html').catch(err => {
 			if (err.code !== 'ENOENT') console.error(err);
 		});
-		return html;
+		return { html };
 	}
+}
+
+
+/**
+ * Get the token from the request cookies
+ * @param {Http.IncomingMessage} request The request object
+ */
+function getToken(request) {
+	let { cookie } = request.headers;
+	if (!cookie) return '';
+	let ca = cookie.split(';');
+	let ctoken = ca.find(c => c.trim().startsWith('token='));
+	return ctoken.trim().replace('token=', '');
 }
