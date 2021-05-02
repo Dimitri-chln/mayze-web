@@ -6,7 +6,7 @@ const Fs = require('fs').promises;
 const Axios = require('axios').default;
 
 const route = {
-	name: 'guild',
+	name: 'dashboard',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
@@ -23,7 +23,7 @@ const route = {
 
 		Axios.get(`${process.env.URL}/api/discord/member?token=${token}`)
 			.then(async res => {
-				const file = await Fs.readFile('./routes/guild/index.html');
+				const file = await Fs.readFile('./routes/dashboard/index.html');
 				response.writeHead(200, { 'Content-Type': 'text/html' });
 				response.write(file);
 				response.end();
