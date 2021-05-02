@@ -1,0 +1,54 @@
+.align-center {
+	top: 7em;
+}
+
+#leaderboard {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	list-style-type: none;
+	width: 75%;
+	background-color: #23272a;
+	justify-self: center;
+	z-index: -1;
+	padding: 0;
+}
+
+.member {
+	display: flex;
+	flex-direction: row;
+}
+
+.member img {
+	height: 2.2em;
+	border-radius: 1.1em;
+}
+
+#leaderboard li p, span {
+	margin: 0;
+	padding: 0.5em;
+}
+
+.member p {
+	width: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#leaderboard li {
+	color: white;
+	font-size: 1.5em;
+	border: 2px solid #1a1e20;
+	padding: 0.5em;
+	display: flex;
+	justify-content: space-between;
+}
+
+.member-stats {
+	display: flex;
+	flex-direction: row;
+}
+
+.member-stats p {
+	width: 5.7em;
+}

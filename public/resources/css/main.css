@@ -15,6 +15,7 @@ body {
 	height: 4em;
 	width: 98%;
 	background-color: #23272a;
+	border: 2px solid black;
 	border-radius: 3em;
 	padding: 5px;
 }
@@ -74,7 +75,7 @@ a {
 	position: absolute;
 	margin: 0;
 	padding: 0;
-    z-index: 10;
+	z-index: 10;
 }
 
 .banner-category:hover .scrolling-menu {
@@ -139,4 +140,13 @@ a {
 	color: white;
 	height: 100%;
 	margin: 0;
+}
+
+/* ALIGN BLOCKS */
+
+.align-center {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	z-index: -1;
 }
