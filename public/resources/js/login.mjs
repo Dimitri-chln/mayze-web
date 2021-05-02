@@ -10,6 +10,6 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 			const randStr = generateRandomString();
 			sessionStorage.setItem('state', randStr);
 			sessionStorage.setItem('callback_location', '/');
-			location.href = `https://discord.com/api/oauth2/authorize?client_id=703161067982946334&redirect_uri=${encodeURIComponent(`${location.origin}/callback`)}&state=${btoa(randStr)}&response_type=code&scope=identify&prompt=none`;
+			location.href = `https://discord.com/api/oauth2/authorize?client_id=703161067982946334&redirect_uri=${encodeURIComponent(`${location.origin}/callback`)}&state=${btoa(randStr)}&response_type=code&scope=identify`;
 		}
 	});
