@@ -7,7 +7,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 		const members = await res.json().catch(() => {});
 
 		const title = document.getElementById('member-count');
-		title.innerHTML += ` ${members.length}/50`;
+		title.innerHTML += ` - ${members.length}/50`;
 
 		const ol = document.getElementById('member-list');
 
