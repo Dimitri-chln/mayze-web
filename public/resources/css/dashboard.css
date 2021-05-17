@@ -150,7 +150,6 @@
 	position: absolute;
 	top: 10em;
 	left: 12.5vw;
-	z-index: -1;
 }
 
 #stats h1 {

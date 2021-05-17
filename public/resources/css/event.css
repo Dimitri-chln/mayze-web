@@ -1,0 +1,46 @@
+#language {
+    position: relative;
+    top: 6em;
+    left: 1em;
+    padding: 0;
+    width: fit-content;
+}
+
+#language input {
+    background-color: #7289da;
+	border: solid #4e5d94;
+	color: white;
+    border-radius: 1em;
+	font-size: 1.3em;
+    padding: 0.4em;
+	font-weight: bold;
+	transition-duration: 0.4s;
+}
+
+#language input:hover {
+	background-color: #4e5d94;
+	transition-duration: 0.4s;
+}
+
+.align-center {
+    top: 7em;
+}
+
+article {
+    width: 75%;
+    margin: 0 0 2em 0;
+}
+
+article p {
+    margin: 0 0 0 1em;
+}
+
+.mention {
+    background-color: #7289da;
+    border-radius: 0.2em;
+}
+
+.code {
+    background-color: #23272a;
+    color: darkgrey;
+}

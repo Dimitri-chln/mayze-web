@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html prefix="og: https://ogp.me/ns#">
+	<head>
+		<meta charset="utf-8" />
+
+		<meta name="theme-color" content="#7289DA" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Mayze" />
+		<meta property="og:url" content="https://mayze.herokuapp.com" />
+		<meta property="og:image" content="https://mayze.herokuapp.com/images/mayze.png" />
+		<meta property="og:description" content="Par Đimitri" />
+
+		<title>Mayze</title>
+		<link rel="icon" href="../images/favicon.ico" />
+		<link rel="stylesheet" href="../resources/css/main.css" />
+		<link rel="stylesheet" href="../resources/css/event.css" />
+		<script type="module" src="../modules/checkCookie.mjs"></script>
+		<script type="module" src="../resources/js/main.mjs"></script>
+		<script type="module" src="../resources/js/event.mjs"></script>
+		<script defer src="../resources/js/main.js" charset="utf-8"></script>
+		<script defer src="../resources/js/event.js" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<header id="banner" role="banner">
+			<div id="banner-main">
+				<img id="banner-icon" src="../images/favicon.ico" alt="Logo" />
+				<h1 id="banner-title"><a href="/">Mayze</a></h1>
+			</div>
+			<nav id="banner-categories">
+				<div class="banner-category"><h2>Serveur</h2>
+					<ul class="scrolling-menu">
+						<li><a href="/dashboard">Dashboard</a></li>
+						<li><a href="/leaderboard">Leaderboard</a></li>
+					</ul>
+				</div>
+				<div class="banner-category"><h2>Menu</h2>
+					<ul class="scrolling-menu">
+						<li><a href="/logout">Se déconnecter</a></li>
+					</ul>
+				</div>
+			</nav>
+			  
+			<div id="banner-login">
+				<input type="button" id="login-button" value="  Connexion  " onclick="redirectLogin();" />
+			</div>
+		</header>
+
+		<div id="language">
+			<input type="button" value=" FR " onclick="languageFR();" />
+			<input type="button" value=" EN " onclick="languageEN();" />
+		</div>
+		
+		<div class="align-center">
+			<article>
+				<h1>Canvas event</h1>
+				<p>
+					Hey <span class="mention">@everyone</span>,<br>
+					<br>
+					I prepared an event to bring a bit more animation to this server 😛<br>
+					The event is simple : it's a drawing contest, except you don't need to be good at drawing to win 😉<br>
+					<br>
+					You need to draw a pixel art with the help of <span class="mention">@[*] ✨ Mayze ✨</span>. To join the event, simply send <span class="code">*event</span>. Then, you'll be assigned a "board" (or "canvas") of size 32x32 where you can draw whatever you want.
+				</p>
+				<h2>Commands</h2>
+				<p>
+					<span class="code">*view</span> : to see your drawing<br>
+					<span class="code">*viewnav</span> : to navigate in your drawing<br>
+					<span class="code">*place</span> : to place a pixel<br>
+					<span class="code">*palette</span> : to see the list of available colors<br>
+					<br>
+					For more information about these commands, go to <span class="mention">#✨┃changelog</span>
+				</p>
+				<h2>Rewards</h2>
+				<p>
+					There will be 3 winners, chosen by a vote at the end of the event<br>
+					1st : 150 roses<br>
+					2nd : 50 roses<br>
+					3rd : 25 roses<br>
+				</p>
+				<h2>Duration</h2>
+				<p>
+					The event will last until around Monday, May 24th at 12pm GMT+2
+				</p>
+			</article>
+		</div>
+		
+		<footer>
+
+		</footer>
+	</body>
+</html>
