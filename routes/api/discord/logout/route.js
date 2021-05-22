@@ -16,7 +16,7 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-        if (request.method.toUpperCase() !== 'POST' || !url.searchParams.get('token')) {
+        if (request.method.toUpperCase() !== 'POST' || !url.searchParams.has('token')) {
             response.writeHead(400, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({
 				status: 400,
