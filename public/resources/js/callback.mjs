@@ -23,6 +23,6 @@ if (queryParams.has('code')) {
 					let err = await res.json().catch(() => {});
 					alert(`La connexion a échoué\n${err.status} ${err.message}`);
 				}
-		});
+			});
 	}
 }
