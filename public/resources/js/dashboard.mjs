@@ -6,6 +6,12 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 	.then(async res => {
 		const members = await res.json().catch(() => {});
 
+		const leader = document.getElementById('leader');
+		leader.innerHTML = members.find(m => m.rank === 3).username;
+
+		const coLeaders = document.getElementById('co-leaders');
+		coLeaders.innerHTML = members.filter(m => m.rank === 2).map(m => m.username).join(', ');
+
 		const title = document.getElementById('member-count');
 		title.innerHTML += ` - ${members.length}/50`;
 
@@ -18,14 +24,36 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 			
 			let li = document.createElement('li');
 
+			let divMember = document.createElement('div');
+				divMember.className = 'member-info';
+			
 			let spanMember = document.createElement('span');
-				spanMember.className = 'member';
+				spanMember.className = member.rank === 3 ? 'leader'
+					: member.rank === 2 ? 'co-leader'
+					: 'member';
 				spanMember.innerHTML = member.username;
+			let spanDiscord = document.createElement('span');
+			if (member.user_id) {
+				spanDiscord.className = 'member-discord';
+				fetch(`api/discord/user?token=${getCookie('token')}&user_id=${member.user_id}`, {
+					method: 'GET'
+				})
+					.then(async res => {
+						const user = await res.json().catch(() => {});
+						spanDiscord.innerHTML = `@${user.tag}`;
+					});
+			} else {
+				spanDiscord.innerHTML = '-';
+			}
+			
+			divMember.appendChild(spanMember);
+			divMember.appendChild(spanDiscord);
+
 			let spanJoinedAt = document.createElement('span');
 				spanJoinedAt.className = 'joined-at';
 				spanJoinedAt.innerHTML = formatDate(member.joined_at);
 			
-			li.appendChild(spanMember);
+			li.appendChild(divMember);
 			li.appendChild(spanJoinedAt);
 
 			ol.appendChild(li);

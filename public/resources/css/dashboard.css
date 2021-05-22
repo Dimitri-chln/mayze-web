@@ -181,3 +181,26 @@
 	left: 1em;
 	background-color: #23272a;
 }
+
+.member-info {
+	display: flex;
+	flex-direction: row;
+}
+
+.leader, .co-leader, .member {
+	width: 10em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.leader {
+	color: orange;
+}
+
+.co-leader {
+	color: gold;
+}
+
+.member-discord {
+	background-color: #7289da;
+}
