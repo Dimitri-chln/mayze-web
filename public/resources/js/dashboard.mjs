@@ -41,7 +41,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 					.then(async res => {
 						const user = await res.json().catch(() => {});
 						if (res.status === 200)	spanDiscord.innerHTML = `@${user.tag}`;
-						else spanDiscord.innerHTML = '-';
+						else spanDiscord.innerHTML = 'invalid-user';
 					});
 			} else {
 				spanDiscord.innerHTML = '-';
