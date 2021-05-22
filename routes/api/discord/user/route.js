@@ -43,9 +43,19 @@ const route = {
 
         	if (member && member.roles.cache.has('689169027922526235')) {
 				const requestedMember = guild.members.cache.get(url.searchParams.get('user_id'));
-				response.writeHead(200, { 'Content-Type': 'application/json' });
-				response.write(JSON.stringify(requestedMember.user));
-				return response.end();
+				
+				if (requestedMember) {
+					response.writeHead(200, { 'Content-Type': 'application/json' });
+					response.write(JSON.stringify(requestedMember.user));
+					return response.end();
+				} else {
+					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.write(JSON.stringify({
+						status: 404,
+						message: 'Not Found'
+					}));
+					return response.end();
+				}
 			} else {
 				response.writeHead(401, { 'Content-Type': 'application/json' });
 				response.write(JSON.stringify({
