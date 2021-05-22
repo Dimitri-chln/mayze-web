@@ -35,14 +35,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 			let spanDiscord = document.createElement('span');
 			if (member.user_id) {
 				spanDiscord.className = 'member-discord';
-				fetch(`api/discord/user?token=${getCookie('token')}&user_id=${member.user_id}`, {
-					method: 'GET'
-				})
-					.then(async res => {
-						const user = await res.json().catch(() => {});
-						if (res.status === 200)	spanDiscord.innerHTML = `@${user.tag}`;
-						else spanDiscord.innerHTML = '@invalid-user';
-					});
+				spanDiscord.innerHTML = `@${member.user.tag}`;
 			} else {
 				spanDiscord.innerHTML = '-';
 			}

@@ -41,9 +41,13 @@ const route = {
 
 		if (member && member.roles.cache.has('689169027922526235')) {
             pg.query('SELECT * FROM clan_members ORDER BY joined_at ASC')
-				.then(res => {
+				.then(async res => {
+					const data = await Promise.all(res.rows.map(async m => {
+						if (m.user_id) m.user = await discord.users.fetch(m.user_id).catch(console.error);
+						return m;
+					}));
 					response.writeHead(200, { 'Content-Type': 'application/json' });
-					response.write(JSON.stringify(res.rows));
+					response.write(JSON.stringify(data));
 					response.end();
 				})
 				.catch(err => {
