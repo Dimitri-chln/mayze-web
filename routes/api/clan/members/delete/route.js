@@ -6,7 +6,7 @@ const Fs = require('fs').promises;
 const Axios = require('axios').default;
 
 const route = {
-	name: 'member',
+	name: 'members',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
@@ -16,16 +16,16 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-        if (request.method.toUpperCase() !== 'GET' || !url.searchParams.has('token')) {
-            response.writeHead(400, { 'Content-Type': 'application/json' });
-            response.write(JSON.stringify({
+		if (request.method.toUpperCase() !== 'POST' || !token || !url.searchParams.has('member')) {
+			response.writeHead(400, { 'Content-Type': 'application/json' });
+			response.write(JSON.stringify({
 				status: 400,
 				message: 'Bad Request'
 			}));
 			return response.end();
-        }
+		}
 
-        const { 'rows': tokens } = await pg.query(`SELECT discord_user_id FROM web_clients WHERE '${url.searchParams.get('token')}' = ANY (mayze_tokens)`);
+		const { 'rows': tokens } = await pg.query(`SELECT discord_user_id FROM web_clients WHERE '${token}' = ANY (mayze_tokens)`);
         if (!tokens.length) {
             response.writeHead(400, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({
@@ -35,25 +35,29 @@ const route = {
 			return response.end();
         }
 
-        const userID = tokens[0].discord_user_id;
+		const userID = tokens[0].discord_user_id;
         const guild = discord.guilds.cache.get('689164798264606784');
         const member = guild.members.cache.get(userID);
-		const JSONMember = member.toJSON();
-		JSONMember.roles = member.roles.cache.toJSON();
-        
-        if (member && member.roles.cache.has('689169027922526235')) {
-            response.writeHead(200, { 'Content-Type': 'application/json' });
-            response.write(JSON.stringify(JSONMember));
-            response.end();
-        } else {
-            response.writeHead(400, { 'Content-Type': 'application/json' });
+
+		if (!member || !member.roles.cache.some(r => r.id === "696751852267765872" || r.id === "696751614177837056")) {
+			response.writeHead(400, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({
 				status: 404,
-				message: 'Not A Member'
+				message: 'Not A Co-Leader'
 			}));
 			return response.end();
-        }
-    }
+		}
+
+		await pg.query(`DELETE FROM clan_members WHERE username = '${url.searchParams.get('member')}'`)
+			.catch(err => {
+				console.error(err);
+				response.writeHead(500);
+				response.end();
+			});
+
+		response.writeHead(200);
+		response.end();
+	}
 };
 
 module.exports = route;

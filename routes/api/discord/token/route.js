@@ -50,11 +50,20 @@ const route = {
 		const { 'rows': tokens } = await pg.query(`SELECT * FROM web_clients WHERE discord_user_id = '${user.data.id}'`);
 
 		if (!tokens.length) {
-			await pg.query(`INSERT INTO web_clients VALUES ('${user.data.id}', '${res.data.access_token}', '{ "${url.searchParams.get('token')}" }', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`);
+			await pg.query(`INSERT INTO web_clients VALUES ('${user.data.id}', '${res.data.access_token}', '{ "${url.searchParams.get('token')}" }', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`)
+				.catch(err => {
+					response.writeHead(500);
+					response.end();
+				});
 		} else {
 			const new_mayze_tokens = tokens[0].mayze_tokens;
 			new_mayze_tokens.push(url.searchParams.get('token'));
-			await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_refresh_token = '${res.data.refresh_token}', mayze_tokens = '{ "${new_mayze_tokens.join('", "')}" }', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE discord_user_id = '${user.data.id}'`);
+			await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_refresh_token = '${res.data.refresh_token}', mayze_tokens = '{ "${new_mayze_tokens.join('", "')}" }', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE discord_user_id = '${user.data.id}'`)
+				.catch(err => {
+					console.error(err);
+					response.writeHead(500);
+					response.end();
+				});
 		}				
 
 		// setTimeout(() => refreshDiscordToken(pg, url.searchParams.get('token'), res.data.refresh_token), res.data.expires_in - 3600000);

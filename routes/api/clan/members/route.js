@@ -43,7 +43,7 @@ const route = {
             pg.query('SELECT * FROM clan_members ORDER BY joined_at ASC')
 				.then(async res => {
 					const data = await Promise.all(res.rows.map(async m => {
-						if (m.user_id) m.user = await discord.users.fetch(m.user_id).catch(console.error);
+						if (m.user_id) m.user = (await discord.users.fetch(m.user_id).catch(console.error)) || null;
 						return m;
 					}));
 					response.writeHead(200, { 'Content-Type': 'application/json' });

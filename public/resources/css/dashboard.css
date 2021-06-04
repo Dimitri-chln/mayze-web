@@ -160,9 +160,23 @@
 	font-size: 15px;
 }
 
+#member-title {
+	display: flex;
+	flex-direction: row;
+}
+
+#member-title button {
+	color:  white;
+	background-color: #23272a;
+	border: 2px solid #1a1e20;
+	border-radius: 1em;
+	margin: 2em 2em;
+	cursor: pointer;
+}
+
 #member-list {
 	position: relative;
-	top: 3em;
+	top: 1em;
 	left: -4em;
 	width: 75vw;
 	list-style-type: none;
@@ -170,7 +184,7 @@
 }
 
 #member-list li {
-	margin: 1.5em;
+	margin: 0.5em;
 	display: flex;
 	justify-content: space-between;
 }
@@ -185,6 +199,10 @@
 .member-info {
 	display: flex;
 	flex-direction: row;
+}
+
+.member-info span {
+	margin: auto;
 }
 
 .leader, .co-leader, .member {
@@ -204,3 +222,92 @@
 .member-discord {
 	background-color: #7289da;
 }
+
+.edit-button {
+	display: none;
+	color:  white;
+	background-color: #23272a;
+	border: 2px solid #1a1e20;
+	border-radius: 1em;
+	margin: 1em 1.5em;
+	cursor: pointer;
+}
+
+#member-list li:hover .edit-button {
+	display: block;
+}
+
+.joined-at {
+	padding: 1em 0 1em 0;
+}
+
+/* POP UP FORM */
+
+/* The popup form - hidden by default */
+#popup-form {
+	display: none;
+	flex-direction: column;
+	position: fixed;
+	width: 75%;
+	top: 12.5%;
+	left: 12.5%;
+	background-color: #23272a;
+	border: 3px solid #1a1e20;
+	border-radius: 2em;
+	z-index: 15;
+	padding: 2em;
+}
+
+#popup-form h1 {
+	margin: 0 0 1em 0;
+}
+
+#popup-form #fields {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 2em;
+}
+  
+/* Full-width input fields */
+#popup-form input[type=text], #popup-form input[type=date], #popup-form select {
+	padding: 13px;
+	margin: 5px 0 22px 0;
+	border: none;
+	background: #f1f1f1;
+}
+  
+/* When the inputs get focus, do something */
+#popup-form input[type=text], #popup-form input[type=date], #popup-form select {
+	background-color: #ddd;
+	outline: none;
+}
+
+#form-buttons {
+	display: flex;
+	flex-direction: row;
+}
+  
+/* Set a style for the submit/login button */
+#popup-form button {
+	color: white;
+	padding: 16px 20px;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	opacity: 0.8;
+}
+  
+/* Add a background color to the buttons */
+#popup-form #cancel-button {
+	background-color: red;
+}
+
+#popup-form #delete-button {
+	background-color: grey;
+}
+
+#popup-form #save-button {
+	background-color: #04AA6D;
+}
+
+/* END POP UP FORM */

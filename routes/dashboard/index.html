@@ -67,7 +67,9 @@
 					<u>Chef :</u> <span id="leader">Chargement...</span><br>
 					<u>Sous-chefs :</u> <span id="co-leaders">Chargement...</span>
 				</p>
-				<h1 id="member-count">Membres</h1>
+				<div id="member-title">
+					<h1 id="member-count">Membres</h1>
+				</div>
 				<ol id="member-list">
 					<li>
 						<div class="member-info">
@@ -80,6 +82,36 @@
 				</ol>
 			</article>
 		</section>
+
+		<div id="popup-form">
+			<form>
+				<h1 id="form-title">Modifier un membre</h1>
+		  
+				<div id="fields">
+					<label for="username"><b>Pseudo</b></label>
+					<input type="text" placeholder="Nouveau pseudo" name="username" id="field-username" required />
+					
+					<label for="discord"><b>ID Discord</b></label>
+					<input type="text" placeholder="Nouvel ID Discord" name="discord" id="field-discord" required />
+				
+					<label for="joined"><b>Rejoint le</b></label>
+					<input type="date" placeholder="Date d'arrivée" name="joined" id="field-joined" required />
+
+					<label for="rank"><b>Rang</b></label>
+					<select name="rank" id="field-rank">
+						<option value="1">Membre</option>
+						<option value="2">Sous-chef</option>
+						<option value="3">Chef</option>
+					</select>
+				</div>
+				
+				<div id="form-buttons">
+					<button id="cancel-button" onclick="closeForm(event);">Annuler</button>
+					<button id="delete-button" onclick="editMember(event, 'delete');">Supprimer</button>
+					<button id="save-button" onclick="editMember(event, 'edit');">Sauvegarder</button>
+				</div>
+			</form>
+		</div>
 
 		<footer>
 
