@@ -93,6 +93,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 						document.getElementById('field-joined').min = '2019-07-30';
 						document.getElementById('field-joined').max = new Date().toISOString().substr(0, 10);
 						document.getElementById('field-joined').value = new Date().toISOString().substr(0, 10);
+						document.getElementById('field-rank').options[0].selected = true;
 						document.getElementById('delete-button').style.display = 'none';
 					});
 
