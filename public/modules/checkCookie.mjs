@@ -7,6 +7,6 @@ if (!user) setCookie('token', generateRandomString(), 365);
 if (
 	(!!window.ApplePaySetupFeature || !!window.safari)
 	&& navigator.userAgent.toLowerCase().search("safari") > -1
-	&& !navigator.userAgent.toLowerCase().search("chrome") > -1
-	&& !navigator.userAgent.toLowerCase().search("crios") > -1
+	&& navigator.userAgent.toLowerCase().search("chrome") === -1
+	&& navigator.userAgent.toLowerCase().search("crios") === -1
 ) alert(`debug:\n${document.cookie}`);
