@@ -65,7 +65,7 @@ a {
 	margin: 0;
 }
 
-.banner-category h2:hover, .banner-category h2:focus {
+.banner-category:hover h2 {
     color: orange;
     border-bottom: 2px solid gold;
 }
@@ -80,7 +80,7 @@ a {
 	z-index: 10;
 }
 
-.banner-category:hover .scrolling-menu, .banner-category:focus .scrolling-menu {
+.banner-category:hover .scrolling-menu {
     display: block;
 }
 

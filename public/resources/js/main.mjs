@@ -44,11 +44,13 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 
 document.getElementById('login-button').addEventListener('click', () => location.href = '/login');
 
-// for (let category of document.getElementsByClassName('banner-category')) {
-// 	category.addEventListener('click', () => {
-// 		let display = category.children[1].style.display !== 'block';
-// 		category.children[1].style.display = display ? 'block' : 'none';
-// 		category.children[0].style.color = display ? 'orange' : 'white';
-// 		category.children[0].style.borderBottom = display ? '2px solid gold' : 'none';
-// 	});
-// }
+if (screen.width < 768) {
+	for (let category of document.getElementsByClassName('banner-category')) {
+		category.addEventListener('click', () => {
+			let display = category.children[1].style.display !== 'block';
+			category.children[1].style.display = display ? 'block' : 'none';
+			category.children[0].style.color = display ? 'orange' : 'white';
+			category.children[0].style.borderBottom = display ? '2px solid gold' : 'none';
+		});
+	}
+}
