@@ -11,6 +11,10 @@ body {
     align-items: center;
 }
 
+input[type=button] {
+	-webkit-appearance: none;
+}
+
 h1, h2 {
     color: white;
 }
