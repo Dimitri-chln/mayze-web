@@ -288,7 +288,7 @@
 }
   
 /* Set a style for the submit/login button */
-#popup-form button {
+#popup-form input[type=button] {
 	color: white;
 	padding: 16px 20px;
 	border: none;
