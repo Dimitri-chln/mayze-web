@@ -6,3 +6,5 @@ fetch(`/api/discord/logout?token=${getCookie('token')}`, {
     .then(res => {
 		location.href = '/';
 	});
+
+document.getElementById('redirect-button').addEventListener(() => location.href = '/');

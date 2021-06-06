@@ -1,5 +1,6 @@
 import { getCookie } from '../../modules/cookie.mjs';
 
+
 const queryParams = new URLSearchParams(location.search);
 
 if (queryParams.has('code')) {
@@ -26,3 +27,9 @@ if (queryParams.has('code')) {
 			});
 	}
 }
+
+document.getElementById('redirect-button').addEventListener('click', () => {
+	location.href = sessionStorage.getItem('callback_location') || '/';
+	sessionStorage.removeItem('state');
+	sessionStorage.removeItem('callback_location');
+});

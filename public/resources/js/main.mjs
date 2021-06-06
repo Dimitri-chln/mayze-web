@@ -1,5 +1,6 @@
 import { getCookie } from '../../modules/cookie.mjs';
 
+
 fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	method: 'GET'
 })
@@ -40,3 +41,11 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 		}
 
 	});
+
+document.getElementById('login-button').addEventListener('click', () => location.href = '/login');
+
+for (let category of document.getElementsByClassName('banner-category')) {
+	category.addEventListener('click', () => {
+		category.children[0].style.display = 'block';
+	});
+}

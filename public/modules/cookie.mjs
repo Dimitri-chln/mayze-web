@@ -7,7 +7,7 @@ export function setCookie(cname, cvalue, exdays) {
 export function getCookie(cname) {
 	let clist = document.cookie.split(/ *; */);
 	for(let c of clist) {
-		let [ , name, value ] = c.match(/(\w+?)=(.+)/);
+		let [ , name, value ] = c.match(/(\w+?)=(.+)/) || [];
 		if (name === cname) return value;
   	}
 	return '';

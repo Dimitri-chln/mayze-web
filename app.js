@@ -16,7 +16,7 @@ let pg = newPgClient();
 pg.connect().then(() => console.log('Connected to the database')).catch(console.error);
 setInterval(reconnectPgClient, 3600000);
 
-Http.createServer(async (request, response) => {
+const server = Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, process.env.URL);
 	const res = await findRoute(url.pathname);
 	const token = getToken(request) || generateRandomString();
@@ -43,8 +43,10 @@ Http.createServer(async (request, response) => {
 			});
 	}
 
-}).listen(process.env.PORT || 8000);
-console.log(`Listening on port ${process.env.PORT || 8000}`);
+})
+	.listen(process.env.PORT || 8000);
+
+console.log(`Listening on port ${server.address().port}`);
 
 
 

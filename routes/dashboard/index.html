@@ -14,11 +14,8 @@
 		<link rel="icon" href="images/favicon.ico" />
 		<link rel="stylesheet" href="resources/css/main.css" />
 		<link rel="stylesheet" href="resources/css/dashboard.css" />
-		<script type="module" src="modules/checkCookie.mjs"></script>
 		<script type="module" src="resources/js/main.mjs"></script>
 		<script type="module" src="resources/js/dashboard.mjs"></script>
-		<script defer src="resources/js/main.js" charset="utf-8"></script>
-		<script defer src="resources/js/dashboard.js" charset="utf-8"></script>
 	</head>
 
 	<body>
@@ -42,7 +39,7 @@
 			</nav>
 			  
 			<div id="banner-login">
-				<input type="button" id="login-button" value="  Connexion  " onclick="redirectLogin();" />
+				<input type="button" id="login-button" value="  Connexion  " />
 			</div>
 		</header>
 
@@ -106,9 +103,9 @@
 				</div>
 				
 				<div id="form-buttons">
-					<button id="cancel-button" onclick="closeForm(event);">Annuler</button>
-					<button id="delete-button" onclick="editMember(event, 'delete');">Supprimer</button>
-					<button id="save-button" onclick="editMember(event, 'edit');">Sauvegarder</button>
+					<button id="cancel-button">Annuler</button>
+					<button id="delete-button">Supprimer</button>
+					<button id="save-button">Sauvegarder</button>
 				</div>
 			</form>
 		</div>
