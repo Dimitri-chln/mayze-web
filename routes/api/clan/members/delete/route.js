@@ -39,7 +39,7 @@ const route = {
         const guild = discord.guilds.cache.get('689164798264606784');
         const member = guild.members.cache.get(userID);
 
-		if (!member || !member.roles.cache.some(r => r.id === "696751852267765872" || r.id === "696751614177837056")) {
+		if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({
 				status: 404,

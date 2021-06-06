@@ -11,7 +11,7 @@ if (queryParams.has('code')) {
 		alert('Connexion refusée');
 	} else {
 
-		fetch(`/api/discord/token?code=${code}&token=${getCookie('token')}`, {
+		fetch(`/api/discord/login?code=${code}&token=${getCookie('token')}`, {
 			method: 'POST'
 		})
 			.then(async res => {

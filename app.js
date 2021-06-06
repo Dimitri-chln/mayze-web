@@ -13,15 +13,15 @@ discord.login(process.env.TOKEN);
 discord.on('ready', () => console.log('Connected to Discord'));
 
 let pg = newPgClient();
-pg.connect().then(() => console.log("Connected to the database")).catch(console.error);
+pg.connect().then(() => console.log('Connected to the database')).catch(console.error);
 setInterval(reconnectPgClient, 3600000);
 
 Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, process.env.URL);
 	const res = await findRoute(url.pathname);
-	const token = getToken(request);
+	const token = getToken(request) || generateRandomString();
 
-	if (!token) response.setHeader('Set-Cookie', `token=${generateRandomString()}; Max-Age=604800; Path=/; SameSite=strict; secure`);
+	if (!token) response.setHeader('Set-Cookie', `token=${token}; Max-Age=604800; Path=/; SameSite=strict; secure`);
 
 	if (res.route) res.route.run(url, request, response, discord, pg, token);
 
@@ -51,7 +51,7 @@ console.log(`Listening on port ${process.env.PORT || 8000}`);
 // Ping the server every 10 minutes
 // setInterval(() => {
 // 	Axios.get(process.env.URL).then(() => {
-// 		console.log("Pinging server...");
+// 		console.log('Pinging server...');
 // 	}).catch(err => console.error('Error pinging the server'));
 // }, 600000);
 
@@ -78,7 +78,7 @@ function newPgClient() {
 	};
 	const pgClient = new Pg.Client(connectionString);
 
-	pgClient.on("error", err => {
+	pgClient.on('error', err => {
 		console.error(err);
 		client.pg.end().catch(console.error);
 		newPgClient();
@@ -90,7 +90,7 @@ function newPgClient() {
 function reconnectPgClient() {
 	pg.end().catch(console.error);
 	pg = newPgClient();
-	pg.connect().then(() => console.log("Connected to the database")).catch(console.error);
+	pg.connect().then(() => console.log('Connected to the database')).catch(console.error);
 }
 
 
@@ -122,7 +122,7 @@ async function findRoute(path) {
 function getToken(request) {
 	let { cookie } = request.headers;
 	if (!cookie) return '';
-	let ca = cookie.split(';');
-	let ctoken = ca.find(c => c.trim().startsWith('token='));
+	let ca = cookie.split(/ *; */);
+	let ctoken = ca.find(c => c.startsWith('token='));
 	return ctoken.trim().replace('token=', '');
 }

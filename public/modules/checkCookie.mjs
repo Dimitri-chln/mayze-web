@@ -10,4 +10,4 @@ if (
 	&& navigator.userAgent.toLowerCase().search("safari") > -1
 	&& navigator.userAgent.toLowerCase().search("chrome") === -1
 	&& navigator.userAgent.toLowerCase().search("crios") === -1
-) alert(`debug:\n${document.cookie}`);
+) alert(`debug:\n${!!window.fetch}`);
