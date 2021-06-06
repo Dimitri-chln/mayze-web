@@ -1,9 +1,10 @@
 import { getCookie, setCookie } from './cookie.mjs';
 import { generateRandomString } from './utils.mjs';
 
-let user = getCookie('token');
-if (!user) setCookie('token', generateRandomString(), 365);
+// let user = getCookie('token');
+// if (!user) setCookie('token', generateRandomString(), 365);
 
+// debug code
 if (
 	(!!window.ApplePaySetupFeature || !!window.safari)
 	&& navigator.userAgent.toLowerCase().search("safari") > -1

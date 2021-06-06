@@ -6,7 +6,7 @@ const Path = require('path');
 const Axios = require('axios').default;
 const Pg = require('pg');
 const Discord = require('discord.js');
-const { getContentType, refreshDiscordToken } = require('./utils');
+const { getContentType, refreshDiscordToken, generateRandomString } = require('./utils');
 
 const discord = new Discord.Client({ disableEveryone: true, fetchAllMembers: true });
 discord.login(process.env.TOKEN);
@@ -19,8 +19,12 @@ setInterval(reconnectPgClient, 3600000);
 Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, process.env.URL);
 	const res = await findRoute(url.pathname);
+	const token = getToken(request);
 
-	if (res.route) res.route.run(url, request, response, discord, pg, getToken(request));
+	if (!token) response.setHeader('Set-Cookie', `token=${generateRandomString()}; Max-Age=604800; Path=/; SameSite=strict; secure`);
+
+	if (res.route) res.route.run(url, request, response, discord, pg, token);
+
 	else if (res.html) {
 		response.writeHead(200, { 'Content-Type': 'text/html' });
 		response.write(res.html);
