@@ -16,7 +16,9 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-		if (request.method.toUpperCase() !== 'GET' || !url.searchParams.has('token')) {
+		const mayzeToken = url.searchParams.get('token') || token;
+
+		if (request.method.toUpperCase() !== 'GET' || !mayzeToken) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(JSON.stringify({
 				status: 400,
@@ -25,7 +27,7 @@ const route = {
 			return response.end();
 		}
 
-		const { 'rows': tokens } = await pg.query(`SELECT discord_user_id FROM web_clients WHERE '${url.searchParams.get('token')}' = ANY (mayze_tokens)`);
+		const { 'rows': tokens } = await pg.query(`SELECT discord_user_id FROM web_clients WHERE '${mayzeToken}' = ANY (mayze_tokens)`);
 		if (!tokens.length) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(JSON.stringify({

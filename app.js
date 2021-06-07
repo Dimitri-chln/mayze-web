@@ -18,13 +18,10 @@ setInterval(reconnectPgClient, 3600000);
 
 const server = Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, process.env.URL);
-	const res = await findRoute(url.pathname);
-	const token = getToken(request) || generateRandomString();
+	const res = await findRoute(url.pathname, request.headers['accept-language']);
+	const token = getToken(request);
 
-	// debug
-	if (url.pathname === '/api/discord/login') console.log(request);
-
-	if (!token) response.setHeader('Set-Cookie', `token=${token}; Max-Age=604800; Path=/; SameSite=strict; Secure`);
+	response.setHeader('Content-Language', res.lang);
 
 	if (res.route) res.route.run(url, request, response, discord, pg, token);
 
@@ -104,18 +101,29 @@ function reconnectPgClient() {
  * Find a route
  * @param {string} path The path of the route
  */
-async function findRoute(path) {
+async function findRoute(path, language) {
+	const languageList = {
+		'fr': /^fr(?:-fr|-FR)?/,
+		'en': /^en(?:-US)?/
+	};
+
 	const fullPath = './routes' + path + (path.endsWith('/') ? '' : '/');
+	const lang = Object.keys(languageList).find(l => languageList[l].test(language)) || 'fr';
 	
 	try {
 		const route = require(fullPath + 'route');
-		return { route };
+		return { route, lang };
 
 	} catch (err) {
-		const html = await Fs.readFile(fullPath + 'index.html').catch(err => {
+		const html = 
+		(await Fs.readFile(fullPath + lang + '/index.html').catch(err => {
 			if (err.code !== 'ENOENT') console.error(err);
-		});
-		return { html };
+		})) ||
+		(await Fs.readFile(fullPath + 'index.html').catch(err => {
+			if (err.code !== 'ENOENT') console.error(err);
+		}));
+
+		return { html, lang };
 	}
 }
 
@@ -129,5 +137,5 @@ function getToken(request) {
 	if (!cookie) return '';
 	let ca = cookie.split(/ *; */);
 	let ctoken = ca.find(c => c.startsWith('token='));
-	return ctoken.trim().replace('token=', '');
+	return ctoken.replace('token=', '');
 }

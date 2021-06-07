@@ -6,7 +6,7 @@ const Fs = require('fs').promises;
 const Axios = require('axios').default;
 
 const route = {
-	name: 'logout',
+	name: 'logs',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
@@ -16,9 +16,7 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-        const mayzeToken = url.searchParams.get('token') || token;
-
-		if (request.method.toUpperCase() !== 'POST' || !mayzeToken) {
+		if (request.method.toUpperCase() !== 'GET' || !request.headers.authorization || request.headers.authorization !== process.env.LOGS_AUTHORIZATION) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(JSON.stringify({
 				status: 400,
@@ -27,16 +25,18 @@ const route = {
 			return response.end();
 		}
 
-        const { 'rows': tokens } = await pg.query(`SELECT mayze_tokens FROM web_clients WHERE '${mayzeToken}' = ANY (mayze_tokens)`);
-        
-        if (tokens.length > 1)
-            await pg.query(`UPDATE web_clients SET mayze_tokens = '{ "${tokens[0].mayze_tokens.filter(t => t !== mayzeToken).join('", "')}" }' WHERE '${mayzeToken}' = ANY (mayze_tokens)`);
-        else if (tokens.length === 1)
-            await pg.query(`DELETE FROM web_clients WHERE '${mayzeToken}' = ANY (mayze_tokens)`);
+        const { spawn } = require('child_process');
+        const channel = discord.channels.cache.get('851532189598613555');
 
-        response.writeHead(200);
+        const logs = spawn('heroku logs --app mayze --tail');
+
+        logs.stdout.on('data', data => channel.send(`\`\`\`diff\n+ ${data}\n\`\`\``));
+        logs.stderr.on('data', data => channel.send(`\`\`\`diff\n- ${data}\n\`\`\``));
+        logs.on('error', error => channel.send(`\`\`\`diff\n- Error - ${error}\n\`\`\``));
+
+        response.writeHead(200, { 'Content-Type': 'text/html' });
         response.end();
-    }
+	}
 };
 
 module.exports = route;

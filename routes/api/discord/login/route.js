@@ -17,9 +17,11 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-		if (request.method.toUpperCase() !== 'POST' || !url.searchParams.has('code') || !url.searchParams.has('token')) {
+		const mayzeToken = url.searchParams.get('token') || token;
+
+		if (request.method.toUpperCase() !== 'POST' || !mayzeToken || !url.searchParams.has('code')) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
-            response.write(JSON.stringify({
+			response.write(JSON.stringify({
 				status: 400,
 				message: 'Bad Request'
 			}));
@@ -50,14 +52,14 @@ const route = {
 		const { 'rows': tokens } = await pg.query(`SELECT * FROM web_clients WHERE discord_user_id = '${user.data.id}'`);
 
 		if (!tokens.length) {
-			await pg.query(`INSERT INTO web_clients VALUES ('${user.data.id}', '${res.data.access_token}', '{ "${url.searchParams.get('token')}" }', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`)
+			await pg.query(`INSERT INTO web_clients VALUES ('${user.data.id}', '${res.data.access_token}', '{ "${mayzeToken}" }', '${res.data.refresh_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}')`)
 				.catch(err => {
 					response.writeHead(500);
 					response.end();
 				});
 		} else {
 			const new_mayze_tokens = tokens[0].mayze_tokens;
-			new_mayze_tokens.push(url.searchParams.get('token'));
+			new_mayze_tokens.push(mayzeToken);
 			await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_refresh_token = '${res.data.refresh_token}', mayze_tokens = '{ "${new_mayze_tokens.join('", "')}" }', expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}' WHERE discord_user_id = '${user.data.id}'`)
 				.catch(err => {
 					console.error(err);
@@ -66,7 +68,7 @@ const route = {
 				});
 		}				
 
-		// setTimeout(() => refreshDiscordToken(pg, url.searchParams.get('token'), res.data.refresh_token), res.data.expires_in - 3600000);
+		// setTimeout(() => refreshDiscordToken(pg, mayzeToken, res.data.refresh_token), res.data.expires_in - 3600000);
 
 		response.writeHead(200);
 		response.end();

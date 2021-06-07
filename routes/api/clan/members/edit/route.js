@@ -6,7 +6,7 @@ const Fs = require('fs').promises;
 const Axios = require('axios').default;
 
 const route = {
-	name: 'members',
+	name: 'edit',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
