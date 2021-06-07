@@ -8,7 +8,7 @@ const Pg = require('pg');
 const Discord = require('discord.js');
 const { getContentType, refreshDiscordToken, generateRandomString } = require('./utils');
 
-const discord = new Discord.Client({ disableEveryone: true, fetchAllMembers: true });
+const discord = new Discord.Client({ disableMentions: 'everyone', fetchAllMembers: true });
 discord.login(process.env.TOKEN);
 discord.on('ready', () => console.log('Connected to Discord'));
 
@@ -17,10 +17,12 @@ pg.connect().then(() => console.log('Connected to the database')).catch(console.
 setInterval(reconnectPgClient, 3600000);
 
 const server = Http.createServer(async (request, response) => {
-
 	const url = new Url.URL(request.url, process.env.URL);
 	const res = await findRoute(url.pathname);
 	const token = getToken(request) || generateRandomString();
+
+	// debug
+	if (url.pathname === '/api/discord/login') console.log(request);
 
 	if (!token) response.setHeader('Set-Cookie', `token=${token}; Max-Age=604800; Path=/; SameSite=strict; Secure`);
 
