@@ -17,6 +17,7 @@ pg.connect().then(() => console.log('Connected to the database')).catch(console.
 setInterval(reconnectPgClient, 3600000);
 
 const server = Http.createServer(async (request, response) => {
+
 	const url = new Url.URL(request.url, process.env.URL);
 	const res = await findRoute(url.pathname);
 	const token = getToken(request) || generateRandomString();
