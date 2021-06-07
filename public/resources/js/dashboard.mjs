@@ -99,6 +99,16 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 
 					memberTitle.appendChild(createButton);
 				}
+
+				if (screen.width < 768) {
+					for (let row of document.getElementsByClassName('member-info')) {
+						row.parentElement.addEventListener('click', () => {
+							console.log('ok');
+							let display = row.children[2].style.display !== 'block';
+							row.children[2].style.display = display ? 'block' : 'none';
+						});
+					}
+				}
 			});
 		
 
