@@ -144,14 +144,14 @@ function modifyMember(event, action) {
 		});
 	
 	function validateUsername(value) {
-		const regex = /\w[\w_]{2,13}/i;
+		const regex = /^\w[\w_]{2,13}$/i;
 		return regex.test(value)
 			? value
 			: null;
 	}
 
 	function validateId(id) {
-		const regex = /\d{18}/;
+		const regex = /^\d{18}$/;
 		return regex.test(id)
 			? id
 			: null;
