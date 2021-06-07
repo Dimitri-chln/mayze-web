@@ -21,7 +21,7 @@ const server = Http.createServer(async (request, response) => {
 	const res = await findRoute(url.pathname);
 	const token = getToken(request) || generateRandomString();
 
-	if (!token) response.setHeader('Set-Cookie', `token=${token}; Max-Age=604800; Path=/; SameSite=strict; secure`);
+	if (!token) response.setHeader('Set-Cookie', `token=${token}; Max-Age=604800; Path=/; SameSite=strict; Secure`);
 
 	if (res.route) res.route.run(url, request, response, discord, pg, token);
 

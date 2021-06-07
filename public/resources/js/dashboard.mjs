@@ -128,10 +128,12 @@ function modifyMember(event, action) {
 	let memberName = action !== 'create'
 		? document.getElementById('form-title').innerHTML.replace('Modifier ', '')
 		: null;
-	let username = document.getElementById('field-username').value;
-	let userID = document.getElementById('field-discord').value;
+	let username = validateUsername(document.getElementById('field-username').value);
+	let userID = validateId(document.getElementById('field-discord').value);
 	let joinedAt = `${document.getElementById('field-joined').value}T12:00:00Z`;
 	let rank = document.getElementById('field-rank').value;
+
+	if (!username || !userID) return alert('Le pseudo ou l\'ID Discord est invalide');
 
 	fetch(`api/clan/members/${action}?${memberName ? `member=${memberName}&` : ''}username=${username}&user_id=${userID}&joined_at=${joinedAt}&rank=${rank}`, {
 		method: 'POST'
@@ -140,6 +142,20 @@ function modifyMember(event, action) {
 			if (res.status !== 200) return alert('Quelque chose s\'est mal passé en modifiant les données');
 			location.href = '/dashboard';
 		});
+	
+	function validateUsername(value) {
+		const regex = /\w[\w_]{2,13}/i;
+		return regex.test(value)
+			? value
+			: null;
+	}
+
+	function validateId(id) {
+		const regex = /\d{18}/;
+		return regex.test(id)
+			? id
+			: null;
+	}
 }
 
 document.getElementById('delete-button').addEventListener('click', event => modifyMember(event, 'delete'));
