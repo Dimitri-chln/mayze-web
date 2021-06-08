@@ -128,14 +128,14 @@ document.getElementById('cancel-button').addEventListener('click', event => {
 	document.getElementById('popup-form').style.display = 'none';
 });
 
-function modifyMember(event, action) {
+function modifyMember(event, method) {
 	event.preventDefault();
 
-	action = action === 'edit'
-		? document.getElementById('form-title').innerHTML === 'Ajouter un membre' ? 'create' : 'edit'
-		: action;
+	method = method === 'POST'
+		? document.getElementById('form-title').innerHTML === 'Ajouter un membre' ? 'POST' : 'PATCH'
+		: method;
 
-	let memberName = action !== 'create'
+	let memberName = method !== 'POST'
 		? document.getElementById('form-title').innerHTML.replace('Modifier ', '')
 		: null;
 	let username = document.getElementById('field-username').value;
@@ -144,10 +144,10 @@ function modifyMember(event, action) {
 	let rank = document.getElementById('field-rank').value;
 
 	if (!validateUsername(username)) return alert('Le pseudo est invalide');
-	if (!validateId(userID)) return alert('L\'ID Discord est invalide');
+	if (userID && !validateId(userID)) return alert('L\'ID Discord est invalide');
 
-	fetch(`api/clan/members/${action}?${memberName ? `member=${memberName}&` : ''}username=${username}&user_id=${userID}&joined_at=${joinedAt}&rank=${rank}`, {
-		method: 'POST'
+	fetch(`api/clan/members?token=${getCookie('token')}${memberName ? `&member=${memberName}&` : ''}&username=${username}&user_id=${userID}&joined_at=${joinedAt}&rank=${rank}`, {
+		method
 	})
 		.then(async res => {
 			if (res.status !== 200) return alert('Quelque chose s\'est mal passé en modifiant les données');
@@ -165,5 +165,5 @@ function modifyMember(event, action) {
 	}
 }
 
-document.getElementById('delete-button').addEventListener('click', event => modifyMember(event, 'delete'));
-document.getElementById('save-button').addEventListener('click', event => modifyMember(event, 'edit'));
+document.getElementById('delete-button').addEventListener('click', event => modifyMember(event, 'DELETE'));
+document.getElementById('save-button').addEventListener('click', event => modifyMember(event, 'POST'));
