@@ -6,7 +6,7 @@ const Fs = require('fs').promises;
 const Axios = require('axios').default;
 
 const route = {
-	name: 'logout',
+	name: 'clan',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
@@ -16,20 +16,21 @@ const route = {
 	 * @param {string} token
 	 */
 	run: async (url, request, response, discord, pg, token) => {
-        const mayzeToken = url.searchParams.get('token') || token;
-
-		if (request.method.toUpperCase() !== 'POST' || !mayzeToken) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
+        if (request.method.toUpperCase() !== 'GET') {
+            response.writeHead(400, { 'Content-Type': 'application/json' });
+            response.write(JSON.stringify({
 				status: 400,
 				message: 'Bad Request'
 			}));
 			return response.end();
-		}
+        }
 
-        await pg.query(`DELETE FROM web_clients WHERE token = '${mayzeToken}'`);
+		const d = {
+			name: "Mayze"
+		};
 
-        response.writeHead(200);
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify(d));
         response.end();
     }
 };

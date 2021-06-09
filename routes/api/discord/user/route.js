@@ -27,7 +27,7 @@ const route = {
 			return response.end();
 		}
 
-		const { 'rows': tokens } = await pg.query(`SELECT discord_token, discord_user_id FROM web_clients WHERE '${mayzeToken}' = ANY (mayze_tokens)`);
+		const { 'rows': tokens } = await pg.query(`SELECT user_id, discord_token FROM web_clients WHERE token = '${mayzeToken}'`);
 		if (!tokens.length) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(JSON.stringify({
@@ -37,11 +37,11 @@ const route = {
 			return response.end();
 		}
 
-		const { discord_token, discord_user_id } = tokens[0];
+		const { user_id, discord_token } = tokens[0];
 
 		if (url.searchParams.has('user_id')) {
 			const guild = discord.guilds.cache.get('689164798264606784');
-        	const member = guild.members.cache.get(discord_user_id);
+        	const member = guild.members.cache.get(user_id);
 
         	if (member && member.roles.cache.has('689169027922526235')) {
 				const requestedMember = guild.members.cache.get(url.searchParams.get('user_id'));
