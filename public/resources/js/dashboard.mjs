@@ -140,7 +140,7 @@ function modifyMember(event, method) {
 		: null;
 	let username = document.getElementById('field-username').value;
 	let userID = document.getElementById('field-discord').value;
-	let joinedAt = `${document.getElementById('field-joined').value}T12:00:00Z`;
+	let joinedAt = document.getElementById('field-joined').value;
 	let rank = document.getElementById('field-rank').value;
 
 	if (!validateUsername(username)) return alert('Le pseudo est invalide');

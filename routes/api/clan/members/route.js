@@ -76,16 +76,34 @@ const route = {
 				break;
 			
 			case 'POST':
-				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
+				if (
+					!url.searchParams.has('username') ||
+					!validateUsername(url.searchParams.get('username')) ||
+					!url.searchParams.has('joined_at') ||
+					!validateJoinedDate(url.searchParams.get('joined_at')) ||
+					!url.searchParams.has('user_id') ||
+					!validateId(url.searchParams.get('user_id')) ||
+					!url.searchParams.has('rank') ||
+					!validateRank(url.searchParams.get('rank'))
+				) {
 					response.writeHead(400, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 404,
+						status: 400,
+						message: 'Bad Request'
+					}));
+					return response.end();
+				}
+
+				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
+					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.write(JSON.stringify({
+						status: 401,
 						message: 'Not A Co-Leader'
 					}));
 					return response.end();
 				}
 		
-				await pg.query(`INSERT INTO clan_members VALUES ('${url.searchParams.get('username')}', '${url.searchParams.get('joined_at')}', '${url.searchParams.get('user_id')}', ${url.searchParams.get('rank')})`)
+				await pg.query(`INSERT INTO clan_members VALUES ('${url.searchParams.get('username')}', '${url.searchParams.get('joined_at')}T12:00:00Z', '${url.searchParams.get('user_id')}', ${url.searchParams.get('rank')})`)
 					.catch(err => {
 						console.error(err);
 						response.writeHead(500);
@@ -97,10 +115,30 @@ const route = {
 				break;
 
 			case 'PATCH':
-				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
+				if (
+					!url.searchParams.has('username') ||
+					!validateUsername(url.searchParams.get('username')) ||
+					!url.searchParams.has('joined_at') ||
+					!validateJoinedDate(url.searchParams.get('joined_at')) ||
+					!url.searchParams.has('user_id') ||
+					!validateId(url.searchParams.get('user_id')) ||
+					!url.searchParams.has('rank') ||
+					!validateRank(url.searchParams.get('rank')) ||
+					!url.searchParams.has('member') ||
+					!validateUsername(url.searchParams.get('member'))
+				) {
 					response.writeHead(400, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 404,
+						status: 400,
+						message: 'Bad Request'
+					}));
+					return response.end();
+				}
+
+				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
+					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.write(JSON.stringify({
+						status: 401,
 						message: 'Not A Co-Leader'
 					}));
 					return response.end();
@@ -118,10 +156,22 @@ const route = {
 				break;
 
 			case 'DELETE':
-				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
+				if (
+					!url.searchParams.has('member') ||
+					!validateUsername(url.searchParams.get('member'))
+				) {
 					response.writeHead(400, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 404,
+						status: 400,
+						message: 'Bad Request'
+					}));
+					return response.end();
+				}
+
+				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
+					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.write(JSON.stringify({
+						status: 401,
 						message: 'Not A Co-Leader'
 					}));
 					return response.end();
@@ -145,6 +195,26 @@ const route = {
 					message: 'Bad Request'
 				}));
 				return response.end();
+		}
+
+		function validateUsername(username) {
+			const regex = /^\w[\w_]{2,13}$/i;
+			return regex.test(username);
+		}
+
+		function validateJoinedDate(date) {
+			const regex = /^[12]\d{3}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/;
+			return regex.test(date);
+		}
+	
+		function validateId(id) {
+			const regex = /^\d{18}$/;
+			return regex.test(id);
+		}
+
+		function validateRank(rank) {
+			const regex = /^[123]$/;
+			return regex.test(rank);
 		}
     }
 };
