@@ -81,8 +81,7 @@ const route = {
 					!validateUsername(url.searchParams.get('username')) ||
 					!url.searchParams.has('joined_at') ||
 					!validateJoinedDate(url.searchParams.get('joined_at')) ||
-					!url.searchParams.has('user_id') ||
-					!validateId(url.searchParams.get('user_id')) ||
+					(url.searchParams.has('user_id') &&	!validateId(url.searchParams.get('user_id'))) ||
 					!url.searchParams.has('rank') ||
 					!validateRank(url.searchParams.get('rank'))
 				) {
@@ -103,7 +102,7 @@ const route = {
 					return response.end();
 				}
 		
-				await pg.query(`INSERT INTO clan_members VALUES ('${url.searchParams.get('username')}', '${url.searchParams.get('joined_at')}T12:00:00Z', '${url.searchParams.get('user_id')}', ${url.searchParams.get('rank')})`)
+				await pg.query(`INSERT INTO clan_members VALUES ('${url.searchParams.get('username')}', '${url.searchParams.get('joined_at')}T12:00:00Z', ${url.searchParams.get('user_id') ? `'${url.searchParams.get('user_id')}'` : 'NULL'}, ${url.searchParams.get('rank')})`)
 					.catch(err => {
 						console.error(err);
 						response.writeHead(500);
@@ -120,8 +119,7 @@ const route = {
 					!validateUsername(url.searchParams.get('username')) ||
 					!url.searchParams.has('joined_at') ||
 					!validateJoinedDate(url.searchParams.get('joined_at')) ||
-					!url.searchParams.has('user_id') ||
-					!validateId(url.searchParams.get('user_id')) ||
+					(url.searchParams.has('user_id') &&	!validateId(url.searchParams.get('user_id'))) ||
 					!url.searchParams.has('rank') ||
 					!validateRank(url.searchParams.get('rank')) ||
 					!url.searchParams.has('member') ||

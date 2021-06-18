@@ -146,7 +146,7 @@ function modifyMember(event, method) {
 	if (!validateUsername(username)) return alert('Le pseudo est invalide');
 	if (userID && !validateId(userID)) return alert('L\'ID Discord est invalide');
 
-	fetch(`api/clan/members?token=${getCookie('token')}${memberName ? `&member=${memberName}&` : ''}&username=${username}&user_id=${userID}&joined_at=${joinedAt}&rank=${rank}`, {
+	fetch(`api/clan/members?token=${getCookie('token')}${memberName ? `&member=${memberName}` : ''}&username=${username}${userID ? `&user_id=${userID}`: ''}&joined_at=${joinedAt}&rank=${rank}`, {
 		method
 	})
 		.then(async res => {
