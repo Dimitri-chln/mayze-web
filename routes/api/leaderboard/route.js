@@ -46,11 +46,11 @@ const route = {
 			const members = guild.members.cache.filter(m => m.roles.cache.has('689169027922526235'));
 			const IDs = members.map(m => m.id);
 
-			pg.query(`SELECT * FROM levels WHERE user_id = ANY ('{ "${IDs.join('", "')}" }') ORDER BY xp DESC`)
+			pg.query(`SELECT * FROM levels WHERE user_id = ANY ('{ "${IDs.join('", "')}" }') ORDER BY chat_xp DESC`)
 				.then(res => {
 					const data = res.rows.map((row, i) => {
-						const level = getLevel(row.xp);
-						return { rank: i + 1, username: members.get(row.user_id).user.username, avatar: members.get(row.user_id).user.avatarURL() || 'https://cdn.discordapp.com/embed/avatars/0.png', level: level[0], xp: level[1], totalXP: row.xp };
+						const level = getLevel(row.chat_xp);
+						return { rank: i + 1, username: members.get(row.user_id).user.username, avatar: members.get(row.user_id).user.avatarURL() || 'https://cdn.discordapp.com/embed/avatars/0.png', level: level[0], xp: level[1], totalXP: row.chat_xp };
 					});
 
 					response.writeHead(200, { 'Content-Type': 'application/json' });
