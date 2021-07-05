@@ -142,7 +142,7 @@ const route = {
 					return response.end();
 				}
 		
-				await pg.query(`UPDATE clan_members SET username = '${url.searchParams.get('username')}', user_id = '${url.searchParams.get('user_id')}', joined_at = '${url.searchParams.get('joined_at')}', rank = ${url.searchParams.get('rank')} WHERE username = '${url.searchParams.get('member')}'`)
+				await pg.query(`UPDATE clan_members SET username = '${url.searchParams.get('username')}', user_id = ${url.searchParams.get('user_id') ? `'${url.searchParams.get('user_id')}'` : 'NULL'}, joined_at = '${url.searchParams.get('joined_at')}', rank = ${url.searchParams.get('rank')} WHERE username = '${url.searchParams.get('member')}'`)
 					.catch(err => {
 						console.error(err);
 						response.writeHead(500);
