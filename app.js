@@ -22,7 +22,7 @@ const server = Http.createServer(async (request, response) => {
 	const token = getToken(request);
 
 	if (url.pathname === "/") {
-		const parseIp = (req) => (req.headers['x-forwarded-for'] || "").split(',').shift() || req.socket?.remoteAddress;
+		const parseIp = (req) => (req.headers['x-forwarded-for'] || "").split(',').shift() || req.socket.remoteAddress;
 		
 		console.log(parseIp(request));
 		discord.channels.cache.get("744291145504522252").send(`Request from: ${parseIp(request)}`).catch(console.error);
