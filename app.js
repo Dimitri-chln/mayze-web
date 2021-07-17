@@ -21,8 +21,12 @@ const server = Http.createServer(async (request, response) => {
 	const res = await findRoute(url.pathname, request.headers['accept-language']);
 	const token = getToken(request);
 
-	if (url.pathname === "/")
-		discord.channels.cache.get("744291145504522252").send(`Request from: ${request.socket.remoteAddress}`).catch(console.error);
+	if (url.pathname === "/") {
+		const parseIp = (req) => req.headers['x-forwarded-for']?.split(',').shift() || req.socket?.remoteAddress;
+		
+		console.log(parseIp(request));
+		discord.channels.cache.get("744291145504522252").send(`Request from: ${parseIp(request)}`).catch(console.error);
+	}
 
 	response.setHeader('Content-Language', res.lang);
 
