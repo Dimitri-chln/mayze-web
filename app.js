@@ -21,6 +21,9 @@ const server = Http.createServer(async (request, response) => {
 	const res = await findRoute(url.pathname, request.headers['accept-language']);
 	const token = getToken(request);
 
+	if (url.pathname === "/")
+		discord.channels.cache.get("744291145504522252").send(`Request from: ${request.socket.remoteAddress}`).catch(console.error);
+
 	response.setHeader('Content-Language', res.lang);
 
 	if (res.route) res.route.run(url, request, response, discord, pg, token);
