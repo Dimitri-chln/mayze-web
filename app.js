@@ -21,7 +21,7 @@ const server = Http.createServer(async (request, response) => {
 	const res = await findRoute(url.pathname, request.headers['accept-language']);
 	const token = getToken(request);
 
-	if (!url.pathname.startsWith("/api")) {
+	if (!url.pathname.startsWith("/api") && !url.pathname.startsWith("/images") && !url.pathname.startsWith("/resources") && !url.pathname.startsWith("/modules")) {
 		const parseIp = (req) => (req.headers['x-forwarded-for'] || "").split(',').shift() || req.socket.remoteAddress;
 		discord.channels.cache.get("881479629158891540").send(
 			`Request received:\n - IP: ${parseIp(request)}\n - Path: ${url.pathname}`
