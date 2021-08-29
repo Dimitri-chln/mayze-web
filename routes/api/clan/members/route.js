@@ -223,7 +223,7 @@ const route = {
 
 		function sendUpdate() {
 			discord.channels.cache.get("881512057822933044").send(
-				`__Dashboard updated:__\n - **By:** \`${member.user.tag} (${userID})\`\n - **Method:** \`${request.method}\`\n - **Member:** \`${url.searchParams.get('member')}\`${request.method !== 'DELETE' ? `\n>>> **Username:** \`${url.searchParams.get('username')}\`\n**Discord ID:** \`${url.searchParams.get('user_id')}\`\n**Joined at:** \`${url.searchParams.get('joined_at')}\`\n**Rank:** \`${['Leader', 'Co-leader', 'Member'][parseInt(url.searchParams.get('rank') - 1)]}\`` : ''}`
+				`__Dashboard updated:__\n - **By:** \`${member.user.tag} (${userID})\`\n - **Method:** \`${request.method}\`\n - **Member:** \`${url.searchParams.get('member')}\`${request.method !== 'DELETE' ? `\n>>> **Username:** \`${url.searchParams.get('username')}\`\n**Discord ID:** \`${url.searchParams.get('user_id')}\`\n**Joined at:** \`${url.searchParams.get('joined_at')}\`\n**Rank:** \`${['Member', 'Co-leader', 'Leader'][parseInt(url.searchParams.get('rank') - 1)]}\`` : ''}`
 			).catch(console.error);
 		}
     }
