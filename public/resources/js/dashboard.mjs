@@ -44,6 +44,11 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 					if (member.user) {
 						spanDiscord.className = 'member-discord';
 						spanDiscord.innerHTML = `@${member.user.tag}`;
+
+						// let spanDiscordHyperlink = document.createElement('a');
+						// spanDiscordHyperlink.href = `discord://https://discord.com/channels/@me/${member.user.id}`;
+						// spanDiscordHyperlink.innerHTML = `@${member.user.tag}`;
+						// spanDiscord.appendChild(spanDiscordHyperlink);
 					} else {
 						spanDiscord.innerHTML = '-';
 					}
