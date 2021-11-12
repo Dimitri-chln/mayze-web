@@ -1,64 +1,78 @@
 require('dotenv').config();
 const Http = require('http');
 const Url = require('url');
-const Fs = require('fs').promises;
-const Path = require('path');
-const Axios = require('axios').default;
-const Pg = require('pg');
-const Discord = require('discord.js');
-const { getContentType, refreshDiscordToken, generateRandomString } = require('./utils');
+const Fs = require('fs');
+const Util = require('./Util');
 
-const discord = new Discord.Client({ disableMentions: 'everyone', fetchAllMembers: true });
-discord.login(process.env.TOKEN);
-discord.on('ready', () => console.log('Connected to Discord'));
+Util.connectToDiscord();
 
-let pg = newPgClient();
-pg.connect().then(() => console.log('Connected to the database')).catch(console.error);
-setInterval(reconnectPgClient, 3600000);
+
 
 const server = Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, process.env.URL);
-	const res = await findRoute(url.pathname, request.headers['accept-language']);
-	const token = getToken(request);
+	const res = route(url.pathname, request.headers['accept-language']);
+	const token = Util.getToken(request);
 
-	if (!url.pathname.startsWith("/api") && !url.pathname.startsWith("/images") && !url.pathname.startsWith("/resources") && !url.pathname.startsWith("/modules")) {
-		const parseIp = (req) => (req.headers['x-forwarded-for'] || "").split(',').shift() || req.socket.remoteAddress;
-		discord.channels.cache.get("881479629158891540").send(
+	if (
+		!url.pathname.startsWith("/api") &&
+		!url.pathname.startsWith("/images") &&
+		!url.pathname.startsWith("/resources") &&
+		!url.pathname.startsWith("/modules")
+	) {
+		const parseIp = (req) => (req.headers['x-forwarded-for'] ?? "").split(',').shift() ?? req.socket.remoteAddress;
+		Util.discord.channels.cache.get("881479629158891540").send(
 			`__Request received:__\n - **IP:** \`${parseIp(request)}\`\n - **Path:** \`${url.pathname}\``
 		).catch(console.error);
 	}
 
-	response.setHeader('Content-Language', res.lang);
+	// response.setHeader('Content-Language', request.headers['accept-language'] ?? 'fr-FR');
 
-	if (res.route) res.route.run(url, request, response, discord, pg, token);
-
-	else if (res.html) {
-		response.writeHead(200, { 'Content-Type': 'text/html' });
-		response.write(res.html);
-		response.end();
-
-	} else {
-		Fs.readFile('./public' + url.pathname)
-			.then(buffer => {
-				response.writeHead(200, { 'Content-Type': getContentType(url.pathname) });
-				response.write(buffer);
+	switch (res.type) {
+		case 'ROUTE':
+			try {
+				res.route.run(url, request, response, token);
+			
+			} catch (err) {
+				console.error(err);
+				response.writeHead(500, { 'Content-Type': 'text/html' });
+				response.write('Unknown Internal Server Error');
 				response.end();
-			})
-			.catch(err => {
+			}
+			break;
+
+		case 'HTML':
+ 			response.writeHead(200, { 'Content-Type': 'text/html' });
+			response.write(res.html);
+			response.end();
+			break;
+
+		case 'PUBLIC_FILE':
+			try {
+				const file = Fs.readFileSync('./public' + url.pathname);
+
+				response.writeHead(200, { 'Content-Type': Util.getContentType(url.pathname) });
+				response.write(file);
+				response.end();
+			
+			} catch (err) {
+				const file404 = Fs.readFileSync('./public/resources/html/404.html');
+
 				response.writeHead(404, { 'Content-Type': 'text/html' });
-				response.end('404 Not Found');
-			});
-	}
+				response.write(file404);
+				response.end();
+			}
+			break;
+		}
 
 })
-	.listen(process.env.PORT || 8000);
+	.listen(process.env.PORT ?? 8000);
 
 console.log(`Listening on port ${server.address().port}`);
 
 
 
 // Delete the tokens from the database when they expired
-setInterval(() => pg.query('SELECT token, expires_at, user_id, discord_expires_at FROM web_clients').then(res => {
+setInterval(() => Util.database.query('SELECT token, expires_at, user_id, discord_expires_at FROM web_clients').then(res => {
 	for (const row of res.rows) {
 		if (new Date(row.expires_at).valueOf() < Date.now()) {
 			pg.query(`DELETE FROM web_clients WHERE token = '${row.token}'`).catch(console.error);
@@ -72,93 +86,67 @@ setInterval(() => pg.query('SELECT token, expires_at, user_id, discord_expires_a
 
 
 
-// Ping the server every 10 minutes
-// setInterval(() => {
-// 	Axios.get(process.env.URL).then(() => {
-// 		console.log('Pinging server...');
-// 	}).catch(err => console.error('Error pinging the server'));
-// }, 600000);
-
-
-
-// Refresh Discord access tokens
-// pg.query('SELECT * FROM web_clients').then(res => {
-// 	for (const tokenInfo of res.rows) {
-// 		let expires_in = Date.parse(tokenInfo.expires_at) - Date.now();
-
-// 		if (expires_in < 3600000) refreshDiscordToken(tokenInfo);
-// 		else setTimeout(() => refreshDiscordToken(pg, tokenInfo.mayze_tokens[0], tokenInfo.refresh_token), expires_in - 3600000);
-// 	}
-// })
-// .catch(console.error);
-
-
-
-// Create a PostgreSQL client
-function newPgClient() {
-	const connectionString = {
-		connectionString: process.env.DATABASE_URL,
-		ssl: true
-	};
-	const pgClient = new Pg.Client(connectionString);
-
-	pgClient.on('error', err => {
-		console.error(err);
-		client.pg.end().catch(console.error);
-		newPgClient();
-	});
-
-	return pgClient;
-}
-
-function reconnectPgClient() {
-	pg.end().catch(console.error);
-	pg = newPgClient();
-	pg.connect().then(() => console.log('Connected to the database')).catch(console.error);
-}
-
-
-
 /**
  * Find a route
- * @param {string} path The path of the route
+ * @param {string} path The path of the request
+ * @param {string} lang The accept-language header of the request
+ * @returns {Route}
  */
-async function findRoute(path, language) {
+function route(path, lang) {
 	const languageList = {
 		'fr': /^fr(?:-fr|-FR)?/,
 		'en': /^en(?:-US)?/
 	};
 
 	const fullPath = './routes' + path + (path.endsWith('/') ? '' : '/');
-	const lang = Object.keys(languageList).find(l => languageList[l].test(language)) || 'fr';
+	const language = Object.keys(languageList).find(l => languageList[l].test(lang)) ?? 'fr';
 	
 	try {
 		const route = require(fullPath + 'route');
-		return { route, lang };
+
+		return {
+			type: 'ROUTE',
+			route: route
+		}
 
 	} catch (err) {
-		const html = 
-		(await Fs.readFile(fullPath + lang + '/index.html').catch(err => {
-			if (err.code !== 'ENOENT') console.error(err);
-		})) ||
-		(await Fs.readFile(fullPath + 'index.html').catch(err => {
-			if (err.code !== 'ENOENT') console.error(err);
-		}));
+		try {
+			let html = Fs.readFileSync(fullPath + language + '/index.html').toString();
+			html = Util.completeHtmlFile(html);
 
-		return { html, lang };
+			return {
+				type: 'HTML',
+				html: html
+			}
+		
+		} catch (err) {
+			try {
+				let html = Fs.readFileSync(fullPath + '/index.html').toString();
+				html = Util.completeHtmlFile(html);
+
+				return {
+					type: 'HTML',
+					html: html
+				}
+			
+			} catch(err) {
+				return {
+					type: 'PUBLIC_FILE'
+				}
+			}
+		}
 	}
 }
 
-
+/**
+ * @typedef {object} RouteObject
+ * @property {string} name
+ * @property {(url: Url.URL, request: Http.IncomingMessage, response: Http.ServerResponse, token: string) => Promise<void>} run
+ */
 
 /**
- * Get the token from the request cookies
- * @param {Http.IncomingMessage} request The request object
+ * @typedef {object} Route
+ * @property {'ROUTE' | 'HTML' | 'PUBLIC_FILE'} type
+ * @property {RouteObject} [route]
+ * @property {Buffer} [html]
  */
-function getToken(request) {
-	let { cookie } = request.headers;
-	if (!cookie) return '';
-	let ca = cookie.split(/ *; */);
-	let ctoken = ca.find(c => c.startsWith('token='));
-	return ctoken.replace('token=', '');
-}

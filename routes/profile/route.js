@@ -7,7 +7,7 @@ const Util = require("../../Util");
 
 
 const route = {
-	name: 'leaderboard',
+	name: 'profile',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
@@ -22,7 +22,7 @@ const route = {
 
 		Axios.get(`${process.env.URL}/api/discord/member?token=${token}`)
 			.then(res => {
-				const file = Fs.readFileSync('./routes/leaderboard/index.html');
+				const file = Fs.readFileSync('./routes/profile/index.html');
 				response.writeHead(200, { 'Content-Type': 'text/html' });
 				response.write(Util.completeHtmlFile(file));
 				response.end();

@@ -1,22 +1,19 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Pg = require('pg');
-const Discord = require('discord.js');
-const Fs = require('fs').promises;
-const Axios = require('axios').default;
-const { refreshDiscordToken } = require('../../../../utils.js');
+const Axios = require("axios").default;
+const Util = require('../../../../Util');
+
+
 
 const route = {
-	name: 'token',
+	name: 'login',
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {Discord.Client} discord 
-	 * @param {Pg.Client} pg 
-	 * @param {string} token
+	 * @param {string} token 
 	 */
-	run: async (url, request, response, discord, pg, token) => {
+	run: async (url, request, response, token) => {
 		const mayzeToken = url.searchParams.get('token') || token;
 
 		if (request.method.toUpperCase() !== 'POST' || !mayzeToken || !url.searchParams.has('code')) {
@@ -49,8 +46,8 @@ const route = {
 			return response.end('Error retrieving user');
 		});
 
-		await pg.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}', discord_refresh_token = '${res.data.refresh_token}' WHERE user_id = '${user.data.id}'`);
-		await pg.query(`INSERT INTO web_clients VALUES ('${mayzeToken}', '${user.data.id}', '${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()}', '${res.data.access_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}', '${res.data.refresh_token}')`);
+		await Util.database.query(`UPDATE web_clients SET discord_token = '${res.data.access_token}', discord_expires_at = '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}', discord_refresh_token = '${res.data.refresh_token}' WHERE user_id = '${user.data.id}'`);
+		await Util.database.query(`INSERT INTO web_clients VALUES ('${mayzeToken}', '${user.data.id}', '${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()}', '${res.data.access_token}', '${new Date(Date.now() + res.data.expires_in * 1000).toISOString()}', '${res.data.refresh_token}')`);
 		
 		response.writeHead(200);
 		response.end();

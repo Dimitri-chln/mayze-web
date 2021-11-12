@@ -1,9 +1,8 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Pg = require('pg');
-const Discord = require('discord.js');
-const Fs = require('fs').promises;
-const Axios = require('axios').default;
+const Util = require('../../../../Util');
+
+
 
 const route = {
 	name: 'members',
@@ -11,11 +10,9 @@ const route = {
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {Discord.Client} discord 
-	 * @param {Pg.Client} pg 
-	 * @param {string} token
+	 * @param {string} token 
 	 */
-	run: async (url, request, response, discord, pg, token) => {
+	run: async (url, request, response, token) => {
         const mayzeToken = url.searchParams.get('token') || token;
 
 		if (!mayzeToken) {
@@ -27,7 +24,7 @@ const route = {
 			return response.end();
 		}
 
-		const { 'rows': tokens } = await pg.query(`SELECT user_id FROM web_clients WHERE token = '${mayzeToken}'`);
+		const { 'rows': tokens } = await Util.database.query(`SELECT user_id FROM web_clients WHERE token = '${mayzeToken}'`);
 		if (!tokens.length) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(JSON.stringify({
@@ -38,16 +35,16 @@ const route = {
 		}
 
 		const userID = tokens[0].user_id;
-		const guild = discord.guilds.cache.get('689164798264606784');
+		const guild = Util.discord.guilds.cache.get('689164798264606784');
 		const member = guild.members.cache.get(userID);
 
 		switch (request.method) {
 			case 'GET':
 				if (member && member.roles.cache.has('689169027922526235')) {
-					pg.query('SELECT * FROM clan_members ORDER BY joined_at ASC')
+					Util.database.query('SELECT * FROM clan_members ORDER BY joined_at ASC')
 						.then(async res => {
 							const data = await Promise.all(res.rows.map(async m => {
-								if (m.user_id) m.user = (await discord.users.fetch(m.user_id).catch(console.error)) || null;
+								if (m.user_id) m.user = (await Util.discord.users.fetch(m.user_id).catch(console.error)) || null;
 								return m;
 							}));
 							response.writeHead(200, { 'Content-Type': 'application/json' });
@@ -66,9 +63,9 @@ const route = {
 						});
 
 				} else {
-					response.writeHead(400, { 'Content-Type': 'application/json' });
+					response.writeHead(403, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 404,
+						status: 403,
 						message: 'Not A Member'
 					}));
 					return response.end();
@@ -94,15 +91,15 @@ const route = {
 				}
 
 				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
-					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.writeHead(403, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 401,
+						status: 403,
 						message: 'Not A Co-Leader'
 					}));
 					return response.end();
 				}
 		
-				await pg.query(`INSERT INTO clan_members VALUES ('${url.searchParams.get('username')}', '${url.searchParams.get('joined_at')}T12:00:00Z', ${url.searchParams.get('user_id') ? `'${url.searchParams.get('user_id')}'` : 'NULL'}, ${url.searchParams.get('rank')})`)
+				await Util.database.query(`INSERT INTO clan_members VALUES ('${url.searchParams.get('username')}', '${url.searchParams.get('joined_at')}T12:00:00Z', ${url.searchParams.get('user_id') ? `'${url.searchParams.get('user_id')}'` : 'NULL'}, ${url.searchParams.get('rank')})`)
 					.catch(err => {
 						console.error(err);
 						response.writeHead(500);
@@ -136,15 +133,15 @@ const route = {
 				}
 
 				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
-					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.writeHead(403, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 401,
+						status: 403,
 						message: 'Not A Co-Leader'
 					}));
 					return response.end();
 				}
 		
-				await pg.query(`UPDATE clan_members SET username = '${url.searchParams.get('username')}', user_id = ${url.searchParams.get('user_id') ? `'${url.searchParams.get('user_id')}'` : 'NULL'}, joined_at = '${url.searchParams.get('joined_at')}', rank = ${url.searchParams.get('rank')} WHERE username = '${url.searchParams.get('member')}'`)
+				await Util.database.query(`UPDATE clan_members SET username = '${url.searchParams.get('username')}', user_id = ${url.searchParams.get('user_id') ? `'${url.searchParams.get('user_id')}'` : 'NULL'}, joined_at = '${url.searchParams.get('joined_at')}', rank = ${url.searchParams.get('rank')} WHERE username = '${url.searchParams.get('member')}'`)
 					.catch(err => {
 						console.error(err);
 						response.writeHead(500);
@@ -171,15 +168,15 @@ const route = {
 				}
 
 				if (!member || !member.roles.cache.some(r => r.id === '696751852267765872' || r.id === '696751614177837056')) {
-					response.writeHead(401, { 'Content-Type': 'application/json' });
+					response.writeHead(403, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify({
-						status: 401,
+						status: 403,
 						message: 'Not A Co-Leader'
 					}));
 					return response.end();
 				}
 				
-				await pg.query(`DELETE FROM clan_members WHERE username = '${url.searchParams.get('member')}'`)
+				await Util.database.query(`DELETE FROM clan_members WHERE username = '${url.searchParams.get('member')}'`)
 					.catch(err => {
 						console.error(err);
 						response.writeHead(500);
@@ -222,7 +219,7 @@ const route = {
 		}
 
 		function sendUpdate() {
-			discord.channels.cache.get("881512057822933044").send(
+			Util.discord.channels.cache.get("881512057822933044").send(
 				`__Dashboard updated:__\n - **By:** \`${member.user.tag} (${userID})\`\n - **Method:** \`${request.method}\`\n - **Member:** \`${url.searchParams.get('member')}\`${request.method !== 'DELETE' ? `\n>>> **Username:** \`${url.searchParams.get('username')}\`\n**Discord ID:** \`${url.searchParams.get('user_id')}\`\n**Joined at:** \`${url.searchParams.get('joined_at')}\`\n**Rank:** \`${['Member', 'Co-leader', 'Leader'][parseInt(url.searchParams.get('rank') - 1)]}\`` : ''}`
 			).catch(console.error);
 		}

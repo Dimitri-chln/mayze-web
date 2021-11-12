@@ -1,118 +1,84 @@
-<!DOCTYPE html>
-<html prefix="og: https://ogp.me/ns#">
-	<head>
-		<meta charset="utf-8" />
+<!-- Incomplete file -->
 
-		<meta name="theme-color" content="#7289DA" />
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content="Mayze" />
-		<meta property="og:url" content="https://mayze.herokuapp.com" />
-		<meta property="og:image" content="https://mayze.herokuapp.com/images/mayze.png" />
-		<meta property="og:description" content="Par Đimitri" />
 
-		<title>Mayze</title>
-		<link rel="icon" href="images/favicon.ico" />
-		<link rel="stylesheet" href="resources/css/main.css" />
-		<link rel="stylesheet" href="resources/css/dashboard.css" />
-		<script type="module" src="modules/checkCookie.mjs"></script>
-		<script type="module" src="resources/js/main.mjs"></script>
-		<script type="module" src="resources/js/dashboard.mjs"></script>
-	</head>
 
-	<body>
-		<header id="banner" role="banner">
-			<div id="banner-main">
-				<img id="banner-icon" src="images/favicon.ico" alt="Logo" />
-				<h1 id="banner-title"><a href="/">Mayze</a></h1>
-			</div>
-			<nav id="banner-categories">
-				<div class="banner-category"><h2>Serveur</h2>
-					<ul class="scrolling-menu">
-						<li><a href="/dashboard">Dashboard</a></li>
-						<li><a href="/leaderboard">Leaderboard</a></li>
-					</ul>
-				</div>
-				<div class="banner-category"><h2>Menu</h2>
-					<ul class="scrolling-menu">
-						<li><a href="/logout">Se déconnecter</a></li>
-					</ul>
-				</div>
-			</nav>
-			  
-			<div id="banner-login">
-				<input type="button" id="login-button" value="  Connexion  " />
-			</div>
-		</header>
+<!-- CSS -->
+<link rel="stylesheet" href="resources/css/dashboard.css" />
+<!-- CSS end -->
 
-		<nav role="navigation">
-			<div id="menu-toggle">
-				<input type="checkbox" />
-				<span></span>
-				<span></span>
-				<span></span>
-				<ul id="menu">
-					<li><a href="/dashboard">Clan</a></li>
-					<!-- li><a href="/dashboard/quests">Quêtes</a></li -->
-				</ul>
-			</div>
-		</nav>
 
-		<section id="clan">
-			<article id="stats">
-				<h1>Informations</h1>
-				<p>
-					<u>Date de création :</u> 30 juillet 2019<br>
-					<u>Chef :</u> <span id="leader">Chargement...</span><br>
-					<u>Sous-chefs :</u> <span id="co-leaders">Chargement...</span>
-				</p>
-				<div id="member-title">
-					<h1 id="member-count">Membres</h1>
-				</div>
-				<ol id="member-list">
-					<li>
-						<div class="member-info">
-							<span class="member"><b>Pseudo</b></span>
-							<span><b>Discord</b></span>
-						</div>
-						<span class="joined-date"><b>Rejoint le</b></span>
-					</li>
-					<!-- Member list here -->
-				</ol>
-			</article>
-		</section>
 
-		<div id="popup-form">
-			<form autocomplete="off">
-				<h1 id="form-title">Modifier un membre</h1>
-		  
-				<div id="fields">
-					<label for="username"><b>Pseudo</b></label>
-					<input type="text" placeholder="Nouveau pseudo" name="username" id="field-username" required />
-					
-					<label for="discord"><b>ID Discord</b></label>
-					<input type="text" placeholder="Nouvel ID Discord" name="discord" id="field-discord" required />
-				
-					<label for="joined"><b>Rejoint le</b></label>
-					<input type="date" placeholder="Date d'arrivée" name="joined" id="field-joined" required />
+<!-- MJS -->		
+<script type="module" src="resources/js/dashboard.mjs"></script>
+<!-- MJS end -->
 
-					<label for="rank"><b>Rang</b></label>
-					<select name="rank" id="field-rank">
-						<option value="1">Membre</option>
-						<option value="2">Sous-chef</option>
-						<option value="3">Chef</option>
-					</select>
-				</div>
-				
-				<div id="form-buttons">
-					<input type="button" id="cancel-button" value="Annuler" />
-					<input type="button" id="delete-button" value="Supprimer" />
-					<input type="button" id="save-button" value="Sauvegarder" />
-				</div>
-			</form>
+
+
+<!-- HTML -->
+<nav role="navigation">
+	<div id="menu-toggle">
+		<input type="checkbox" />
+		<span></span>
+		<span></span>
+		<span></span>
+		<ul id="menu">
+			<li><a href="/dashboard">Clan</a></li>
+			<!-- li><a href="/dashboard/quests">Quêtes</a></li -->
+		</ul>
+	</div>
+</nav>
+
+<section id="clan">
+	<article id="stats">
+		<h1>Informations</h1>
+		<p>
+			<u>Date de création :</u> 30 juillet 2019<br>
+			<u>Chef :</u> <span id="leader">Chargement...</span><br>
+			<u>Sous-chefs :</u> <span id="co-leaders">Chargement...</span>
+		</p>
+		<div id="member-title">
+			<h1 id="member-count">Membres</h1>
 		</div>
+		<ol id="member-list">
+			<li>
+				<div class="member-info">
+					<span class="member"><b>Pseudo</b></span>
+					<span><b>Discord</b></span>
+				</div>
+				<span class="joined-date"><b>Rejoint le</b></span>
+			</li>
+			<!-- Member list here -->
+		</ol>
+	</article>
+</section>
 
-		<footer>
+<div id="popup-form">
+	<form autocomplete="off">
+		<h1 id="form-title">Modifier un membre</h1>
+	
+		<div id="fields">
+			<label for="username"><b>Pseudo</b></label>
+			<input type="text" placeholder="Nouveau pseudo" name="username" id="field-username" required />
+			
+			<label for="discord"><b>ID Discord</b></label>
+			<input type="text" placeholder="Nouvel ID Discord" name="discord" id="field-discord" required />
+		
+			<label for="joined"><b>Rejoint le</b></label>
+			<input type="date" placeholder="Date d'arrivée" name="joined" id="field-joined" required />
 
-		</footer>
-	</body>
-</html>
+			<label for="rank"><b>Rang</b></label>
+			<select name="rank" id="field-rank">
+				<option value="1">Membre</option>
+				<option value="2">Sous-chef</option>
+				<option value="3">Chef</option>
+			</select>
+		</div>
+		
+		<div id="form-buttons">
+			<input type="button" id="cancel-button" value="Annuler" />
+			<input type="button" id="delete-button" value="Supprimer" />
+			<input type="button" id="save-button" value="Sauvegarder" />
+		</div>
+	</form>
+</div>
+<!-- HTML end -->

@@ -1,9 +1,8 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Pg = require('pg');
-const Discord = require('discord.js');
-const Fs = require('fs').promises;
-const Axios = require('axios').default;
+const Util = require('../../../../Util');
+
+
 
 const route = {
 	name: 'logout',
@@ -11,12 +10,10 @@ const route = {
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {Discord.Client} discord 
-	 * @param {Pg.Client} pg 
-	 * @param {string} token
+	 * @param {string} token 
 	 */
-	run: async (url, request, response, discord, pg, token) => {
-        const mayzeToken = url.searchParams.get('token') || token;
+	run: async (url, request, response, token) => {
+		const mayzeToken = url.searchParams.get('token') || token;
 
 		if (request.method.toUpperCase() !== 'POST' || !mayzeToken) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
@@ -27,11 +24,11 @@ const route = {
 			return response.end();
 		}
 
-        await pg.query(`DELETE FROM web_clients WHERE token = '${mayzeToken}'`);
+		await Util.database.query(`DELETE FROM web_clients WHERE token = '${mayzeToken}'`);
 
-        response.writeHead(200);
-        response.end();
-    }
+		response.writeHead(200);
+		response.end();
+	}
 };
 
 module.exports = route;

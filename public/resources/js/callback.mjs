@@ -16,21 +16,23 @@ if (queryParams.has('code')) {
 			method: 'POST'
 		})
 			.then(async res => {
+				sessionStorage.removeItem('state');
+				
 				if (res.status === 200) {
-					location.href = sessionStorage.getItem('callback_location') || '/';
+					const callbackLocation = sessionStorage.getItem('callback_location');
+					if (callbackLocation) sessionStorage.removeItem('callback_loaction');
+					location.href = callbackLocation || '/';
+				
 				} else {
 					let err = await res.json().catch(() => {});
 					alert(`La connexion a échoué\n${err.status} ${err.message}`);
 				}
-
-				sessionStorage.removeItem('state');
-				sessionStorage.removeItem('callback_location');
 			});
 	}
 }
 
 document.getElementById('redirect-button').addEventListener('click', () => {
-	location.href = sessionStorage.getItem('callback_location') || '/';
 	sessionStorage.removeItem('state');
 	sessionStorage.removeItem('callback_location');
+	location.href = sessionStorage.getItem('callback_location') || '/';
 });

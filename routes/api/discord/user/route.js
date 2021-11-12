@@ -1,9 +1,9 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Pg = require('pg');
-const Discord = require('discord.js');
-const Fs = require('fs').promises;
-const Axios = require('axios').default;
+const Axios = require("axios").default;
+const Util = require('../../../../Util');
+
+
 
 const route = {
 	name: 'user',
@@ -11,11 +11,9 @@ const route = {
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {Discord.Client} discord 
-	 * @param {Pg.Client} pg 
-	 * @param {string} token
+	 * @param {string} token 
 	 */
-	run: async (url, request, response, discord, pg, token) => {
+	run: async (url, request, response, token) => {
 		const mayzeToken = url.searchParams.get('token') || token;
 
 		if (request.method.toUpperCase() !== 'GET' || !mayzeToken) {
@@ -27,7 +25,7 @@ const route = {
 			return response.end();
 		}
 
-		const { 'rows': tokens } = await pg.query(`SELECT user_id, discord_token FROM web_clients WHERE token = '${mayzeToken}'`);
+		const { 'rows': tokens } = await Util.database.query(`SELECT user_id, discord_token FROM web_clients WHERE token = '${mayzeToken}'`);
 		if (!tokens.length) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(JSON.stringify({
@@ -40,7 +38,7 @@ const route = {
 		const { user_id, discord_token } = tokens[0];
 
 		if (url.searchParams.has('user_id')) {
-			const guild = discord.guilds.cache.get('689164798264606784');
+			const guild = Util.discord.guilds.cache.get('689164798264606784');
         	const member = guild.members.cache.get(user_id);
 
         	if (member && member.roles.cache.has('689169027922526235')) {

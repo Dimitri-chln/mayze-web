@@ -1,9 +1,8 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Pg = require('pg');
-const Discord = require('discord.js');
-const Fs = require('fs').promises;
-const Axios = require('axios').default;
+const Util = require('../../../../Util');
+
+
 
 const route = {
 	name: 'api',
@@ -11,11 +10,9 @@ const route = {
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {Discord.Client} discord 
-	 * @param {Pg.Client} pg 
-	 * @param {string} token
+	 * @param {string} token 
 	 */
-	run: async (url, request, response, discord, pg, token) => {
+	run: async (url, request, response, token) => {
         if (request.method.toUpperCase() !== 'GET') {
             response.writeHead(400, { 'Content-Type': 'application/json' });
             response.write(JSON.stringify({
