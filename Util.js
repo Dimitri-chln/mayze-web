@@ -100,9 +100,9 @@ class Util {
 		
 		if (!data.startsWith('<!-- Incomplete file -->')) return Buffer.from(incompleteHtml);
 
-		const [ , css ] = data.match(/<!-- CSS -->(.*)<!-- CSS end -->/s) ?? [];
-		const [ , mjs ] = data.match(/<!-- MJS -->(.*)<!-- MJS end -->/s) ?? [];
-		const [ , html ] = data.match(/<!-- HTML -->(.*)<!-- HTML end -->/s) ?? [];
+		const [ , css ] = data.match(/<!-- CSS -->(.*)<!-- CSS end -->/s) || [];
+		const [ , mjs ] = data.match(/<!-- MJS -->(.*)<!-- MJS end -->/s) || [];
+		const [ , html ] = data.match(/<!-- HTML -->(.*)<!-- HTML end -->/s) || [];
 		
 		if (css) defaultHtml = defaultHtml.replace('<!-- CSS here -->', css.trim());
 		if (mjs) defaultHtml = defaultHtml.replace('<!-- MJS here -->', mjs.trim());

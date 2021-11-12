@@ -19,13 +19,13 @@ const server = Http.createServer(async (request, response) => {
 		!url.pathname.startsWith("/resources") &&
 		!url.pathname.startsWith("/modules")
 	) {
-		const parseIp = (req) => (req.headers['x-forwarded-for'] ?? "").split(',').shift() ?? req.socket.remoteAddress;
+		const parseIp = (req) => (req.headers['x-forwarded-for'] || "").split(',').shift() || req.socket.remoteAddress;
 		Util.discord.channels.cache.get("881479629158891540").send(
 			`__Request received:__\n - **IP:** \`${parseIp(request)}\`\n - **Path:** \`${url.pathname}\``
 		).catch(console.error);
 	}
 
-	// response.setHeader('Content-Language', request.headers['accept-language'] ?? 'fr-FR');
+	// response.setHeader('Content-Language', request.headers['accept-language'] || 'fr-FR');
 
 	switch (res.type) {
 		case 'ROUTE':
@@ -65,7 +65,7 @@ const server = Http.createServer(async (request, response) => {
 		}
 
 })
-	.listen(process.env.PORT ?? 8000);
+	.listen(process.env.PORT || 8000);
 
 console.log(`Listening on port ${server.address().port}`);
 
@@ -99,7 +99,7 @@ function route(path, lang) {
 	};
 
 	const fullPath = './routes' + path + (path.endsWith('/') ? '' : '/');
-	const language = Object.keys(languageList).find(l => languageList[l].test(lang)) ?? 'fr';
+	const language = Object.keys(languageList).find(l => languageList[l].test(lang)) || 'fr';
 	
 	try {
 		const route = require(fullPath + 'route');
