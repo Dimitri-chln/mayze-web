@@ -8,7 +8,7 @@ if (queryParams.has('code')) {
 	const callback_state = queryParams.get('state');
 	const code = queryParams.get('code');
 
-	if (state !== atob(callback_state)) {
+	if (state !== callback_state) {
 		alert('Connexion refusée');
 	} else {
 
