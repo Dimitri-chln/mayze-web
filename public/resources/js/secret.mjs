@@ -20,6 +20,6 @@ document.getElementById('claim-button').addEventListener('click', () => {
         method: 'POST'
     })
         .then(res => {
-            alert('La validation a bien été prise en compte')
+            alert('La validation a bien été prise en compte');
         });
 });
