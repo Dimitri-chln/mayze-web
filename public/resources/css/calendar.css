@@ -1,0 +1,39 @@
+#calendar {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	top: 10em;
+	width: fit-content;
+	border-collapse: collapse;
+	border: 4px solid #1a1e20;
+	background-color: #23272a;
+}
+
+#calendar tr {
+	height: 9em;
+}
+
+#calendar th, td {
+	text-align: center; 
+    vertical-align: middle;
+	width: 3em;
+}
+
+#calendar th {
+	width: 9em;
+}
+
+#calendar td {
+	font-size: xxx-large;
+	border: 4px solid #7289da;
+}
+
+#calendar .passed-day {
+	color: rgba(255, 255, 255, .1);
+
+}
+
+#calendar .current-day {
+	color: orange;
+}

@@ -1,13 +1,9 @@
-.align-center {
-	top: 7em;
-}
-
 #leaderboard {
 	display: flex;
 	flex-direction: column;
 	position: relative;
+	top: 7em;
 	list-style-type: none;
-	width: 75%;
 	background-color: #23272a;
 	justify-self: center;
 	padding: 0;
