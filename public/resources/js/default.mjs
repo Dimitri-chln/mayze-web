@@ -1,6 +1,7 @@
 import { getCookie } from '../../modules/cookie.mjs';
 
 
+
 fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	method: 'GET'
 })
@@ -42,7 +43,14 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 
 	});
 
-document.getElementById('login-button').addEventListener('click', () => location.href = '/login');
+
+
+document.getElementById('login-button').addEventListener('click', () => {
+	sessionStorage.setItem('callback_location', location.href);
+	location.href = '/login';
+});
+
+
 
 if (screen.width < 768) {
 	for (let category of document.getElementsByClassName('banner-category')) {

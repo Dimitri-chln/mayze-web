@@ -10,7 +10,7 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
             claimButton.style.cursor = 'auto';
 
         } else {
-			sessionStorage.setItem('callback_location', '/secret');
+			sessionStorage.setItem('callback_location', location.href);
             location.href = '/login';
 		}
 	});
