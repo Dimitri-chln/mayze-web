@@ -27,9 +27,30 @@
 
 #calendar .passed-day {
 	color: rgba(255, 255, 255, .1);
-
+	cursor: pointer;
 }
 
 #calendar .current-day {
 	color: orange;
+}
+
+#day-popup {
+	display: none;
+	position: fixed;
+	width: 75%;
+	top: 15em;
+	background-color: #23272a;
+	border: 3px solid #1a1e20;
+	border-radius: 2em;
+	z-index: 15;
+	padding: 1em;
+	justify-content: space-between;
+}
+
+#close-button {
+	height: 1em;
+	width: 1em;
+	background-color: red;
+	border-radius: 1em;
+	cursor: pointer;
 }
