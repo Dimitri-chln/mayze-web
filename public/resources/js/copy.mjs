@@ -1,6 +1,9 @@
 navigator.clipboard.writeText(
-    new URLSearchParams(window.location.search).get("text")
+	new URLSearchParams(window.location.search).get('text')
 )
-    .then(() => {
-        window.close();
-    });
+	.then(() => {
+		window.close();
+	})
+	.catch(err => {
+		alert(err);
+	});
