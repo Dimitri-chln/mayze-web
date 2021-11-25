@@ -4,6 +4,6 @@ navigator.clipboard.writeText(
 	.then(() => {
 		window.close();
 	})
-	.catch(err => {
-		alert(err);
+	.catch(() => {
+		window.close();
 	});
