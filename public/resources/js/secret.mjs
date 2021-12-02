@@ -1,5 +1,6 @@
 import { getCookie } from '../../modules/cookie.mjs'
 
+
 fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	method: 'GET'
 })
