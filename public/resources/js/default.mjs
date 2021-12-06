@@ -24,7 +24,7 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 		parent.prepend(avatarImage);
 
 		if (location.pathname === '/')  {
-			const isMember = document.getElementById('is-member').children.item(0);
+			const isMember = document.getElementById('is-member').firstChild;
 			isMember.innerHTML = 'Connexion...';
 
 			fetch(`/api/discord/member?token=${getCookie('token')}`, {
