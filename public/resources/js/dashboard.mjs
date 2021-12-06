@@ -4,7 +4,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 	method: 'GET'
 })
 	.then(async res => {
-		const members = await res.json().catch(() => {});
+		const members = await res.json();
 
 		const leader = document.getElementById('leader');
 		leader.innerHTML = members.find(m => m.rank === 3).username;
@@ -21,7 +21,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 			method: 'GET'
 		})
 			.then(async res => {
-				const discordMember = await res.json().catch(() => {});
+				const discordMember = await res.json();
 				const isColeader = discordMember.roles.some(r => r.id === '696751852267765872' || r.id === '696751614177837056');
 
 				for (let member of members) {

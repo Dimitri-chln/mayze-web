@@ -19,7 +19,7 @@ fetch(`/api/calendar?token=${getCookie('token')}`, {
 	method: 'GET'
 })
 	.then(async res => {
-		const calendarData = await res.json().catch(() => {});
+		const calendarData = await res.json();
 
 		for (const [ day, cell ] of calendar) {
 			const date = new Date(getISO(day));

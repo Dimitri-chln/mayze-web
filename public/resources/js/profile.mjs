@@ -4,7 +4,7 @@ fetch(`api/discord/user?token=${getCookie('token')}`, {
 	method: 'GET'
 })
 	.then(async res => {
-		const discordUser = await res.json().catch(() => {});
+		const discordUser = await res.json();
 
         document.getElementById('member-title').firstElementChild.innerHTML = discordUser.username;
     });

@@ -4,7 +4,7 @@ fetch(`api/leaderboard?token=${getCookie('token')}`, {
     method: 'GET'
 })
     .then(async res => {
-        const leaderboard = await res.json().catch(() => {});
+        const leaderboard = await res.json();
 		if (!leaderboard.length) return;
 
         const ol = document.getElementById('leaderboard');

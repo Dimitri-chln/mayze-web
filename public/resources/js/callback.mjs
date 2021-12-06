@@ -24,7 +24,7 @@ if (queryParams.has('code')) {
 					location.href = callbackLocation || '/';
 				
 				} else {
-					let err = await res.json().catch(() => {});
+					let err = await res.json();
 					alert(`La connexion a échoué\n${err.status} ${err.message}`);
 				}
 			});

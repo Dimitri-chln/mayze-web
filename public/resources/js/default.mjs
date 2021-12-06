@@ -6,7 +6,7 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	method: 'GET'
 })
 	.then(async res => {
-		const user = await res.json().catch(() => {});
+		const user = await res.json();
 		if (!user.id) return;
 
 		console.log('Logged in');
@@ -22,25 +22,6 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 		
 		const parent = document.getElementById('banner-login');
 		parent.prepend(avatarImage);
-
-		if (location.pathname === '/')  {
-			const isMember = document.getElementById('is-member').firstChild;
-			isMember.innerHTML = 'Connexion...';
-
-			fetch(`/api/discord/member?token=${getCookie('token')}`, {
-				method: 'GET'
-			})
-				.then(async res => {
-					const member = await res.json().catch(() => {});
-
-					if (member.userID) {
-						isMember.innerHTML = '✨ Tu es membre de Mayze ! ✨';
-					} else {
-						isMember.innerHTML = 'Tu n\'es pas un membre de Mayze';
-					}
-				});
-		}
-
 	});
 
 
