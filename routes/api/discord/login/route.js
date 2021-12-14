@@ -29,12 +29,12 @@ const route = {
 			client_id: '703161067982946334',
 			client_secret: process.env.CLIENT_SECRET,
 			grant_type: 'authorization_code',
-			redirect_uri: `${process.env.HOSTNAME}/callback`,
+			redirect_uri: `${process.env.PROTOCOL}://${process.env.HOSTNAME}/callback`,
 			code: url.searchParams.get('code'),
 			scope: 'identify',
 		};
 
-		const res = await Axios.post(`${process.env.PROTOCOL}://discord.com/api/oauth2/token`, new URLSearchParams(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).catch(err => {
+		const res = await Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }).catch(err => {
 			console.error(err);
 			response.writeHead(400, { 'Content-Type': 'text/html' });
 			return response.end('Error retrieving token');
