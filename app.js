@@ -82,12 +82,12 @@ console.log(`Listening on port ${httpsServer.address().port}`);
 
 
 
-const httpServer = Http.createServer((req, res) => {
-   res.statusCode = 301;
-   res.setHeader('Location', `https://${process.env.HOSTNAME}${req.url}`);
-   res.end(); // make sure to call send() or end() to send the response
-})
-	.listen(process.env.PORT || 80);
+// const httpServer = Http.createServer((req, res) => {
+// 	res.statusCode = 301;
+// 	res.setHeader('Location', `https://${process.env.HOSTNAME}${req.url}`);
+// 	res.end(); // make sure to call send() or end() to send the response
+// })
+// 	.listen(process.env.PORT || 80);
 
 
 
