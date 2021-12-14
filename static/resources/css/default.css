@@ -9,6 +9,12 @@ body {
 	background-color: #2c2f33;
 	font-family: 'monserrat', sans-serif;
 	color: white;
+	height: 100vh;
+}
+
+footer {
+	margin-left: auto;
+	margin-top: auto;
 }
 
 input[type=button] {
