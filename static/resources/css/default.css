@@ -13,8 +13,11 @@ body {
 }
 
 footer {
-	margin-left: auto;
 	margin-top: auto;
+}
+
+#positive-ssl {
+	margin-left: auto;
 }
 
 input[type=button] {
