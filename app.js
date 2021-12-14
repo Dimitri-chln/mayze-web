@@ -1,25 +1,25 @@
 require('dotenv').config();
 const Http = require('http')
-const Https = require('https');
+// const Https = require('https');
 const Url = require('url');
 const Fs = require('fs');
 const Util = require('./Util');
 
-const cert = Fs.readFileSync('./ssl/mayze_xyz.crt');
-const ca = Fs.readFileSync('./ssl/mayze_xyz.ca-bundle');
-const key = Fs.readFileSync('./ssl/mayze_xyz.key');
+// const cert = Fs.readFileSync('./ssl/mayze_xyz.crt');
+// const ca = Fs.readFileSync('./ssl/mayze_xyz.ca-bundle');
+// const key = Fs.readFileSync('./ssl/mayze_xyz.key');
 
 Util.connectToDiscord();
 
 
 
-const options = {
-	cert: cert,
-	ca: ca,
-	key: key
-};
+// const options = {
+// 	cert: cert,
+// 	ca: ca,
+// 	key: key
+// };
 
-const httpsServer = Https.createServer(options, async (request, response) => {
+const httpServer = Http.createServer(async (request, response) => {
 	const url = new Url.URL(request.url, `https://${process.env.HOSTNAME}`);
 	const res = route(url.pathname, request.headers['accept-language']);
 	const token = Util.getToken(request);
@@ -76,9 +76,9 @@ const httpsServer = Https.createServer(options, async (request, response) => {
 		}
 
 })
-	.listen(process.env.PORT || 443);
+	.listen(process.env.PORT || 8000);
 
-console.log(`Listening on port ${httpsServer.address().port}`);
+console.log(`Listening on port ${httpServer.address().port}`);
 
 
 
