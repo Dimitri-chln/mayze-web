@@ -20,7 +20,7 @@ Util.connectToDiscord();
 // };
 
 const httpServer = Http.createServer(async (request, response) => {
-	const url = new Url.URL(request.url, `https://${process.env.HOSTNAME}`);
+	const url = new Url.URL(request.url, `${process.env.PROTOCOL}://${process.env.HOSTNAME}`);
 	const res = route(url.pathname, request.headers['accept-language']);
 	const token = Util.getToken(request);
 
