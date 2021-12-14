@@ -1,15 +1,26 @@
 require('dotenv').config();
-const Http = require('http');
+const Http = require('http')
+const Https = require('https');
 const Url = require('url');
 const Fs = require('fs');
 const Util = require('./Util');
+
+const cert = Fs.readFileSync('./ssl/mayze_xyz.crt');
+const ca = Fs.readFileSync('./ssl/mayze_xyz.ca-bundle');
+const key = Fs.readFileSync('./ssl/mayze_xyz.key');
 
 Util.connectToDiscord();
 
 
 
-const server = Http.createServer(async (request, response) => {
-	const url = new Url.URL(request.url, process.env.URL);
+const options = {
+	cert: cert,
+	ca: ca,
+	key: key
+};
+
+const httpsServer = Https.createServer(options, async (request, response) => {
+	const url = new Url.URL(request.url, `https://${process.env.HOSTNAME}`);
 	const res = route(url.pathname, request.headers['accept-language']);
 	const token = Util.getToken(request);
 
@@ -65,9 +76,18 @@ const server = Http.createServer(async (request, response) => {
 		}
 
 })
-	.listen(process.env.PORT || 8000);
+	.listen(process.env.PORT || 443);
 
-console.log(`Listening on port ${server.address().port}`);
+console.log(`Listening on port ${httpsServer.address().port}`);
+
+
+
+const httpServer = Http.createServer((req, res) => {
+   res.statusCode = 301;
+   res.setHeader('Location', `https://${process.env.HOSTNAME}${req.url}`);
+   res.end(); // make sure to call send() or end() to send the response
+})
+	.listen(process.env.PORT || 80);
 
 
 
