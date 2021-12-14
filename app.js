@@ -46,16 +46,16 @@ const server = Http.createServer(async (request, response) => {
 			response.end();
 			break;
 
-		case 'PUBLIC_FILE':
+		case 'STATIC_FILE':
 			try {
-				const file = Fs.readFileSync('./public' + url.pathname);
+				const file = Fs.readFileSync('./static' + url.pathname);
 
 				response.writeHead(200, { 'Content-Type': Util.getContentType(url.pathname) });
 				response.write(file);
 				response.end();
 			
 			} catch (err) {
-				const file404 = Fs.readFileSync('./public/resources/html/404.html');
+				const file404 = Fs.readFileSync('./static/resources/html/404.html');
 
 				response.writeHead(404, { 'Content-Type': 'text/html' });
 				response.write(file404);
@@ -131,7 +131,7 @@ function route(path, lang) {
 			
 			} catch(err) {
 				return {
-					type: 'PUBLIC_FILE'
+					type: 'STATIC_FILE'
 				}
 			}
 		}
@@ -146,7 +146,7 @@ function route(path, lang) {
 
 /**
  * @typedef {object} Route
- * @property {'ROUTE' | 'HTML' | 'PUBLIC_FILE'} type
+ * @property {'ROUTE' | 'HTML' | 'STATIC_FILE'} type
  * @property {RouteObject} [route]
  * @property {Buffer} [html]
  */

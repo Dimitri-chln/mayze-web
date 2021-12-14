@@ -94,7 +94,7 @@ class Util {
 	 * @param {Buffer} incompleteHtml 
 	 */
 	static completeHtmlFile(incompleteHtml) {
-		let defaultHtml = Fs.readFileSync('./public/resources/html/default.html').toString();
+		let defaultHtml = Fs.readFileSync('./static/resources/html/default.html').toString();
 
 		const data = incompleteHtml.toString();
 		

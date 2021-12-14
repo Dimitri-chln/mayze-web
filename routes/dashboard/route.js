@@ -28,7 +28,7 @@ const route = {
 				response.end();
 			})
 			.catch(err => {
-				const file = Fs.readFileSync('./public/resources/html/unauthorized.html');
+				const file = Fs.readFileSync('./static/resources/html/unauthorized.html');
 				response.writeHead(200, { 'Content-Type': 'text/html' });
 				response.write(file);
 				return response.end();
