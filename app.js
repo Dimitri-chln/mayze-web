@@ -4,8 +4,8 @@ const Url = require('url');
 const Fs = require('fs');
 const Util = require('./Util');
 
-const cert = Fs.readFileSync('./ssl/mayze_xyz.crt');
-const key = Fs.readFileSync('./ssl/mayze_xyz.key');
+const cert = Fs.readFileSync('./ssl/cert.pem');
+const key = Fs.readFileSync('./ssl/key.pem');
 
 Util.connectToDiscord();
 
