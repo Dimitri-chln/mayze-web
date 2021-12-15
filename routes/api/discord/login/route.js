@@ -29,7 +29,7 @@ const route = {
 			client_id: '703161067982946334',
 			client_secret: process.env.CLIENT_SECRET,
 			grant_type: 'authorization_code',
-			redirect_uri: `${process.env.PROTOCOL}://${process.env.HOSTNAME}/callback`,
+			redirect_uri: `https://${process.env.HOSTNAME}/callback`,
 			code: url.searchParams.get('code'),
 			scope: 'identify',
 		};
