@@ -1,5 +1,5 @@
 require('dotenv').config();
-const Https = require('https');
+const Http = require('http');
 const Url = require('url');
 const Fs = require('fs');
 const Util = require('./Util');
@@ -16,7 +16,7 @@ const options = {
 	key: key
 };
 
-const httpServer = Https.createServer(options, async (request, response) => {
+const httpServer = Http.createServer(/*options,*/ async (request, response) => {
 	const url = new Url.URL(request.url, `${process.env.PROTOCOL}://${process.env.HOSTNAME}`);
 	const res = route(url.pathname, request.headers['accept-language']);
 	const token = Util.getToken(request);
