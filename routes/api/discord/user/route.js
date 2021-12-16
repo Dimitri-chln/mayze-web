@@ -19,7 +19,10 @@ class Route extends BaseRoute {
 	static async runValid(url, request, response, token) {
 		token = url.searchParams.get('token') || token;
 
-		const { 'rows': tokens } = await Util.database.query(`SELECT user_id, discord_token FROM web_clients WHERE token = '${token}'`);
+		const { 'rows': tokens } = await Util.database.query(
+			'SELECT user_id, discord_token FROM web_clients WHERE token = $1',
+			[ token ]
+		);
 		const { discord_token } = tokens[0];
 
 		// Fetch requested user
@@ -29,9 +32,7 @@ class Route extends BaseRoute {
 				
 			if (requestedUser) {
 				response.writeHead(200, { 'Content-Type': 'application/json' });
-				response.write(JSON.stringify(
-					requestedUser.toJSON()
-				));
+				response.write(JSON.stringify(requestedUser.toJSON()));
 				response.end();
 			
 			} else {
