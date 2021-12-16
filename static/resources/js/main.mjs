@@ -8,9 +8,7 @@ fetch(`/api/discord/member?token=${getCookie('token')}`, {
 	method: 'GET'
 })
 	.then(async res => {
-		const member = await res.json();
-
-		isMember.innerText = member
+		isMember.innerText = res.status === 200
 			? '✨ Tu es membre de Mayze ! ✨'
 			: 'Tu n\'es pas membre de Mayze';
 	});
