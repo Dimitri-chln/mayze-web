@@ -23,7 +23,7 @@ const OPTIONS = {
 };
 
 const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
-	const url = new Url.URL(request.url, `https://${process.env.HOSTNAME}`);
+	const url = new Url.URL(request.url, `${process.env.PROTOCOL}://${process.env.HOSTNAME}`);
 	const token = Util.getToken(request);
 
 	const filePath = './routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
