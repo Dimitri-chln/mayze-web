@@ -24,7 +24,8 @@ class Route extends BaseRoute {
 
 		// Fetch requested user
 		if (url.searchParams.has('user_id')) {
-			const requestedUser = Util.guild.members.cache.get(url.searchParams.get('user_id'))?.user;
+			const requestedMember = Util.guild.members.cache.get(url.searchParams.get('user_id'));
+			if (requestedMember) const requestedUser = requestedMember.user;
 				
 			if (requestedUser) {
 				response.writeHead(200, { 'Content-Type': 'application/json' });

@@ -29,7 +29,7 @@ class BaseRoute {
 
 		const { 'rows': wolvesvilleMembers } = await Util.database.query(
 			'SELECT * FROM clan_members WHERE user_id = $1',
-			[ member?.user?.id ]
+			[ member.user.id ]
 		);
 
 		const wolvesvilleMember = {
