@@ -31,7 +31,7 @@ class Util {
 		
 		const cookieList = cookie.split(/ *; */);
 		const cookieToken = cookieList.find(c => c.startsWith('token='));
-		return cookieToken?.replace('token=', '');
+		return cookieToken.replace('token=', '');
 	}
 
 	/**
