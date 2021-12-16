@@ -24,7 +24,6 @@ fetch(`api/discord/member?token=${getCookie('token')}`, {
 })
 	.then(async res => {
 		const member = await res.json();
-		console.log(member)
 		
 		document.getElementById('member-discord-tag').innerHTML = member.discord.tag;
 		document.getElementById('member-wolvesville-username').innerHTML = member.wolvesville.username;
