@@ -12,14 +12,6 @@ body {
 	height: 100vh;
 }
 
-footer {
-	margin-top: auto;
-}
-
-#positive-ssl {
-	margin-left: auto;
-}
-
 input[type=button] {
 	-webkit-appearance: none;
 }

@@ -1,70 +1,48 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Axios = require("axios").default;
+const BaseRoute = require('../../../../BaseRoute');
 const Util = require('../../../../Util');
+const Axios = require('axios').default;
 
 
 
-const route = {
-	name: 'user',
+class Route extends BaseRoute {
+	static path = '/api/discord/user';
+	static requireLogin = true;
+	
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {string} token 
+	 * @param {string} token
 	 */
-	run: async (url, request, response, token) => {
-		const mayzeToken = url.searchParams.get('token') || token;
+	static async runValid(url, request, response, token) {
+		token = url.searchParams.get('token') || token;
 
-		if (request.method.toUpperCase() !== 'GET' || !mayzeToken) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
-				status: 400,
-				message: 'Bad Request'
-			}));
-			return response.end();
-		}
+		const { 'rows': tokens } = await Util.database.query(`SELECT user_id, discord_token FROM web_clients WHERE token = '${token}'`);
+		const { discord_token } = tokens[0];
 
-		const { 'rows': tokens } = await Util.database.query(`SELECT user_id, discord_token FROM web_clients WHERE token = '${mayzeToken}'`);
-		if (!tokens.length) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
-				status: 401,
-				message: 'Not Connected'
-			}));
-			return response.end();
-		}
-
-		const { user_id, discord_token } = tokens[0];
-
+		// Fetch requested user
 		if (url.searchParams.has('user_id')) {
-			const guild = Util.discord.guilds.cache.get('689164798264606784');
-        	const member = guild.members.cache.get(user_id);
-
-        	if (member && member.roles.cache.has('689169027922526235')) {
-				const requestedMember = guild.members.cache.get(url.searchParams.get('user_id'));
+			const requestedUser = Util.guild.members.cache.get(url.searchParams.get('user_id'))?.user;
 				
-				if (requestedMember) {
-					response.writeHead(200, { 'Content-Type': 'application/json' });
-					response.write(JSON.stringify(requestedMember.user));
-					return response.end();
-				} else {
-					response.writeHead(401, { 'Content-Type': 'application/json' });
-					response.write(JSON.stringify({
-						status: 404,
-						message: 'Not Found'
-					}));
-					return response.end();
-				}
+			if (requestedUser) {
+				response.writeHead(200, { 'Content-Type': 'application/json' });
+				response.write(JSON.stringify(
+					requestedUser.toJSON()
+				));
+				response.end();
+			
 			} else {
 				response.writeHead(401, { 'Content-Type': 'application/json' });
 				response.write(JSON.stringify({
-					status: 401,
-					message: 'Not A Member'
+					status: 404,
+					message: 'Not Found'
 				}));
 				return response.end();
 			}
 
+		// Fetch requesting user
 		} else {
 			Axios.get('https://discord.com/api/users/@me', {
 				headers: {
@@ -74,20 +52,12 @@ const route = {
 				.then(res => {
 					response.writeHead(200, { 'Content-Type': 'application/json' });
 					response.write(JSON.stringify(res.data));
-					return response.end();
-				})
-				.catch(err => {
-					console.error(err);
-
-					response.writeHead(500, { 'Content-Type': 'text/html' });
-					response.write(JSON.stringify({
-						status: 500,
-						message: 'Internal Error'
-					}));
-					return response.end();
+					response.end();
 				});
 		}
 	}
-};
+}
 
-module.exports = route;
+
+
+module.exports = Route;

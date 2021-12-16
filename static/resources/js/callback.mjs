@@ -21,7 +21,7 @@ if (queryParams.has('code')) {
 				if (res.status === 200) {
 					const callbackLocation = sessionStorage.getItem('callback_location');
 					if (callbackLocation) sessionStorage.removeItem('callback_loaction');
-					location.href = callbackLocation || '/';
+					location.href = callbackLocation ?? '/';
 				
 				} else {
 					let err = await res.json();
@@ -34,5 +34,5 @@ if (queryParams.has('code')) {
 document.getElementById('redirect-button').addEventListener('click', () => {
 	sessionStorage.removeItem('state');
 	sessionStorage.removeItem('callback_location');
-	location.href = sessionStorage.getItem('callback_location') || '/';
+	location.href = sessionStorage.getItem('callback_location') ?? '/';
 });

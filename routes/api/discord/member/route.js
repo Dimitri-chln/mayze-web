@@ -1,60 +1,39 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Util = require('../../../../Util');
+const BaseRoute = require('../../../../BaseRoute');
 
 
 
-const route = {
-	name: 'member',
+class Route extends BaseRoute {
+	static path = '/api/discord/member';
+	static requireLogin = true;
+	
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {string} token 
+	 * @param {string} token
 	 */
-	run: async (url, request, response, token) => {
-		const mayzeToken = url.searchParams.get('token') || token;
+	static async runValid(url, request, response, token) {
+		token = url.searchParams.get('token') || token;
 
-		if (request.method.toUpperCase() !== 'GET' || !mayzeToken) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
-				status: 400,
-				message: 'Bad Request'
-			}));
-			return response.end();
-		}
+		const member = await this.fetchMember(token);
 
-		const { 'rows': tokens } = await Util.database.query(`SELECT user_id FROM web_clients WHERE token = '${mayzeToken}'`);
-		
-		if (!tokens.length) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
-				status: 401,
-				message: 'Not Connected'
-			}));
-			return response.end();
-		}
-
-		const userID = tokens[0].user_id;
-		const guild = Util.discord.guilds.cache.get('689164798264606784');
-		const member = guild.members.cache.get(userID);
-		const JSONMember = member.toJSON();
-		JSONMember.roles = member.roles.cache.toJSON();
-		
-		if (member && member.roles.cache.has('689169027922526235')) {
-			response.writeHead(200, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify(JSONMember));
-			response.end();
-		
-		} else {
-			response.writeHead(403, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
-				status: 403,
-				message: 'Not A Member'
-			}));
-			return response.end();
-		}
+		const JSONMember = {
+			discord: {
+				...member.discord.toJSON(),
+				tag: member.discord.user.tag,
+				roles: member.discord.roles.cache.toJSON()
+			},
+			wolvesville: member.wolvesville
+		};
+	
+		response.writeHead(200, { 'Content-Type': 'application/json' });
+		response.write(JSON.stringify(JSONMember));
+		response.end();
 	}
-};
+}
 
-module.exports = route;
+
+
+module.exports = Route;

@@ -8,16 +8,19 @@ const Http = require('http');
 
 
 class Util {
+	static config = require('./config.json');
 	/**@type {Pg.Client} */
 	static database = newDatabaseClient();
-
 	static discord = new Discord.Client({ disableMentions: 'everyone', fetchAllMembers: true })
-		.on('ready', () => console.log('Connected to Discord'));
+		.on('ready', () => {
+			console.log('Connected to Discord');
+			this.guild = this.discord.guilds.cache.get(this.config.GUILD_ID);
+		});
 
 	static connectToDiscord() {
 		this.discord.login(process.env.TOKEN);
 	}
-	
+
 	/**
 	 * Get the token from the request cookies
 	 * @param {Http.IncomingMessage} request The request object
@@ -28,7 +31,7 @@ class Util {
 		
 		const cookieList = cookie.split(/ *; */);
 		const cookieToken = cookieList.find(c => c.startsWith('token='));
-		return cookieToken.replace('token=', '');
+		return cookieToken?.replace('token=', '');
 	}
 
 	/**
@@ -71,7 +74,7 @@ class Util {
 	 */
 	static refreshDiscordToken(token, refresh_token) {
 		const data = {
-			client_id: '703161067982946334',
+			client_id: process.env.CLIENT_ID,
 			client_secret: process.env.CLIENT_SECRET,
 			grant_type: 'refresh_token',
 			redirect_uri: `${process.env.URL}/callback`,
@@ -109,6 +112,16 @@ class Util {
 		if (html) defaultHtml = defaultHtml.replace('<!-- HTML here -->', html.trim());
 
 		return Buffer.from(defaultHtml);
+	}
+
+	static formatDate(date) {
+		const months = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
+
+		let year = date.substr(0, 4);
+		let month = months[parseInt(date.substr(5, 2)) - 1];
+		let day = date.substr(8, 2);
+
+		return `${day} ${month} ${year}`;
 	}
 }
 

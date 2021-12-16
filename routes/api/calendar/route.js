@@ -1,29 +1,20 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Axios = require("axios").default;
-const Util = require('../../../Util');
+const BaseRoute = require('../../../BaseRoute');
 
 
 
-const route = {
-	name: 'calendar',
+class Route extends BaseRoute {
+	static path = '/api/calendar';
+	
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {string} token 
+	 * @param {string} token
 	 */
-	run: async (url, request, response, token) => {
-		const mayzeToken = url.searchParams.get('token') || token;
-
-		if (request.method.toUpperCase() !== 'GET' || !mayzeToken) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(JSON.stringify({
-				status: 400,
-				message: 'Bad Request'
-			}));
-			return response.end();
-		}
+	static async runValid(url, request, response, token) {
+		token = url.searchParams.get('token') || token;
 
 		const data = require('./calendar.json');
 		data.splice(new Date().getDate() - 1);
@@ -32,6 +23,8 @@ const route = {
 		response.write(JSON.stringify(data));
 		response.end();
 	}
-};
+}
 
-module.exports = route;
+
+
+module.exports = Route;

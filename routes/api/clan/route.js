@@ -1,35 +1,32 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const Util = require('../../../Util');
+const BaseRoute = require('../../../BaseRoute');
 
 
 
-const route = {
-	name: 'clan',
+class Route extends BaseRoute {
+	static path = '/api/clan';
+	static requireLogin = true;
+	
 	/**
 	 * @param {URL} url 
 	 * @param {IncomingMessage} request 
 	 * @param {ServerResponse} response 
-	 * @param {string} token 
+	 * @param {string} token
 	 */
-	run: async (url, request, response, token) => {
-        if (request.method.toUpperCase() !== 'GET') {
-            response.writeHead(400, { 'Content-Type': 'application/json' });
-            response.write(JSON.stringify({
-				status: 400,
-				message: 'Bad Request'
-			}));
-			return response.end();
-        }
+	static async runValid(url, request, response, token) {
+		token = url.searchParams.get('token') || token;
 
-		const d = {
-			name: "Mayze"
+		const data = {
+			name: 'Mayze'
 		};
 
-        response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.write(JSON.stringify(d));
-        response.end();
-    }
-};
+		response.writeHead(200, { 'Content-Type': 'application/json' });
+		response.write(JSON.stringify(data));
+		response.end();
+	}
+}
 
-module.exports = route;
+
+
+module.exports = Route;

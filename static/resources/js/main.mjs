@@ -10,9 +10,7 @@ fetch(`/api/discord/member?token=${getCookie('token')}`, {
 	.then(async res => {
 		const member = await res.json();
 
-		if (member.userID) {
-			isMember.innerText = '✨ Tu es membre de Mayze ! ✨';
-		} else {
-			isMember.innerText = 'Tu n\'es pas membre de Mayze';
-		}
+		isMember.innerText = member
+			? '✨ Tu es membre de Mayze ! ✨'
+			: 'Tu n\'es pas membre de Mayze';
 	});

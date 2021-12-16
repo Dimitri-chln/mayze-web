@@ -1,4 +1,6 @@
 import { getCookie } from '../../modules/cookie.mjs';
+import { formatDate } from '../../modules/utils.mjs';
+
 
 fetch(`api/clan/members?token=${getCookie('token')}`, {
 	method: 'GET'
@@ -21,29 +23,26 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 			method: 'GET'
 		})
 			.then(async res => {
-				const discordMember = await res.json();
-				const isColeader = discordMember.roles.some(r => r.id === '696751852267765872' || r.id === '696751614177837056');
+				const requestingMember = await res.json();
+				const isCoLeader = ['CO-LEADER', 'LEADER'].includes(requestingMember.wolvesville.rank);
 
 				for (let member of members) {
-					let separator = document.createElement('div');
+					const separator = document.createElement('div');
 						separator.className = 'separator';
-					ol.appendChild(separator);
-					
-					let li = document.createElement('li');
-		
-					let divMember = document.createElement('div');
+						ol.appendChild(separator);
+					const li = document.createElement('li');
+					const divMember = document.createElement('div');
 						divMember.className = 'member-info';
-					
-					let spanMember = document.createElement('span');
+					const spanMember = document.createElement('span');
 						spanMember.className = member.rank === 3 ? 'leader'
 							: member.rank === 2 ? 'co-leader'
 							: 'member';
 						spanMember.innerHTML = member.username;
-		
-					let spanDiscord = document.createElement('span');
-					if (member.user) {
+					const spanDiscord = document.createElement('span');
+				
+					if (member.user_id) {
 						spanDiscord.className = 'member-discord';
-						spanDiscord.innerHTML = `@${member.user.tag}`;
+						spanDiscord.innerHTML = `@${member.discord_tag}`;
 
 						// let spanDiscordHyperlink = document.createElement('a');
 						// spanDiscordHyperlink.href = `discord://https://discord.com/channels/@me/${member.user.id}`;
@@ -54,7 +53,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 					}
 
 					let editButton;
-					if (isColeader) {
+					if (isCoLeader) {
 						editButton = document.createElement('button');
 						editButton.className = 'edit-button';
 						editButton.innerHTML = 'Modifier';
@@ -85,7 +84,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 					ol.appendChild(li);
 				}
 
-				if (isColeader) {
+				if (isCoLeader) {
 					let memberTitle = document.getElementById('member-title');
 					let createButton = document.createElement('button');
 					createButton.className = 'create-button';
@@ -115,17 +114,6 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 					}
 				}
 			});
-		
-
-		function formatDate(date) {
-			const months = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
-
-			let year = date.substr(0, 4);
-			let month = months[parseInt(date.substr(5, 2)) - 1];
-			let day = date.substr(8, 2);
-
-			return `${day} ${month} ${year}`;
-		}
 	});
 
 document.getElementById('cancel-button').addEventListener('click', event => {

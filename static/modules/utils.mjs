@@ -8,3 +8,14 @@ export function generateRandomString() {
 
 	return randStr;
 }
+
+
+export function formatDate(date) {
+	const months = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
+
+	let year = date.substr(0, 4);
+	let month = months[parseInt(date.substr(5, 2)) - 1];
+	let day = date.substr(8, 2);
+
+	return `${day} ${month} ${year}`;
+}

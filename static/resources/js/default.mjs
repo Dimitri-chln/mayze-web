@@ -27,8 +27,7 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 
 
 document.getElementById('login-button').addEventListener('click', () => {
-	sessionStorage.setItem('callback_location', location.href);
-	location.href = '/login';
+	location.href = `/login?redirect=${location.pathname}`;
 });
 
 
