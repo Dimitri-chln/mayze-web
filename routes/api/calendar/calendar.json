@@ -56,7 +56,7 @@
 	{
 		"date": "2021-12-10T20:30:00Z",
 		"title": "Défi",
-		"subject": "Écrire un discours, sur un de ces deux thèmes, au choix :\n__Sujet A :__ \"Pourquoi il faut interdire les pingouins sur la banquise de 8h à 10h\"\n__Sujet B :__S \"Pourquoi il faut interdire themodo\"",
+		"subject": "Écrire un discours, sur un de ces deux thèmes, au choix :\n<u>Sujet A :</u> \"Pourquoi il faut interdire les pingouins sur la banquise de 8h à 10h\"\n<u>Sujet B :</u>\"Pourquoi il faut interdire themodo\"",
 		"image": "https://cdn.discordapp.com/attachments/913485946366873600/913489833849151550/46590B75-E0EF-498C-ADCC-79CFEB507A94.png"
 	},
 	{
