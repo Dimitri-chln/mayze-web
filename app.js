@@ -55,11 +55,20 @@ const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
 		
 		// If no file is found, send the 404 file
 		} catch (err) {
-			const file404 = Fs.readFileSync('./static/resources/html/404.html');
+			if (url.pathname.startsWith('/api')) {
+				response.writeHead(404, { 'Content-Type': 'application/json' });
+				response.write(JSON.stringify({
+					status: 404,
+					message: 'Not Found'
+				}));
 
-			response.writeHead(404, { 'Content-Type': 'text/html' });
-			response.write(file404);
-			response.end();
+			} else {
+				const file404 = Fs.readFileSync('./static/resources/html/404.html');
+
+				response.writeHead(404, { 'Content-Type': 'text/html' });
+				response.write(file404);
+				response.end();
+			}
 		}
 	}
 
