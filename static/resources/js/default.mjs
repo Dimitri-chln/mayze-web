@@ -8,8 +8,7 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	.then(async res => {
 		const user = await res.json();
 		if (!user.id) return;
-		console.log(user)
-
+		
 		console.log('Logged in');
 		const loginButton = document.getElementById('login-button');
 		loginButton.disabled = true;
