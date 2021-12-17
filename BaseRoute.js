@@ -161,7 +161,6 @@ class BaseRoute {
 	static async run(url, request, response, token) {
 		switch (await this._validateRequest(request, token)) {
 			case 'VALID':
-				console.log(url.pathname)
 				this.runValid(url, request, response, token);
 				break;
 
