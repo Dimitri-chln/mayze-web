@@ -10,11 +10,14 @@ class BaseRoute {
 	static path = '/';
 	static methods = ['GET'];
 	static requireLogin = false;
+	static requireMember = false;
 
 	/**
 	 * @param {string} token
 	 */
-	 static async fetchMember(token) {
+	static async fetchMember(token) {
+		if (!this.requireMember) return;
+
 		const { 'rows': tokens } = await Util.database.query(
 			'SELECT user_id FROM web_clients WHERE token = $1',
 			[ token ]
@@ -64,12 +67,13 @@ class BaseRoute {
 		
 			if (!tokens.length) return 'NOT_AUTHENTICATED';
 
-			const userID = tokens[0].user_id;
-			const member = Util.guild.members.cache.get(userID);
+			if (this.requireMember) {
+				const userID = tokens[0].user_id;
+				const member = Util.guild.members.cache.get(userID);
 
-			if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID)) return 'UNAUTHORIZED';
-			else return 'VALID';
-		
+				if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID)) return 'UNAUTHORIZED';
+				else return 'VALID';
+			} else return 'VALID';
 		} else return 'VALID';
 	}
 
@@ -117,7 +121,7 @@ class BaseRoute {
 		
 		} else {
 			response.writeHead(307, {
-				'Location': `/login?redirect=${url.pathname}`
+				'Location': `/login?redirect=${encodeURIComponent(url.pathname)}`
 			});
 		}
 
@@ -157,6 +161,7 @@ class BaseRoute {
 	static async run(url, request, response, token) {
 		switch (await this._validateRequest(request, token)) {
 			case 'VALID':
+				console.log(url.pathname)
 				this.runValid(url, request, response, token);
 				break;
 

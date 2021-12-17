@@ -8,6 +8,7 @@ const Util = require('../../../Util');
 class Route extends BaseRoute {
 	static path = '/api/leaderboard';
 	static requireLogin = true;
+	static requireMember = true;
 	
 	/**
 	 * @param {URL} url 
@@ -16,7 +17,7 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') || token;
+		token = url.searchParams.get('token') ?? token;
 
 		const members = Util.guild.members.cache.filter(m => m.roles.cache.has(Util.config.MEMBER_ROLE_ID));
 		const IDs = members.map(m => m.id);
