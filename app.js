@@ -87,9 +87,9 @@ const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
 			`__Request received:__
 			 - **Path:** \`${url.pathname}\`
 			 - **IP:** \`${IP}\`
-			 - **Country:** \`${geo.country}\`
-			 - **City:** \`${geo.city}\`
-			 - **Lat. long.:** \`${geo.ll}\``.replace(/\t/g, '')
+			 - **Country:** \`${geo.country || '-'}\`
+			 - **City:** \`${geo.city || '-'}\`
+			 - **Lat. long.:** \`${geo.ll || '-'}\``.replace(/\t/g, '')
 		).catch(console.error);
 	}
 })
