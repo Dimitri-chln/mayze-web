@@ -16,7 +16,7 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') ?? token;
+		token = url.searchParams.get('token') || token;
 
 		const data = {
 			name: 'Mayze'

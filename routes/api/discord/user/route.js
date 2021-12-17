@@ -17,7 +17,7 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') ?? token;
+		token = url.searchParams.get('token') || token;
 
 		const { 'rows': tokens } = await Util.database.query(
 			'SELECT user_id, discord_token FROM web_clients WHERE token = $1',
