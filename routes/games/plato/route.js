@@ -1,9 +1,9 @@
-const BaseRoute = require("../../BaseRoute");
+const BaseRoute = require("../../../BaseRoute");
 
 
 
 class Route extends BaseRoute {
-	static path = '/secret';
+	static path = '/games/plato';
 	static requireLogin = true;
 }
 

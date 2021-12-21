@@ -114,6 +114,19 @@ class Util {
 		return Buffer.from(defaultHtml);
 	}
 
+	/**
+	 * @param {Buffer} htmlFile 
+	 */
+	static addBaseURI(htmlFile) {
+		const data = htmlFile.toString()
+			.replace(
+				'<!-- BASE URI -->',
+				`<base href="${process.env.PROTOCOL}://${process.env.HOSTNAME}" />`
+			);
+
+		return Buffer.from(data);
+	}
+
 	static formatDate(date) {
 		const months = [ 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre' ];
 

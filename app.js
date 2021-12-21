@@ -64,7 +64,9 @@ const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
 				}));
 
 			} else {
-				const file404 = Fs.readFileSync('./static/resources/html/404.html');
+				const file404 = Util.addBaseURI(
+					Fs.readFileSync('./static/resources/html/404.html')
+				);
 
 				response.writeHead(404, { 'Content-Type': 'text/html' });
 				response.write(file404);
@@ -83,14 +85,16 @@ const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
 		const IP = parseIP(request);
 		const geo = GeoIP.lookup(IP);
 
-		Util.discord.channels.cache.get('881479629158891540').send(
-			`__Request received:__
-			 - **Path:** \`${url.pathname}\`
-			 - **IP:** \`${IP}\`
-			 - **Country:** \`${geo.country || '-'}\`
-			 - **City:** \`${geo.city || '-'}\`
-			 - **Lat. long.:** \`${geo.ll || '-'}\``.replace(/\t/g, '')
-		).catch(console.error);
+		if (IP !== "::1") {
+			Util.discord.channels.cache.get('881479629158891540').send(
+				`__Request received:__
+				 - **Path:** \`${url.pathname}\`
+				 - **IP:** \`${IP}\`
+				 - **Country:** \`${geo.country || '-'}\`
+				 - **City:** \`${geo.city || '-'}\`
+				 - **Lat. long.:** \`${geo.ll || '-'}\``.replace(/\t/g, '')
+			).catch(console.error);
+		}
 	}
 })
 	.listen(process.env.PORT || 8000);

@@ -86,7 +86,11 @@ class BaseRoute {
 	static runValid(url, request, response, token) {
 		const file = Fs.readFileSync(Path.join(__dirname, 'routes' + url.pathname, 'index.html'));
 		response.writeHead(200, { 'Content-Type': 'text/html' });
-		response.write(Util.completeHtmlFile(file));
+		response.write(
+			Util.addBaseURI(
+				Util.completeHtmlFile(file)
+			)
+		);
 		response.end();
 	}
 
