@@ -6,7 +6,7 @@
 	border-collapse: collapse;
 	border: 4px solid #1a1e20;
 	background-color: #23272a;
-	width: 90%;
+	width: 100%;
 }
 
 
@@ -37,7 +37,7 @@
 #day-popup {
 	display: none;
 	position: fixed;
-	width: 75%;
+	width: 80%;
 	top: 15em;
 	background-color: #23272a;
 	border: 3px solid #1a1e20;

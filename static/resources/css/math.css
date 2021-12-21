@@ -1,16 +1,13 @@
 #katex-input {
 	position: relative;
-	top: 10em;
-	width:85vw;
+	width: 100%;
 	resize: none;
-	min-height: 2em;
 	overflow: hidden;
 	font-size: x-large;
 }
 
 #katex-render {
 	position: relative;
-	top: 15em;
 	background: white;
 	color: black;
 	padding: 0 1em;

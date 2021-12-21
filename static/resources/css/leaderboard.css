@@ -1,8 +1,7 @@
 #leaderboard {
+	position: relative;
 	display: flex;
 	flex-direction: column;
-	position: relative;
-	top: 7em;
 	list-style-type: none;
 	background-color: #23272a;
 	justify-self: center;

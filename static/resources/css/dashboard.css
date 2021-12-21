@@ -1,33 +1,9 @@
-#tabs {
-	display: none;
-}
-
-#tabs ul {
-	position: fixed;
-	display: flex;
-	flex-direction: column;
-	list-style-type: none;
-	top: 5em;
-	width: 25%;
-	height: 100%;
-	background-color: #23272a;
-	border: 2px solid #1a1e20;
-	border-radius: 1.5em;
-	padding: 1em;
-}
-
-#tabs li {
-	font-size: 1.25em;
-	margin: 0.5em;
-	border-bottom: 2px solid #2c2f33;
-}
-
 /* MENU BUTTON */
 
 #menu-toggle {
 	display: block;
 	position: fixed;
-	top: 7em;
+	top: 8em;
 	left: 2em;
 	z-index: 1;
 	-webkit-user-select: none;
@@ -147,46 +123,44 @@
 /* END MENU BUTTON */
 
 #clan {
-	position: absolute;
-	top: 10em;
-	left: 12.5vw;
+	position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 2em;
 }
 
 #stats h1 {
-	font-size: 30px;
+	font-size: 3em;
 }
 
 #stats p {
-	font-size: 15px;
+	font-size: 1em;
 }
 
 #member-title {
 	display: flex;
-	flex-direction: row;
+	font-size: 1.5em;
 }
 
 #member-title button {
 	color:  white;
 	background-color: #23272a;
 	border: 2px solid #1a1e20;
-	border-radius: 1em;
+	border-radius: 2em;
 	margin: 2em 2em;
+	padding: 1em;
 	cursor: pointer;
 }
 
 #member-list {
 	position: relative;
-	top: 1em;
-	left: -4em;
-	width: 75vw;
 	list-style-type: none;
-	margin-bottom: 10em;
 }
 
 #member-list li {
-	margin: 0.5em;
 	display: flex;
 	justify-content: space-between;
+	margin: 0.5em;
 }
 
 .separator {

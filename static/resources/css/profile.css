@@ -1,11 +1,10 @@
 #member-title {
 	position: relative;
-	top: 4em;
 	left: 2em;
 }
 
 #member-info {
 	position: relative;
-	top: 8em;
-	left: 8em;
+	left: 6em;
+	width: 100%;
 }

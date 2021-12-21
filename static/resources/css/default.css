@@ -3,13 +3,27 @@
 	src: url('../../resources/fonts/Montserrat-Regular.otf');
 }
 
+html {
+	height: 100%;
+}
+
 body {
 	display: flex;
+	box-sizing: border-box;
 	flex-direction: column;
 	background-color: #2c2f33;
 	font-family: 'monserrat', sans-serif;
 	color: white;
-	height: 100vh;
+	min-height: 100%;
+	margin: unset;
+}
+
+section#main {
+	position: absolute;
+	box-sizing: border-box;
+	width: 100%;
+	top: 7em;
+	padding: 1em;
 }
 
 input[type=button] {
@@ -19,33 +33,31 @@ input[type=button] {
 #banner {
 	position: fixed;
 	display: flex;
+	box-sizing: border-box;
 	justify-content: space-between;
-	height: 4em;
-	width: 98%;
+	height: 6em;
+	width: 100%;
 	background-color: #23272a;
-	border: 2px solid black;
-	border-radius: 3em;
-	padding: 5px;
+	padding: 0.4em;
 	z-index: 10;
 }
 
 #banner-main {
 	display: flex;
 	background-color: #1a1e20;
-	height: 100%;
 	border-radius: 3em;
 }
 
 #banner-icon {
-	height: 100%;
 	border-radius: 100%;
-	margin-right: 8px;
 }
 
 #banner-title {
+	display: flex;
 	color: white;
-	font-size: 2.4em;
-	margin: 5px 10px 5px 0;
+	font-size: 3em;
+	align-self: center;
+	margin: 0 0.5em 0 0.2em;
 }
 
 a {
@@ -60,47 +72,46 @@ a {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	align-self: center;
 }
 
 .banner-category h2 {
-	display: block;
-	text-decoration: none;
+	display: flex;
 	color: white;
-	font-size: 2em;
-    border-bottom: 2px solid transparent;
-	padding: 10px 0;
+	font-size: 2.5em;
+	border-bottom: 2px solid transparent;
 	margin: 0;
 }
 
 .banner-category:hover h2 {
-    color: orange;
-    border-bottom: 2px solid gold;
+	color: orange;
+	border-bottom: 2px solid gold;
 }
 
 .scrolling-menu {
 	display: none;
+	position: fixed;
 	list-style-type: none;
-    background-color: #1a1e20;
-	position: absolute;
+	background-color: #1a1e20;
 	margin: 0;
 	padding: 0;
 	z-index: 10;
 }
 
 .banner-category:hover .scrolling-menu {
-    display: block;
+	display: block;
 }
 
 .scrolling-menu li {
-    float: none;
+	float: none;
 	text-align: center;
 	font-size: 1.4em;
 	margin: 1em;
 }
 
 .scrolling-menu a:hover {
-    color: orange;
-	transition-duration: 0.3s;
+	color: orange;
+	transition-duration: 0.2s;
 }
 
 /* END SCROLLING MENU */
@@ -108,14 +119,12 @@ a {
 #banner-login {
 	display: flex;
 	background-color: #1a1e20;
-	height: 100%;
 	border-radius: 3em;
 }
 
 #banner-user-avatar {
-	height: 100%;
-	margin: 0 10px 0 0;
 	border-radius: 100%;
+	margin: 0 0.5em 0 0;
 }
 
 #login-button {
@@ -123,33 +132,15 @@ a {
 	border: solid #4e5d94;
 	color: white;
 	border-radius: 3em;
-	font-size: 1.3em;
+	font-size: 1.5em;
 	font-weight: bold;
+	padding: 0 1em;
 	transition-duration: 0.4s;
 }
 
 #login-button:hover {
 	background-color: #4e5d94;
 	transition-duration: 0.4s;
-}
-
-#is-member {
-	position: fixed;
-	top: 6em;
-	left: 1em;
-	display: flex;
-	justify-content: center;
-	text-align: center;
-	background-color: #7289da;
-	border: solid #4e5d94;
-	border-radius: 1em;
-	padding: 5px 7px;
-}
-
-#is-member p {
-	color: white;
-	height: 100%;
-	margin: 0;
 }
 
 /* ALIGN BLOCKS */
