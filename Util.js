@@ -120,7 +120,7 @@ class Util {
 	static addBaseURI(htmlFile) {
 		const data = htmlFile.toString()
 			.replace(
-				'<!-- BASE URI -->',
+				'<!-- Base URI -->',
 				`<base href="${process.env.PROTOCOL}://${process.env.HOSTNAME}" />`
 			);
 

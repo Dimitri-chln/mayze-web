@@ -20,6 +20,8 @@ body {
 
 section#main {
 	position: absolute;
+	display: flex;
+	flex-direction: column;
 	box-sizing: border-box;
 	width: 100%;
 	top: 7em;
