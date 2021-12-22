@@ -1,4 +1,7 @@
 import { getCookie } from '../../modules/cookie.mjs';
+import { formatXP } from '../../modules/utils.mjs';
+
+
 
 fetch(`api/leaderboard?token=${getCookie('token')}`, {
 	method: 'GET'
@@ -65,16 +68,4 @@ function createLeaderboard(leaderboard, leaderboardType) {
 
 		ol.appendChild(li);
 	}
-}
-
-
-function formatXP(xp) {
-	const suffixes = ['', 'k', 'm', 'g'];
-
-	while (xp > 1000) {
-		suffixes.shift();
-		xp = xp / 1000;
-	}
-
-	return `${(Math.round(xp * 10) / 10) + suffixes[0]} XP`;
 }

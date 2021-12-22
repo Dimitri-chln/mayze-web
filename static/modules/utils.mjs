@@ -19,3 +19,15 @@ export function formatDate(date) {
 
 	return `${day} ${month} ${year}`;
 }
+
+
+export function formatXP(xp) {
+	const suffixes = ['', 'k', 'm', 'g'];
+
+	while (xp > 1000) {
+		suffixes.shift();
+		xp = xp / 1000;
+	}
+
+	return `${(Math.round(xp * 10) / 10) + suffixes[0]} XP`;
+}

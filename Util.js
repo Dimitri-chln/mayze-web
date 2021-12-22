@@ -136,6 +136,20 @@ class Util {
 
 		return `${day} ${month} ${year}`;
 	}
+
+	/**
+	 * @param {number} xp
+	 * @param {number} [level]
+	 * @returns {{ level: number, currentXP: number, neededXP: number }}
+	 */
+	static getLevel(xp, level = 0) {
+		const xpForLevel = Util.config.BASE_XP + level * Util.config.XP_INCREMENT;
+
+		if (xp < xpForLevel)
+			return { level, currentXP: xp, neededXP: xpForLevel };
+
+		return this.getLevel(xp - xpForLevel, level + 1);
+	}
 }
 
 

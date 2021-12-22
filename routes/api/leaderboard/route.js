@@ -28,8 +28,8 @@ class Route extends BaseRoute {
 		)
 			.then(res => {
 				const data = res.rows.map(row => {
-					const chatLevel = getLevel(row.chat_xp);
-					const voiceLevel = getLevel(row.voice_xp);
+					const chatLevel = Util.getLevel(row.chat_xp);
+					const voiceLevel = Util.getLevel(row.voice_xp);
 
 					return {
 						username: members.get(row.user_id).user.username,
@@ -51,22 +51,6 @@ class Route extends BaseRoute {
 			});
 	}
 }
-
-
-
-/**
- * @param {number} xp
- * @param {number} [level]
- * @returns {{ level: number, currentXP: number, neededXP: number }}
- */
-function getLevel(xp, level = 0) {
-	 const xpForLevel = Util.config.BASE_XP + level * Util.config.XP_INCREMENT;
-	 
-	 if (xp < xpForLevel)
-		 return { level, currentXP: xp, neededXP: xpForLevel };
-	 
-	 return getLevel(xp - xpForLevel, level + 1);
- }
 
 
 
