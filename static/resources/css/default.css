@@ -58,7 +58,7 @@ input[type=button] {
 #banner-title {
 	display: flex;
 	color: white;
-	font-size: 3em;
+	font-size: xxx-large;
 	align-self: center;
 	margin: 0 0.5em 0 0.2em;
 }
@@ -78,7 +78,7 @@ a {
 	align-self: center;
 }
 
-.banner-category h2 {
+.banner-category > h2 {
 	display: flex;
 	color: white;
 	font-size: 2.5em;
@@ -86,7 +86,7 @@ a {
 	margin: 0;
 }
 
-.banner-category:hover h2 {
+.banner-category:hover > h2 {
 	color: orange;
 	border-bottom: 2px solid gold;
 }
@@ -101,18 +101,18 @@ a {
 	z-index: 10;
 }
 
-.banner-category:hover .scrolling-menu {
+.banner-category:hover > .scrolling-menu {
 	display: block;
 }
 
-.scrolling-menu li {
+.scrolling-menu > li {
 	float: none;
 	text-align: center;
 	font-size: 1.4em;
 	margin: 1em;
 }
 
-.scrolling-menu a:hover {
+.scrolling-menu > li > a:hover {
 	color: orange;
 	transition-duration: 0.2s;
 }
@@ -135,7 +135,7 @@ a {
 	border: solid #4e5d94;
 	color: white;
 	border-radius: 3em;
-	font-size: 1.5em;
+	font-size: x-large;
 	font-weight: bold;
 	padding: 0 1em;
 	transition-duration: 0.4s;

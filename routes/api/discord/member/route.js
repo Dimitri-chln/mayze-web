@@ -24,7 +24,7 @@ class Route extends BaseRoute {
 			discord: {
 				...member.discord.toJSON(),
 				tag: member.discord.user.tag,
-				roles: member.discord.roles.cache.toJSON()
+				roles: member.discord.roles.cache.toJSON()				
 			},
 			wolvesville: member.wolvesville
 		};

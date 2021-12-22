@@ -91,7 +91,8 @@ class BaseRoute {
 				Util.completeHtmlFile(file)
 			)
 		);
-		response.end();
+		
+		return response.end();
 	}
 
 	/**
@@ -106,7 +107,8 @@ class BaseRoute {
 			status: 405,
 			message: 'Method Not Allowed'
 		}));
-		response.end();
+		
+		return response.end();
 	}
 
 	/**
@@ -129,7 +131,7 @@ class BaseRoute {
 			});
 		}
 
-		response.end();
+		return response.end();
 	}
 
 	/**
@@ -153,7 +155,7 @@ class BaseRoute {
 		}
 
 		
-		response.end();
+		return response.end();
 	}
 	
 	/**

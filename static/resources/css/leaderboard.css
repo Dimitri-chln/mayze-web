@@ -1,3 +1,15 @@
+#leaderboard-selection {
+	display: flex;
+	flex-direction: column;
+}
+
+#leaderboard-selection > div {
+	display: flex;
+	align-items: center;
+	font-size: larger;
+	margin: 0.5em;
+}
+
 #leaderboard {
 	position: relative;
 	display: flex;

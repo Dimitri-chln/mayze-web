@@ -22,17 +22,26 @@ class Route extends BaseRoute {
 		const members = Util.guild.members.cache.filter(m => m.roles.cache.has(Util.config.MEMBER_ROLE_ID));
 		const IDs = members.map(m => m.id);
 
-		Util.database.query(`SELECT * FROM levels WHERE user_id = ANY ('{ "${IDs.join('", "')}" }') ORDER BY chat_xp DESC`)
+		Util.database.query(
+			'SELECT * FROM levels WHERE user_id = ANY ($1)',
+			[ IDs ]
+		)
 			.then(res => {
-				const data = res.rows.map((row, i) => {
-					const level = getLevel(row.chat_xp);
+				const data = res.rows.map(row => {
+					const chatLevel = getLevel(row.chat_xp);
+					const voiceLevel = getLevel(row.voice_xp);
+
 					return {
-						rank: i + 1,
 						username: members.get(row.user_id).user.username,
 						avatar: members.get(row.user_id).user.avatarURL() || 'https://cdn.discordapp.com/embed/avatars/0.png',
-						level: level.level,
-						needed_xp: level.neededXP,
-						total_xp: row.chat_xp
+						chat_level: chatLevel.level,
+						chat_needed_xp: chatLevel.neededXP,
+						chat_total_xp: row.chat_xp,
+						chat_rank: res.rows.filter(r => r.chat_xp > row.chat_xp).length + 1,
+						voice_level: voiceLevel.level,
+						voice_needed_xp: voiceLevel.neededXP,
+						voice_total_xp: row.voice_xp,
+						voice_rank: res.rows.filter(r => r.voice_xp > row.voice_xp).length + 1
 					};
 				});
 
