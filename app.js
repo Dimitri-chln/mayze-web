@@ -34,6 +34,7 @@ const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
 	try {
 		/**@type {typeof Route} */
 		const route = require(filePath + 'route');
+		
 		route.run(url, request, response, token)
 			.catch(err => {
 				console.error(err);

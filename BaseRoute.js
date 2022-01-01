@@ -28,7 +28,7 @@ class BaseRoute {
 		const userID = tokens[0].user_id;
 		const member = Util.guild.members.cache.get(userID);
 
-		if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID)) return;
+		if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID)) throw new Error('Unauthorized');
 
 		const { 'rows': wolvesvilleMembers } = await Util.database.query(
 			'SELECT * FROM clan_members WHERE user_id = $1',
@@ -85,6 +85,7 @@ class BaseRoute {
 	 */
 	static runValid(url, request, response, token) {
 		const file = Fs.readFileSync(Path.join(__dirname, 'routes' + url.pathname, 'index.html'));
+		
 		response.writeHead(200, { 'Content-Type': 'text/html' });
 		response.write(
 			Util.addBaseURI(
