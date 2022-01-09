@@ -106,14 +106,22 @@ console.log(`Listening on port ${httpServer.address().port}`);
 
 
 // Delete the tokens from the database when they expired
-setInterval(() => Util.database.query('SELECT token, expires_at, user_id, discord_expires_at FROM web_clients').then(res => {
+setInterval(() => Util.database.query(
+	'SELECT token, expires_at, user_id, discord_expires_at FROM web_clients'
+).then(res => {
 	for (const row of res.rows) {
 		if (new Date(row.expires_at).valueOf() < Date.now()) {
-			Util.database.query(`DELETE FROM web_clients WHERE token = '${row.token}'`).catch(console.error);
+			Util.database.query(
+				'DELETE FROM web_clients WHERE token = $1',
+				[ row.token ]
+			).catch(console.error);
 		}
 
 		if (new Date(row.discord_expires_at).valueOf() < Date.now()) {
-			Util.database.query(`DELETE FROM web_clients WHERE user_id = '${row.user_id}'`).catch(console.error);
+			Util.database.query(
+				'DELETE FROM web_clients WHERE user_id = $1',
+				[ row.user_id ]
+			).catch(console.error);
 		}
 	}
 }), 60000);
