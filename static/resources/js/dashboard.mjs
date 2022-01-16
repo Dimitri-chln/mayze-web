@@ -61,10 +61,11 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 							document.getElementById('popup-form').style.display = 'block';
 							document.getElementById('form-title').innerHTML = `Modifier ${member.username}`;
 							document.getElementById('field-username').value = member.username;
+							document.getElementById('field-username').focus();
 							document.getElementById('field-discord').value = member.user_id || '';
 							document.getElementById('field-joined').min = '2019-07-30';
-							document.getElementById('field-joined').max = new Date().toISOString().substr(0, 10);
-							document.getElementById('field-joined').value = member.joined_at.substr(0, 10);
+							document.getElementById('field-joined').max = new Date().toISOString().substring(0, 10);
+							document.getElementById('field-joined').value = member.joined_at.substring(0, 10);
 							document.getElementById('field-rank').options[member.rank - 1].selected = true;
 							document.getElementById('delete-button').style.display = 'block';
 						});
@@ -107,7 +108,6 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 				if (screen.width < 768) {
 					for (let row of document.getElementsByClassName('member-info')) {
 						row.parentElement.addEventListener('click', () => {
-							console.log('ok');
 							let display = row.children[2].style.display !== 'block';
 							row.children[2].style.display = display ? 'block' : 'none';
 						});
@@ -116,10 +116,14 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 			});
 	});
 
+
 document.getElementById('cancel-button').addEventListener('click', event => {
 	event.preventDefault();
 	document.getElementById('popup-form').style.display = 'none';
 });
+document.getElementById('delete-button').addEventListener('click', event => modifyMember(event, 'DELETE'));
+document.getElementById('save-button').addEventListener('click', event => modifyMember(event, 'POST'));
+
 
 function modifyMember(event, method) {
 	event.preventDefault();
@@ -157,6 +161,3 @@ function modifyMember(event, method) {
 		return regex.test(id);
 	}
 }
-
-document.getElementById('delete-button').addEventListener('click', event => modifyMember(event, 'DELETE'));
-document.getElementById('save-button').addEventListener('click', event => modifyMember(event, 'POST'));
