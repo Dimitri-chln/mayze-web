@@ -94,6 +94,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 						document.getElementById('popup-form').style.display = 'block';
 						document.getElementById('form-title').innerHTML = `Ajouter un membre`;
 						document.getElementById('field-username').value = '';
+						document.getElementById('field-username').focus();
 						document.getElementById('field-discord').value = '';
 						document.getElementById('field-joined').min = '2019-07-30';
 						document.getElementById('field-joined').max = new Date().toISOString().substr(0, 10);
