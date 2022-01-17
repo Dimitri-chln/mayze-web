@@ -11,7 +11,7 @@ input[type=button] {
 #redirect-button {
     position: absolute;
     background-color: #5865f2;
-    border: solid #4e5d94;
+	border: solid #404ab3;
     color: white;
     top: 3em;
     height: 3em;
@@ -22,6 +22,6 @@ input[type=button] {
 }
 
 #redirect-button:hover {
-    background-color: #4e5d94;
+    background-color: #404ab3;
     transition-duration: 0.4s;
 }
