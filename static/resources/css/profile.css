@@ -9,3 +9,15 @@
 	align-self: center;
 	width: 85%;
 }
+
+#member-info td {
+	padding: 1em;
+}
+
+#member-info tr:nth-child(even) {
+	background: #23272a;
+}
+
+#member-info tr:nth-child(odd) {
+	background: #202427;
+}

@@ -46,8 +46,9 @@ input[type=button] {
 
 #banner-main {
 	display: flex;
-	background-color: #1a1e20;
+	background-color: #1a141a;
 	border-radius: 3em;
+	width: fit-content;
 }
 
 #banner-icon {
@@ -95,7 +96,7 @@ a {
 	display: none;
 	position: fixed;
 	list-style-type: none;
-	background-color: #1a1e20;
+	background-color: #1a141a;
 	margin: 0;
 	padding: 0;
 	z-index: 10;
@@ -121,13 +122,14 @@ a {
 
 #banner-login {
 	display: flex;
-	background-color: #1a1e20;
+	background-color: #1a141a;
 	border-radius: 3em;
 }
 
 #banner-user-avatar {
 	border-radius: 100%;
 	margin: 0 0.5em 0 0;
+	width: fit-content;
 }
 
 #login-button {
