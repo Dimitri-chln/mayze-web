@@ -90,7 +90,7 @@
 	margin: -3em 0 0 -2em;
 	padding-top: 3em;
 	background: #23272a;
-	border: 2px solid #1a141a;
+	border: 2px solid #1a1e20;
 	border-radius: 1em;
 	list-style-type: none;
 	-webkit-font-smoothing: antialiased;
@@ -146,7 +146,7 @@
 #member-title button {
 	color:  white;
 	background-color: #23272a;
-	border: 2px solid #1a141a;
+	border: 2px solid #1a1e20;
 	border-radius: 2em;
 	margin: 2em 2em;
 	padding: 1em;
@@ -202,7 +202,7 @@
 	display: none;
 	color:  white;
 	background-color: #23272a;
-	border: 2px solid #1a141a;
+	border: 2px solid #1a1e20;
 	border-radius: 1em;
 	margin: 1em 1.5em;
 	cursor: pointer;
@@ -227,7 +227,7 @@
 	top: 12.5%;
 	left: 12.5%;
 	background-color: #23272a;
-	border: 3px solid #1a141a;
+	border: 3px solid #1a1e20;
 	border-radius: 2em;
 	z-index: 15;
 	padding: 2em;
