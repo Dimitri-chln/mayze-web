@@ -28,8 +28,9 @@ const httpServer = Http.createServer(/*OPTIONS,*/ async (request, response) => {
 	const token = Util.getToken(request);
 
 	const filePath = './routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
-	const language = Object.keys(LANGUAGE_LIST).find(l => LANGUAGE_LIST[l].test(request.headers['accept-language'])) || 'fr';
-	// response.setHeader('Content-Language', request.headers['accept-language'] || 'fr-FR');
+	const language = url.searchParams.get('lang')
+		?? Object.keys(LANGUAGE_LIST).find(l => LANGUAGE_LIST[l].test(request.headers['accept-language']))
+		?? 'fr';
 
 	try {
 		/**@type {typeof Route} */
