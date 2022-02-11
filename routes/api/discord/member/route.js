@@ -22,7 +22,7 @@ class Route extends BaseRoute {
 		const member = await this.fetchMember(token);
 
 		const { rows } = await Util.database.query(
-			'SELECT * FROM levels WHERE user_id = $1',
+			'SELECT * FROM level WHERE user_id = $1',
 			[ member.discord.user.id ]
 		);
 

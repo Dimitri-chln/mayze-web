@@ -23,7 +23,7 @@ class Route extends BaseRoute {
 		const IDs = members.map(m => m.id);
 
 		Util.database.query(
-			'SELECT * FROM levels WHERE user_id = ANY ($1)',
+			'SELECT * FROM level WHERE user_id = ANY ($1)',
 			[ IDs ]
 		)
 			.then(res => {
