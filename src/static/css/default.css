@@ -1,6 +1,6 @@
 @font-face {
-	font-family: "monserrat";
-	src: url("https://cdn.mayze.xyz/static/fonts/Montserrat-Regular.otf");
+	font-family: 'monserrat';
+	src: url('https://mayze.xyz/static/fonts/Montserrat-Regular.otf');
 }
 
 html {
@@ -12,7 +12,7 @@ body {
 	box-sizing: border-box;
 	flex-direction: column;
 	background-color: #2c2f33;
-	font-family: "monserrat", sans-serif;
+	font-family: 'monserrat', sans-serif;
 	color: white;
 	height: 100%;
 	margin: unset;
@@ -28,7 +28,7 @@ section#main {
 	padding: 1em;
 }
 
-input[type="button"] {
+input[type='button'] {
 	-webkit-appearance: none;
 }
 

@@ -1,18 +1,12 @@
 <!-- Incomplete file -->
 
-
-
 <!-- CSS -->
-<link rel="stylesheet" href="https://cdn.mayze.xyz/static/css/dashboard.css" />
+<link rel="stylesheet" href="https://mayze.xyz/static/css/dashboard.css" />
 <!-- CSS end -->
 
-
-
-<!-- MJS -->		
-<script type="module" src="https://cdn.mayze.xyz/static/js/dashboard.mjs"></script>
+<!-- MJS -->
+<script type="module" src="https://mayze.xyz/static/js/dashboard.mjs"></script>
 <!-- MJS end -->
-
-
 
 <!-- HTML -->
 <nav role="navigation">
@@ -32,8 +26,8 @@
 	<article id="stats">
 		<h1>Informations</h1>
 		<p>
-			<u>Date de création :</u> 30 juillet 2019<br>
-			<u>Chef :</u> <span id="leader">Chargement...</span><br>
+			<u>Date de création :</u> 30 juillet 2019<br />
+			<u>Chef :</u> <span id="leader">Chargement...</span><br />
 			<u>Sous-chefs :</u> <span id="co-leaders">Chargement...</span>
 		</p>
 	</article>
@@ -55,16 +49,34 @@
 <div id="popup-form">
 	<form autocomplete="off">
 		<h1 id="form-title">Modifier un membre</h1>
-	
+
 		<div id="fields">
 			<label for="username"><b>Pseudo</b></label>
-			<input type="text" placeholder="Nouveau pseudo" name="username" id="field-username" required />
-			
+			<input
+				type="text"
+				placeholder="Nouveau pseudo"
+				name="username"
+				id="field-username"
+				required
+			/>
+
 			<label for="discord"><b>ID Discord</b></label>
-			<input type="text" placeholder="Nouvel ID Discord" name="discord" id="field-discord" required />
-		
+			<input
+				type="text"
+				placeholder="Nouvel ID Discord"
+				name="discord"
+				id="field-discord"
+				required
+			/>
+
 			<label for="joined"><b>Rejoint le</b></label>
-			<input type="date" placeholder="Date d'arrivée" name="joined" id="field-joined" required />
+			<input
+				type="date"
+				placeholder="Date d'arrivée"
+				name="joined"
+				id="field-joined"
+				required
+			/>
 
 			<label for="rank"><b>Rang</b></label>
 			<select name="rank" id="field-rank">
@@ -73,7 +85,7 @@
 				<option value="3">Chef</option>
 			</select>
 		</div>
-		
+
 		<div id="form-buttons">
 			<input type="button" id="cancel-button" value="Annuler" />
 			<input type="button" id="delete-button" value="Supprimer" />
