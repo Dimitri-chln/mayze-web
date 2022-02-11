@@ -30,8 +30,11 @@ const httpServer = Http.createServer(
 		);
 		const token = Util.getToken(request);
 
-		const filePath = Path.join(
-			'routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/'),
+		const routePath = Path.join(
+			__dirname,
+			'routes',
+			url.pathname + (url.pathname.endsWith('/') ? '' : '/'),
+			'route',
 		);
 		const language =
 			url.searchParams.get('lang') ??
@@ -42,7 +45,7 @@ const httpServer = Http.createServer(
 
 		try {
 			/**@type {typeof Route} */
-			const route = require(filePath + 'route');
+			const route = require(routePath);
 
 			route.run(url, request, response, token).catch((err) => {
 				console.error(err);
