@@ -2,9 +2,9 @@
   "name": "mayze-web",
   "version": "0.0.2",
   "description": "Pour le meilleur clan!",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node ."
   },
   "dependencies": {
     "axios": "^0.21.1",

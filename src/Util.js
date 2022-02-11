@@ -6,7 +6,7 @@ const Discord = require('discord.js');
 const Http = require('http');
 
 class Util {
-	static config = require('./config.json');
+	static config = require('../config.json');
 	/**@type {Pg.Client} */
 	static database = newDatabaseClient();
 	static discord = new Discord.Client({
@@ -121,7 +121,7 @@ class Util {
 	 */
 	static completeHtmlFile(incompleteHtml) {
 		let defaultHtml = Fs.readFileSync(
-			Path.join(__dirname, 'public/static/html/default.html'),
+			Path.join(__dirname, 'static/html/default.html'),
 		).toString();
 
 		const data = incompleteHtml.toString();

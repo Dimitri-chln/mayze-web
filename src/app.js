@@ -64,7 +64,7 @@ const httpServer = Http.createServer(
 				);
 			} else {
 				const file404 = Util.addBaseURI(
-					Fs.readFileSync('./public/static/html/404.html'),
+					Fs.readFileSync('./static/html/404.html'),
 				);
 
 				response.writeHead(404, { 'Content-Type': 'text/html' });
