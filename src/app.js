@@ -2,13 +2,12 @@ require('dotenv').config();
 const Http = require('http');
 const Url = require('url');
 const Fs = require('fs');
-const Path = require('path');
 const GeoIP = require('geoip-lite');
 const Util = require('./Util');
 const Route = require('./BaseRoute');
 
-// const cert = Fs.readFileSync('./ssl/cert.pem');
-// const key = Fs.readFileSync('./ssl/key.pem');
+// const cert = Fs.readFileSync('../ssl/cert.pem');
+// const key = Fs.readFileSync('../ssl/key.pem');
 
 Util.connectToDiscord();
 
@@ -30,12 +29,9 @@ const httpServer = Http.createServer(
 		);
 		const token = Util.getToken(request);
 
-		const routePath = Path.join(
-			__dirname,
-			'routes',
-			url.pathname + (url.pathname.endsWith('/') ? '' : '/'),
-			'route',
-		);
+		const filePath =
+			'./routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
+
 		const language =
 			url.searchParams.get('lang') ??
 			Object.keys(LANGUAGE_LIST).find((l) =>
@@ -45,7 +41,7 @@ const httpServer = Http.createServer(
 
 		try {
 			/**@type {typeof Route} */
-			const route = require(routePath);
+			const route = require(filePath + 'route');
 
 			route.run(url, request, response, token).catch((err) => {
 				console.error(err);
@@ -57,24 +53,36 @@ const httpServer = Http.createServer(
 				response.end();
 			});
 
-			// If the route doesn't exist, send the 404 file
+			// If the route doesn't exist, try finding a static file
 		} catch (err) {
-			if (url.pathname.startsWith('/api')) {
-				response.writeHead(404, { 'Content-Type': 'application/json' });
-				response.write(
-					JSON.stringify({
-						status: 404,
-						message: 'Not Found',
-					}),
-				);
-			} else {
-				const file404 = Util.addBaseURI(
-					Fs.readFileSync(Path.join(__dirname, 'static/html/404.html')),
-				);
+			try {
+				const file = Fs.readFileSync('./src/public' + url.pathname);
 
-				response.writeHead(404, { 'Content-Type': 'text/html' });
-				response.write(file404);
+				response.writeHead(200, {
+					'Content-Type': Util.getContentType(url.pathname),
+				});
+				response.write(file);
 				response.end();
+
+				// If no file is found, send the 404 file
+			} catch (err) {
+				if (url.pathname.startsWith('/api')) {
+					response.writeHead(404, { 'Content-Type': 'application/json' });
+					response.write(
+						JSON.stringify({
+							status: 404,
+							message: 'Not Found',
+						}),
+					);
+				} else {
+					const file404 = Util.addBaseURI(
+						Fs.readFileSync('./src/public/static/html/404.html'),
+					);
+
+					response.writeHead(404, { 'Content-Type': 'text/html' });
+					response.write(file404);
+					response.end();
+				}
 			}
 		}
 

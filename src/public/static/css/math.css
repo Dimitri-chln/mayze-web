@@ -1,0 +1,18 @@
+#katex-input {
+	position: relative;
+	width: 100%;
+}
+
+#katex-input-field {
+	resize: vertical;
+	overflow: hidden;
+	font-size: x-large;
+	width: 100%;
+}
+
+#katex-render {
+	position: relative;
+	background: white;
+	color: black;
+	padding: 0 1em;
+}

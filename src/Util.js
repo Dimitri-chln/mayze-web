@@ -121,7 +121,7 @@ class Util {
 	 */
 	static completeHtmlFile(incompleteHtml) {
 		let defaultHtml = Fs.readFileSync(
-			Path.join(__dirname, 'static/html/default.html'),
+			'./src/public/static/html/default.html',
 		).toString();
 
 		const data = incompleteHtml.toString();
