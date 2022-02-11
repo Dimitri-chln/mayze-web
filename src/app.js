@@ -16,10 +16,10 @@ const LANGUAGE_LIST = {
 	en: /^en(?:-US)?/,
 };
 
-const OPTIONS = {
-	cert: cert,
-	key: key,
-};
+// const OPTIONS = {
+// 	cert: cert,
+// 	key: key,
+// };
 
 const httpServer = Http.createServer(
 	/*OPTIONS,*/ async (request, response) => {
