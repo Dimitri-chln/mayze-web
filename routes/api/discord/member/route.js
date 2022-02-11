@@ -3,17 +3,15 @@ const { URL } = require('url');
 const Util = require('../../../../Util');
 const BaseRoute = require('../../../../BaseRoute');
 
-
-
 class Route extends BaseRoute {
 	static path = '/api/discord/member';
 	static requireLogin = true;
 	static requireMember = true;
-	
+
 	/**
-	 * @param {URL} url 
-	 * @param {IncomingMessage} request 
-	 * @param {ServerResponse} response 
+	 * @param {URL} url
+	 * @param {IncomingMessage} request
+	 * @param {ServerResponse} response
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
@@ -23,7 +21,7 @@ class Route extends BaseRoute {
 
 		const { rows } = await Util.database.query(
 			'SELECT * FROM level WHERE user_id = $1',
-			[ member.discord.user.id ]
+			[member.discord.user.id],
 		);
 
 		const chatLevel = Util.getLevel(rows[0].chat_xp);
@@ -39,15 +37,13 @@ class Route extends BaseRoute {
 				voice_total_xp: rows[0].voice_xp,
 				voice_level: voiceLevel.level,
 			},
-			wolvesville: member.wolvesville
+			wolvesville: member.wolvesville,
 		};
-	
+
 		response.writeHead(200, { 'Content-Type': 'application/json' });
 		response.write(JSON.stringify(JSONMember));
 		response.end();
 	}
 }
-
-
 
 module.exports = Route;

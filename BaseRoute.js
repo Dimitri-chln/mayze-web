@@ -1,12 +1,12 @@
-const Fs = require("fs");
-const Path = require("path");
-const { IncomingMessage, ServerResponse } = require("http");
-const { URL } = require("url");
-const Util = require("./Util");
+const Fs = require('fs');
+const Path = require('path');
+const { IncomingMessage, ServerResponse } = require('http');
+const { URL } = require('url');
+const Util = require('./Util');
 
 class BaseRoute {
-	static path = "/";
-	static methods = ["GET"];
+	static path = '/';
+	static methods = ['GET'];
 	static requireLogin = false;
 	static requireMember = false;
 
@@ -17,20 +17,20 @@ class BaseRoute {
 		if (!this.requireMember) return;
 
 		const { rows: tokens } = await Util.database.query(
-			"SELECT user_id FROM web_client WHERE token = $1",
+			'SELECT user_id FROM web_client WHERE token = $1',
 			[token],
 		);
 
-		if (!tokens.length) throw new Error("Not Authenticated");
+		if (!tokens.length) throw new Error('Not Authenticated');
 
 		const userID = tokens[0].user_id;
 		const member = Util.guild.members.cache.get(userID);
 
 		if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID))
-			throw new Error("Unauthorized");
+			throw new Error('Unauthorized');
 
 		const { rows: wolvesvilleMembers } = await Util.database.query(
-			"SELECT * FROM clan_member WHERE user_id = $1",
+			'SELECT * FROM clan_member WHERE user_id = $1',
 			[member.user.id],
 		);
 
@@ -42,7 +42,7 @@ class BaseRoute {
 			/**@type {Date} */
 			joinedAt: new Date(wolvesvilleMembers[0].joined_at),
 			/**@type {'MEMBER' | 'CO-LEADER' | 'LEADER'} */
-			rank: ["MEMBER", "CO-LEADER", "LEADER"][wolvesvilleMembers[0].rank - 1],
+			rank: ['MEMBER', 'CO-LEADER', 'LEADER'][wolvesvilleMembers[0].rank - 1],
 		};
 
 		return {
@@ -57,25 +57,25 @@ class BaseRoute {
 	 */
 	static async _validateRequest(request, token) {
 		if (!this.methods.includes(request.method.toUpperCase()))
-			return "METHOD_NOT_ALLOWED";
+			return 'METHOD_NOT_ALLOWED';
 
 		if (this.requireLogin) {
 			const { rows: tokens } = await Util.database.query(
-				"SELECT user_id FROM web_client WHERE token = $1",
+				'SELECT user_id FROM web_client WHERE token = $1',
 				[token],
 			);
 
-			if (!tokens.length) return "NOT_AUTHENTICATED";
+			if (!tokens.length) return 'NOT_AUTHENTICATED';
 
 			if (this.requireMember) {
 				const userID = tokens[0].user_id;
 				const member = Util.guild.members.cache.get(userID);
 
 				if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID))
-					return "UNAUTHORIZED";
-				else return "VALID";
-			} else return "VALID";
-		} else return "VALID";
+					return 'UNAUTHORIZED';
+				else return 'VALID';
+			} else return 'VALID';
+		} else return 'VALID';
 	}
 
 	/**
@@ -86,10 +86,10 @@ class BaseRoute {
 	 */
 	static runValid(url, request, response, token) {
 		const file = Fs.readFileSync(
-			Path.join(__dirname, "routes" + url.pathname, "index.html"),
+			Path.join(__dirname, 'routes' + url.pathname, 'index.html'),
 		);
 
-		response.writeHead(200, { "Content-Type": "text/html" });
+		response.writeHead(200, { 'Content-Type': 'text/html' });
 		response.write(Util.addBaseURI(Util.completeHtmlFile(file)));
 
 		return response.end();
@@ -102,11 +102,11 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static runMethodNotAllowed(url, request, response, token) {
-		response.writeHead(405, { "Content-Type": "application/json" });
+		response.writeHead(405, { 'Content-Type': 'application/json' });
 		response.write(
 			JSON.stringify({
 				status: 405,
-				message: "Method Not Allowed",
+				message: 'Method Not Allowed',
 			}),
 		);
 
@@ -120,12 +120,12 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static runNotAuthenticated(url, request, response, token) {
-		if (this.path.startsWith("/api")) {
-			response.writeHead(401, { "Content-Type": "application/json" });
+		if (this.path.startsWith('/api')) {
+			response.writeHead(401, { 'Content-Type': 'application/json' });
 			response.write(
 				JSON.stringify({
 					status: 401,
-					message: "Unauthorized Access",
+					message: 'Unauthorized Access',
 				}),
 			);
 		} else {
@@ -144,19 +144,19 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static runUnauthorized(url, request, response, token) {
-		if (this.path.startsWith("/api")) {
-			response.writeHead(401, { "Content-Type": "application/json" });
+		if (this.path.startsWith('/api')) {
+			response.writeHead(401, { 'Content-Type': 'application/json' });
 			response.write(
 				JSON.stringify({
 					status: 401,
-					message: "Unauthorized Access",
+					message: 'Unauthorized Access',
 				}),
 			);
 		} else {
 			const file = Fs.readFileSync(
-				Path.join(__dirname, "public/static/html/unauthorized.html"),
+				Path.join(__dirname, 'public/static/html/unauthorized.html'),
 			);
-			response.writeHead(200, { "Content-Type": "text/html" });
+			response.writeHead(200, { 'Content-Type': 'text/html' });
 			response.write(file);
 		}
 
@@ -171,21 +171,21 @@ class BaseRoute {
 	 */
 	static async run(url, request, response, token) {
 		switch (await this._validateRequest(request, token)) {
-			case "VALID":
+			case 'VALID':
 				this.runValid(url, request, response, token);
 				break;
 
-			case "METHOD_NOT_ALLOWED": {
+			case 'METHOD_NOT_ALLOWED': {
 				this.runMethodNotAllowed(url, request, response, token);
 				break;
 			}
 
-			case "NOT_AUTHENTICATED": {
+			case 'NOT_AUTHENTICATED': {
 				this.runNotAuthenticated(url, request, response, token);
 				break;
 			}
 
-			case "UNAUTHORIZED": {
+			case 'UNAUTHORIZED': {
 				this.runUnauthorized(url, request, response, token);
 				break;
 			}
