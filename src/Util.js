@@ -6,7 +6,7 @@ const Discord = require('discord.js');
 const Http = require('http');
 
 class Util {
-	static config = require('../config.json');
+	static config = require('./config.json');
 	/**@type {Pg.Client} */
 	static database = newDatabaseClient();
 	static discord = new Discord.Client({
