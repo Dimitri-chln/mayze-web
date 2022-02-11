@@ -2,6 +2,7 @@ require('dotenv').config();
 const Http = require('http');
 const Url = require('url');
 const Fs = require('fs');
+const Path = require('path');
 const GeoIP = require('geoip-lite');
 const Util = require('./Util');
 const Route = require('./BaseRoute');
@@ -29,8 +30,9 @@ const httpServer = Http.createServer(
 		);
 		const token = Util.getToken(request);
 
-		const filePath =
-			'./routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
+		const filePath = Path.join(
+			'routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/'),
+		);
 		const language =
 			url.searchParams.get('lang') ??
 			Object.keys(LANGUAGE_LIST).find((l) =>
@@ -64,7 +66,7 @@ const httpServer = Http.createServer(
 				);
 			} else {
 				const file404 = Util.addBaseURI(
-					Fs.readFileSync('./static/html/404.html'),
+					Fs.readFileSync(Path.join(__dirname, 'static/html/404.html')),
 				);
 
 				response.writeHead(404, { 'Content-Type': 'text/html' });
