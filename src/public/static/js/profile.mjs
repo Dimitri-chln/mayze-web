@@ -22,6 +22,9 @@ fetch(`api/discord/member?token=${getCookie('token')}`, {
 	const member = await res.json();
 
 	document.getElementById('member-discord-tag').innerHTML = member.discord.tag;
+	document.getElementById(
+		'member-discord-avatar',
+	).innerHTML = `<a href=${member.discord.avatar}>Clique pour visualiser</a>`;
 	document.getElementById('member-wolvesville-username').innerHTML =
 		member.wolvesville.username;
 	document.getElementById('member-rank').innerHTML =

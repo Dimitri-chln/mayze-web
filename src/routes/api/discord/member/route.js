@@ -31,6 +31,7 @@ class Route extends BaseRoute {
 			discord: {
 				...member.discord.toJSON(),
 				tag: member.discord.user.tag,
+				avatar: member.discord.user.avatarURL({ dynamic: true, size: 4096 }),
 				roles: member.discord.roles.cache.toJSON(),
 				chat_total_xp: rows[0].chat_xp,
 				chat_level: chatLevel.level,
