@@ -154,7 +154,7 @@ class BaseRoute {
 			);
 		} else {
 			const file = Fs.readFileSync(
-				Path.join(__dirname, 'static/html/unauthorized.html'),
+				Path.join(__dirname, 'public/static/html/unauthorized.html'),
 			);
 			response.writeHead(200, { 'Content-Type': 'text/html' });
 			response.write(file);
