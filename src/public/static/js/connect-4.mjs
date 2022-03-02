@@ -15,30 +15,15 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 	column.addEventListener('click', () => {
 		if (!rack.playable) return;
 
-		const data = [...rack.data];
-
 		try {
 			const winner = rack.play(columnIndex);
 			updateHtmlRack(winner);
+			if (winner) return;
 
-			fetch(`api/connect-four?token=${getCookie('token')}`, {
-				method: 'POST',
-				body: JSON.stringify({
-					rack: data,
-					played: columnIndex,
-					new_rack: [...rack.data],
-				}),
-			}).then(async (res) => {
-				if (winner) return;
-
-				const body = await res.json();
-				const bestColumn = parseInt(body);
-
-				setTimeout(() => {
-					const winner = rack.bot(bestColumn);
-					updateHtmlRack(winner);
-				}, 500);
-			});
+			setTimeout(() => {
+				const winner = rack.bot(Math.floor(Math.random() * 7));
+				updateHtmlRack(winner);
+			}, 500);
 		} catch (err) {
 			console.error(err);
 		}
