@@ -1,9 +1,6 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
 const BaseRoute = require('../../../BaseRoute');
-const Util = require('../../../Util');
-const Fs = require('fs');
-const BrainJS = require('brain.js');
 
 class Route extends BaseRoute {
 	static path = '/api/connect-four';

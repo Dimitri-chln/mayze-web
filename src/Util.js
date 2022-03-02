@@ -4,8 +4,6 @@ const Axios = require('axios').default;
 const Pg = require('pg');
 const Discord = require('discord.js');
 const Http = require('http');
-const BrainJS = require('brain.js');
-const { NeuralNetwork } = require('brain.js');
 
 class Util {
 	static config = require('./config.json');
