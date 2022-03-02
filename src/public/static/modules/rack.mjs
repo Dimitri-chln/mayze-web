@@ -15,19 +15,24 @@ export default class Rack {
 	 * @type {1 | 2}
 	 */
 	#winner;
+	/**
+	 * @type {boolean}
+	 */
+	#playable;
 
 	constructor() {
 		this.#data = [];
 		this.#row = [];
 		this.#player = 1;
 		this.#winner = null;
+		this.#playable = true;
 
 		for (let column = 0; column < 7; column++) {
 			this.#data[column] = [];
 			this.#row[column] = 0;
 
 			for (let row = 0; row < 6; row++) {
-				this.#data[column][row] = null;
+				this.#data[column][row] = 0;
 			}
 		}
 	}
@@ -52,6 +57,10 @@ export default class Rack {
 		return this.#winner;
 	}
 
+	get playable() {
+		return this.#playable;
+	}
+
 	/**
 	 * @param {number} column The column number
 	 * @returns {?number} The eventual winner
@@ -65,6 +74,26 @@ export default class Rack {
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
 		this.#player = this.player === 1 ? 2 : 1;
+		this.#playable = false;
+
+		this.#winner = this.check();
+		return this.winner;
+	}
+
+	/**
+	 * @param {number} column The column number
+	 * @returns {?number} The eventual winner
+	 */
+	bot(column) {
+		if (this.winner) throw new Error('Game is over');
+
+		const row = this.row[column];
+		if (row >= 6) throw new Error('Column is filled');
+
+		this.#data[column][row] = this.player;
+		this.#row[column]++;
+		this.#player = this.player === 1 ? 2 : 1;
+		this.#playable = true;
 
 		this.#winner = this.check();
 		return this.winner;
@@ -77,7 +106,7 @@ export default class Rack {
 	check() {
 		const checkLine = (a, b, c, d) =>
 			// Verify that the first cell non-zero and all cells match
-			a !== null && a == b && a == c && a == d;
+			a !== 0 && a == b && a == c && a == d;
 
 		// Check going up
 		for (let c = 0; c < 7; c++)

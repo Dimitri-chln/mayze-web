@@ -19,7 +19,7 @@
 	position: relative;
 	width: 4em;
 	height: 4em;
-	border: 2px solid black;
+	border: 2px solid #1a1520;
 }
 
 #rack tr > td > img {
@@ -27,8 +27,18 @@
 	height: 4em;
 }
 
-#win-text {
+#grid-info {
 	position: relative;
 	top: 3em;
+	display: flex;
+}
+
+#win-text {
 	font-size: large;
+	margin: 1em;
+}
+
+#restart-button {
+	display: none;
+	margin: 1em;
 }

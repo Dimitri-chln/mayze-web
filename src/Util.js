@@ -4,11 +4,25 @@ const Axios = require('axios').default;
 const Pg = require('pg');
 const Discord = require('discord.js');
 const Http = require('http');
+const BrainJS = require('brain.js');
+const { NeuralNetwork } = require('brain.js');
 
 class Util {
 	static config = require('./config.json');
+
 	/**@type {Pg.Client} */
 	static database = newDatabaseClient();
+
+	static connectFour = {
+		config: {
+			hiddenLayers: [8, 8], // Array of ints for the sizes of the hidden layers in the network
+			activation: 'relu', // Supported activation types: ['sigmoid', 'relu', 'leaky-relu', 'tanh'],
+		},
+		/**@type {NeuralNetwork} */
+		net: null,
+		training: false,
+	};
+
 	static discord = new Discord.Client({
 		disableMentions: 'everyone',
 		fetchAllMembers: true,
@@ -205,7 +219,15 @@ function newDatabaseClient() {
 		reconnectDatabase(database);
 	});
 
-	database.connect();
+	database.connect().then(() => {
+		// Connect 4 AI
+		// Create a simple feed forward neural network with backpropagation
+		const net = new BrainJS.NeuralNetwork(Util.connectFour.config).fromJSON(
+			JSON.parse(Fs.readFileSync('./src/assets/connect-four.json')),
+		);
+
+		Util.connectFour.net = net;
+	});
 
 	return database;
 }
