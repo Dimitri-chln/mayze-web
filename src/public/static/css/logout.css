@@ -9,19 +9,5 @@ input[type=button] {
 }
 
 #redirect-button {
-    position: absolute;
-    background-color: #5865f2;
-    border: solid #404ab3;
-    color: white;
     top: 3em;
-    height: 3em;
-    border-radius: 3em;
-    font-size: 1em;
-    font-weight: bold;
-    transition-duration: 0.4s;
-}
-
-#redirect-button:hover {
-    background-color: #404ab3;
-    transition-duration: 0.4s;
 }

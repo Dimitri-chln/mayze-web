@@ -1,0 +1,13 @@
+#download-form {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+#download-form-url {
+	position: relative;
+	border-radius: 1em;
+	padding: 1em;
+	margin: 1em 0;
+}

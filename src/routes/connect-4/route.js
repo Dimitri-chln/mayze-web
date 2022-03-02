@@ -1,7 +1,9 @@
 const BaseRoute = require('../../BaseRoute');
 
 class Route extends BaseRoute {
-	static path = '/callback';
+	static path = '/connect-4';
+	static requireLogin = true;
+	static requireMember = true;
 }
 
 module.exports = Route;

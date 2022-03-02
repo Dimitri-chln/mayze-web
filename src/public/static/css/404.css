@@ -27,6 +27,7 @@ h1 {
 	top: 3em;
 	height: 3em;
 	border-radius: 3em;
+	padding: 0 1em;
 	font-size: 1em;
 	font-weight: bold;
 	transition-duration: 0.4s;

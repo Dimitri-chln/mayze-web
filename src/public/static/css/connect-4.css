@@ -1,0 +1,34 @@
+#rack {
+	position: relative;
+	width: fit-content;
+}
+
+#rack tbody {
+	position: relative;
+	display: flex;
+	flex-direction: row;
+}
+
+#rack tr {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+
+#rack tr > td {
+	position: relative;
+	width: 4em;
+	height: 4em;
+	border: 2px solid black;
+}
+
+#rack tr > td > img {
+	width: 4em;
+	height: 4em;
+}
+
+#win-text {
+	position: relative;
+	top: 3em;
+	font-size: large;
+}
