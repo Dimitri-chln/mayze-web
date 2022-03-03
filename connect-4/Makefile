@@ -4,6 +4,9 @@ CXXFLAGS=--std=c++11 -W -Wall -O3 -DNDEBUG
 SRCS=Solver.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
+test : test.cpp
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o test test.cpp $(LDLIBS)
+
 c4solver : $(OBJS) main.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o c4solver main.o $(OBJS) $(LDLIBS)
 
