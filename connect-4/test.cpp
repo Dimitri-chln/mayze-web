@@ -1,10 +1,7 @@
 #include <iostream>
 
-int main(int argc, char **argv)
+int main()
 {
-	bool weak = false;
-	bool analyze = false;
-
 	std::string line;
 	std::cin >> line;
 
