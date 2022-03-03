@@ -39,7 +39,7 @@ class Route extends BaseRoute {
 
 			Util.youtubeDownloads.set(downloadId, {
 				url: youtubeURL,
-				currentVideo: 0,
+				currentVideo: null,
 				progress: 0,
 				finished: false,
 			});
@@ -61,6 +61,9 @@ class Route extends BaseRoute {
 						.replace(/[^\w\s\(\)\[\]-]/g, ' ')
 						.replace(/ +/g, ' ')}.mp3`;
 
+					Util.youtubeDownloads.get(downloadId).currentVideo =
+						info.video_details.title;
+
 					const writeStream = Fs.createWriteStream(Path.join(path, filename));
 
 					writeStream
@@ -77,8 +80,6 @@ class Route extends BaseRoute {
 										path,
 										filename,
 									);
-
-									console.log(Util.youtubeDownloads.get(downloadId));
 								})
 								.pipe(writeStream);
 						})
@@ -93,52 +94,59 @@ class Route extends BaseRoute {
 						.replace(/ +/g, ' ')}.mp3`;
 					Fs.mkdirSync(Path.join(path, dirname));
 
-					for (const video of await playlistInfo.all_videos()) {
+					const videos = await playlistInfo.all_videos();
+
+					for (const video of videos) {
 						const info = await PlayDl.video_info(video.url);
 						const filename = `${info.video_details.title
 							.replace(/[^\w\s\(\)\[\]-]/g, ' ')
 							.replace(/ +/g, ' ')}.mp3`;
 
+						Util.youtubeDownloads.get(downloadId).currentVideo =
+							info.video_details.title;
+
 						const writeStream = Fs.createWriteStream(
 							Path.join(path, dirname, filename),
 						);
 
-						writeStream
-							.on('open', async () => {
-								(await PlayDl.stream(youtubeURL)).stream
-									.on(
-										'progress',
-										(chunkLength, downloadedBytes, totalBytes) => {
-											Util.youtubeDownloads.get(downloadId).progress =
-												downloadedBytes / totalBytes;
-										},
-									)
-									.on('finish', () => {
-										Util.youtubeDownloads.get(downloadId).currentVideo += 1;
+						await new Promise((resolve, reject) => {
+							writeStream
+								.on('open', async () => {
+									(await PlayDl.stream(youtubeURL)).stream
+										.on(
+											'progress',
+											(chunkLength, downloadedBytes, totalBytes) => {
+												Util.youtubeDownloads.get(downloadId).progress =
+													downloadedBytes / totalBytes;
+											},
+										)
+										.on('finish', () => {
+											if (
+												Util.youtubeDownloads.get(downloadId).currentVideo ===
+												videos[playlistInfo.videoCount].title
+											) {
+												Util.zipDirectory().then(async () => {
+													await zipDirectory(
+														Path.join(path, dirname),
+														`${Path.join(path, dirname)}.zip`,
+													);
 
-										if (
-											Util.youtubeDownloads.get(downloadId).currentVideo ===
-											playlistInfo.videoCount
-										) {
-											Util.zipDirectory().then(async () => {
-												await zipDirectory(
-													Path.join(path, dirname),
-													`${Path.join(path, dirname)}.zip`,
-												);
+													Util.youtubeDownloads.get(downloadId).finished = true;
+													Util.youtubeDownloads.get(
+														downloadId,
+													).filename = `${dirname}.zip`;
+													Util.youtubeDownloads.get(
+														downloadId,
+													).path = `${Path.join(path, dirname)}.zip`;
+												});
+											}
 
-												Util.youtubeDownloads.get(downloadId).finished = true;
-												Util.youtubeDownloads.get(
-													downloadId,
-												).filename = `${dirname}.zip`;
-												Util.youtubeDownloads.get(
-													downloadId,
-												).path = `${Path.join(path, dirname)}.zip`;
-											});
-										}
-									})
-									.pipe(writeStream);
-							})
-							.on('error', console.error);
+											resolve();
+										})
+										.pipe(writeStream);
+								})
+								.on('error', console.error);
+						});
 					}
 					break;
 				}
@@ -185,7 +193,14 @@ class Route extends BaseRoute {
 			response.writeHead(200, {
 				'Content-Type': 'application/json',
 			});
-			response.write(JSON.stringify(runningDownload));
+			response.write(
+				JSON.stringify({
+					url: runningDownload.url,
+					current_video: runningDownload.currentVideo,
+					progress: runningDownload.progress,
+					finished: runningDownload.finished,
+				}),
+			);
 			response.end();
 		}
 	}

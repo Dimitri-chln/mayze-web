@@ -30,7 +30,7 @@ class Util {
 	 * @property {string} filename The local file name
 	 * @property {string} path The local file's path
 	 * @property {number} progress The current download progress
-	 * @property {number} currentVideo The current downloading video
+	 * @property {string} currentVideo The current downloading video
 	 * @property {boolean} finished Whether the download has finished or not
 	 */
 
