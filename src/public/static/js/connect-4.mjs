@@ -14,9 +14,12 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 	column.addEventListener('click', () => {
 		try {
+			if (!rack.playable) return;
+
 			const winner = rack.play(columnIndex);
 			rack.playable = false;
 			updateHtmlRack(winner);
+
 			if (winner) return;
 
 			fetch(`/api/connect-four?token=${getCookie('token')}`, {
