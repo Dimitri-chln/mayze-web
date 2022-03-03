@@ -142,15 +142,7 @@ setInterval(
 
 const childProcess = require('child_process');
 
-const child = childProcess.execFile(
-	'connect-4/c4solver',
-	(error, stdout, stderr) => {
-		if (error) {
-			throw error;
-		}
-		console.log(`stdout: ${stdout}`);
-	},
-);
+const child = childProcess.execFile('connect-4/c4solver');
 
 child.stdout.on('data', (data) => {
 	console.log(`c4solver: ${data}`);
