@@ -144,7 +144,7 @@ const childProcess = require('child_process');
 
 childProcess.execFile(
 	'connect-4/c4solver',
-	'44553236',
+	['44553236'],
 	(error, stdout, stderr) => {
 		if (error) {
 			throw error;
