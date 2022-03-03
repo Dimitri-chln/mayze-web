@@ -38,6 +38,7 @@ class Route extends BaseRoute {
 
 		connectFourGame.child.stdout.on('data', (data) => {
 			const items = data.split(' ');
+			console.log(items);
 
 			positions.push({
 				index: items[0],
