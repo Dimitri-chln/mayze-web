@@ -53,7 +53,7 @@ class Route extends BaseRoute {
 			}
 		});
 
-		connectFourGame.child.stdin.write(data.played);
+		connectFourGame.child.stdin.write(data.played.toString());
 	}
 }
 
