@@ -147,4 +147,4 @@ child.stdout.on('data', (data) => {
 	console.log(`c4solver: ${data}`);
 });
 
-child.stdin.write('4');
+child.stdin.end('4');
