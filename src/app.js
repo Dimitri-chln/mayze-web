@@ -141,7 +141,7 @@ setInterval(
 );
 
 const childProcess = require('child_process');
-const child = childProcess.spawn('connect-4/c4solver');
+const child = childProcess.spawn('connect-4/test');
 
 child.stdout.on('data', (data) => {
 	console.log(`c4solver: ${data}`);
