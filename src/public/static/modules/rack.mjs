@@ -61,39 +61,23 @@ export default class Rack {
 		return this.#playable;
 	}
 
-	/**
-	 * @param {number} column The column number
-	 * @returns {?number} The eventual winner
-	 */
-	play(column) {
-		if (this.winner) throw new Error('Game is over');
-
-		const row = this.row[column];
-		if (row >= 6) throw new Error('Column is filled');
-
-		this.#data[column][row] = this.player;
-		this.#row[column]++;
-		this.#player = this.player === 1 ? 2 : 1;
-		this.#playable = false;
-
-		this.#winner = this.check();
-		return this.winner;
+	set playable(value) {
+		this.#playable = value;
 	}
 
 	/**
 	 * @param {number} column The column number
 	 * @returns {?number} The eventual winner
 	 */
-	bot(column) {
+	play(column) {
 		if (this.winner) throw new Error('Game is over');
-
 		const row = this.row[column];
+		if (!this.playable) throw new Error('Game is not currently playable');
 		if (row >= 6) throw new Error('Column is filled');
 
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
 		this.#player = this.player === 1 ? 2 : 1;
-		this.#playable = true;
 
 		this.#winner = this.check();
 		return this.winner;

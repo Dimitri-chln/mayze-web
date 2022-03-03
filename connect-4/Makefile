@@ -5,10 +5,10 @@ SRCS=Solver.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
 
 c4solver : $(OBJS) main.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o c4solver main.o $(OBJS) $(LDLIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o c4solver.exe main.o $(OBJS) $(LDLIBS)
 
 generator : generator.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o generator generator.o $(LDLIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o generator.exe generator.o $(LDLIBS)
 
 .depend: $(SRCS)
 	$(CXX) $(CXXFLAGS) -MM $^ > ./.depend

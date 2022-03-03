@@ -139,12 +139,3 @@ setInterval(
 			}),
 	60000,
 );
-
-const childProcess = require('child_process');
-const child = childProcess.spawn('connect-4/c4solver');
-
-child.stdout.on('data', (data) => {
-	console.log(`c4solver: ${data}`);
-});
-
-child.stdin.end('4');

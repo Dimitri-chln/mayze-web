@@ -4,6 +4,7 @@ const Axios = require('axios').default;
 const Pg = require('pg');
 const Discord = require('discord.js');
 const Http = require('http');
+const { ChildProcess } = require('child_process');
 
 class Util {
 	static config = require('./config.json');
@@ -22,6 +23,11 @@ class Util {
 	static connectToDiscord() {
 		this.discord.login(process.env.TOKEN);
 	}
+
+	/**
+	 * @type {{ [K: string]: { token: string, child: ChildProcess }}}
+	 */
+	static connectFourGames = {};
 
 	/**
 	 * Get the token from the request cookies
