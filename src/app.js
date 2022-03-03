@@ -56,7 +56,7 @@ const httpServer = Http.createServer(
 			// If the route doesn't exist, try finding a static file
 		} catch (err) {
 			try {
-				const file = Fs.readFileSync('./src/public' + url.pathname);
+				const file = Fs.readFileSync('src/public' + url.pathname);
 
 				response.writeHead(200, {
 					'Content-Type': Util.getContentType(url.pathname),
@@ -76,7 +76,7 @@ const httpServer = Http.createServer(
 					);
 				} else {
 					const file404 = Util.addBaseURI(
-						Fs.readFileSync('./src/public/static/html/404.html'),
+						Fs.readFileSync('src/public/static/html/404.html'),
 					);
 
 					response.writeHead(404, { 'Content-Type': 'text/html' });
@@ -142,8 +142,9 @@ setInterval(
 
 const childProcess = require('child_process');
 
-const child = childProcess.execFile(
+childProcess.execFile(
 	'connect-4/c4solver',
+	'44553236',
 	(error, stdout, stderr) => {
 		if (error) {
 			throw error;
