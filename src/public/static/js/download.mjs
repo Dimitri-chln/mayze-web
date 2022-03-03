@@ -38,10 +38,12 @@ downloadButton.addEventListener('click', (event) => {
 			).then(async (res) => {
 				const body = await res.json();
 
+				console.log(body);
+
 				currentVideo.innerHTML = body.current_video;
 				progress.style.width = `${body.progress * 100}%`;
 
-				setTimeout(update, 1_000);
+				if (!body.finished) setTimeout(update, 1_000);
 			});
 		})();
 	});
