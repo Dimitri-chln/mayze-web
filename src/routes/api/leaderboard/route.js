@@ -15,8 +15,6 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') || token;
-
 		const members = Util.guild.members.cache.filter((m) =>
 			m.roles.cache.has(Util.config.MEMBER_ROLE_ID),
 		);

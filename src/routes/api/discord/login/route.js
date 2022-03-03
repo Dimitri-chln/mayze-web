@@ -15,8 +15,6 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') || token;
-
 		if (!url.searchParams.has('code')) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
 			response.write(

@@ -14,8 +14,6 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') || token;
-
 		await Util.database.query('DELETE FROM web_client WHERE token = $1', [
 			token,
 		]);

@@ -15,8 +15,6 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		token = url.searchParams.get('token') || token;
-
 		const member = await this.fetchMember(token);
 
 		const { rows } = await Util.database.query(

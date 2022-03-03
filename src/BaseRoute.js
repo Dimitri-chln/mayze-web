@@ -170,6 +170,8 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static async run(url, request, response, token) {
+		token = url.searchParams.get('token') || token;
+
 		switch (await this._validateRequest(request, token)) {
 			case 'VALID':
 				this.runValid(url, request, response, token);

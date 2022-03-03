@@ -4,7 +4,7 @@ const Axios = require('axios').default;
 const Pg = require('pg');
 const Discord = require('discord.js');
 const Http = require('http');
-const { ChildProcess } = require('child_process');
+const archiver = require('archiver');
 
 class Util {
 	static config = require('./config.json');
@@ -25,9 +25,19 @@ class Util {
 	}
 
 	/**
-	 * @type {{ [K: string]: { token: string, child: ChildProcess }}}
+	 * @typedef {object} YouTubeDownload
+	 * @property {string} url The video URL
+	 * @property {string} filename The local file name
+	 * @property {string} path The local file's path
+	 * @property {number} progress The current download progress
+	 * @property {number} currentVideo The current downloading video
+	 * @property {boolean} finished Whether the download has finished or not
 	 */
-	static connectFourGames = {};
+
+	/**
+	 * @type {Discord.Collection<string, YouTubeDownload>}
+	 */
+	static youtubeDownloads = new Discord.Collection();
 
 	/**
 	 * Get the token from the request cookies
@@ -197,6 +207,26 @@ class Util {
 		if (xp < xpForLevel) return { level, currentXP: xp, neededXP: xpForLevel };
 
 		return this.getLevel(xp - xpForLevel, level + 1);
+	}
+
+	/**
+	 * @param {String} source
+	 * @param {String} out
+	 * @returns {Promise}
+	 */
+	static zipDirectory(source, out) {
+		const archive = archiver('zip', { zlib: { level: 9 } });
+		const stream = Fs.createWriteStream(out);
+
+		return new Promise((resolve, reject) => {
+			archive
+				.directory(source, false)
+				.on('error', (err) => reject(err))
+				.pipe(stream);
+
+			stream.on('close', () => resolve());
+			archive.finalize();
+		});
 	}
 }
 
