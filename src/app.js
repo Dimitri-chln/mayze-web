@@ -139,3 +139,16 @@ setInterval(
 			}),
 	60000,
 );
+
+const childProcess = require('child_process');
+
+const child = childProcess.execFile(
+	'../connect-4/c4solver',
+	'',
+	(err, stdout, stderr) => {
+		if (error) {
+			throw error;
+		}
+		console.log(stdout);
+	},
+);
