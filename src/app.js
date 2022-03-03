@@ -144,9 +144,10 @@ const childProcess = require('child_process');
 
 const child = childProcess.execFile('connect-4/c4solver.exe');
 
-child.stdout.on('data', (data) => {
-	console.log(`c4solver: ${data}`);
-});
+child.once('spawn', () => {
+	child.stdout.on('data', (data) => {
+		console.log(`c4solver: ${data}`);
+	});
 
-child.stdin.write('4');
-child.stdin.end();
+	child.stdin.write('4');
+});
