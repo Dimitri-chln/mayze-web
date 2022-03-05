@@ -33,7 +33,7 @@ class Route extends BaseRoute {
 			return response.end();
 		}
 
-		if (youtubeURL) {
+		if (youtubeURL && !runningDownloadId) {
 			const urlType = await PlayDl.validate(youtubeURL);
 			const downloadId = Util.generateRandomString();
 
