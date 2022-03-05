@@ -112,7 +112,7 @@ class Route extends BaseRoute {
 						await new Promise((resolve, reject) => {
 							writeStream
 								.on('open', async () => {
-									(await PlayDl.stream(youtubeURL)).stream
+									(await PlayDl.stream(video.url)).stream
 										.on(
 											'progress',
 											(chunkLength, downloadedBytes, totalBytes) => {
