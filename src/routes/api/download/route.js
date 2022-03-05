@@ -272,9 +272,8 @@ class Route extends BaseRoute {
 
 				readStream.on('close', () => {
 					Fs.rmSync(runningDownload.path, { force: true });
+					response.end();
 				});
-
-				response.end();
 			} else {
 				response.writeHead(200, {
 					'Content-Type': 'application/json',
