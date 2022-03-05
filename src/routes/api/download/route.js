@@ -35,7 +35,6 @@ class Route extends BaseRoute {
 
 		if (youtubeURL) {
 			const urlType = await PlayDl.validate(youtubeURL);
-
 			const downloadId = Util.generateRandomString();
 
 			Util.youtubeDownloads.set(downloadId, {
@@ -102,7 +101,8 @@ class Route extends BaseRoute {
 							);
 						})
 						.on('error', (err) => {
-							Fs.unlinkSync(Path.join(path, filename));
+							Fs.rmSync(Path.join(path, filename), { force: true });
+							Util.youtubeDownloads.delete(downloadId);
 							streamError = true;
 
 							response.writeHead(500, { 'Content-Type': 'application/json' });
@@ -119,7 +119,9 @@ class Route extends BaseRoute {
 				}
 
 				case 'yt_playlist': {
-					const playlistInfo = await PlayDl.playlist_info(youtubeURL);
+					const playlistInfo = await PlayDl.playlist_info(youtubeURL, {
+						incomplete: true,
+					});
 					const dirname = downloadId;
 					Fs.mkdirSync(Path.join(path, dirname));
 
@@ -175,7 +177,10 @@ class Route extends BaseRoute {
 										resolve();
 									})
 									.on('error', (err) => {
-										Fs.unlinkSync(Path.join(path, dirname, filename));
+										Fs.rmSync(Path.join(path, dirname, filename), {
+											force: true,
+										});
+										Util.youtubeDownloads.delete(downloadId);
 										streamError = true;
 
 										response.writeHead(500, {
@@ -198,7 +203,10 @@ class Route extends BaseRoute {
 							`${Path.join(path, dirname)}.zip`,
 						);
 
-						Fs.rmSync(Path.join(path, dirname), { recursive: true });
+						Fs.rmSync(Path.join(path, dirname), {
+							recursive: true,
+							force: true,
+						});
 
 						Util.youtubeDownloads.get(downloadId).finished = true;
 						Util.youtubeDownloads.get(downloadId).filename = `${dirname}.zip`;
@@ -252,10 +260,20 @@ class Route extends BaseRoute {
 			}
 
 			if (runningDownload.finished) {
+				const fileStat = Fs.statSync(runningDownload.path);
+
 				response.writeHead(200, {
 					'Content-Type': Util.getContentType(runningDownload.path),
+					'Content-Length': fileStat.size,
 				});
-				Fs.createReadStream(runningDownload.path).pipe(response);
+
+				const readStream = Fs.createReadStream(runningDownload.path);
+				readStream.pipe(response);
+
+				readStream.on('close', () => {
+					Fs.rmSync(runningDownload.path, { force: true });
+				});
+
 				response.end();
 			} else {
 				response.writeHead(200, {

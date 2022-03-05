@@ -24,6 +24,7 @@ downloadButton.addEventListener('click', (event) => {
 			method: 'GET',
 		},
 	).then(async (res) => {
+		if (res.status !== 200) return;
 		const body = await res.json();
 		const downloadId = body.download_id;
 
@@ -33,6 +34,7 @@ downloadButton.addEventListener('click', (event) => {
 				method: 'GET',
 			},
 		).then(async (res) => {
+			if (res.status !== 200) return;
 			const body = await res.json();
 
 			for (const video of body.videos) {
@@ -60,7 +62,9 @@ downloadButton.addEventListener('click', (event) => {
 						method: 'GET',
 					},
 				).then(async (res) => {
+					if (res.status !== 200) return;
 					const body = await res.json();
+					console.log(body);
 
 					for (let i = 0; i < body.videos.length; i++) {
 						const video = body.videos[i];
