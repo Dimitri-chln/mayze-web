@@ -120,25 +120,23 @@ class Route extends BaseRoute {
 													downloadedBytes / totalBytes;
 											},
 										)
-										.on('finish', () => {
+										.on('finish', async () => {
 											if (
 												Util.youtubeDownloads.get(downloadId).currentVideo ===
 												videos[playlistInfo.videoCount].title
 											) {
-												Util.zipDirectory().then(async () => {
-													await zipDirectory(
-														Path.join(path, dirname),
-														`${Path.join(path, dirname)}.zip`,
-													);
+												await Util.zipDirectory(
+													Path.join(path, dirname),
+													`${Path.join(path, dirname)}.zip`,
+												);
 
-													Util.youtubeDownloads.get(downloadId).finished = true;
-													Util.youtubeDownloads.get(
-														downloadId,
-													).filename = `${dirname}.zip`;
-													Util.youtubeDownloads.get(
-														downloadId,
-													).path = `${Path.join(path, dirname)}.zip`;
-												});
+												Util.youtubeDownloads.get(downloadId).finished = true;
+												Util.youtubeDownloads.get(
+													downloadId,
+												).filename = `${dirname}.zip`;
+												Util.youtubeDownloads.get(
+													downloadId,
+												).path = `${Path.join(path, dirname)}.zip`;
 											}
 
 											resolve();
