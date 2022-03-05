@@ -26,11 +26,18 @@ class Util {
 
 	/**
 	 * @typedef {object} YouTubeDownload
-	 * @property {string} url The video URL
+	 * @property {string} url The video or playlist URL
 	 * @property {string} filename The local file name
 	 * @property {string} path The local file's path
-	 * @property {number} progress The current download progress
-	 * @property {string} currentVideo The current downloading video
+	 * @property {DownloadingVideo[]} videos The downloading videos
+	 * @property {boolean} finished Whether the download has finished or not
+	 */
+
+	/**
+	 * @typedef {object} DownloadingVideo
+	 * @property {string} url The video URL
+	 * @property {string} name The video name
+	 * @property {number} progress The download progress
 	 * @property {boolean} finished Whether the download has finished or not
 	 */
 
@@ -81,6 +88,10 @@ class Util {
 				return 'application/json';
 			case '.txt':
 				return 'text/plain';
+			case '.mp3':
+				return 'audio/mpeg';
+			case '.zip':
+				return 'application/zip';
 			default:
 				return 'application/octet-stream';
 		}

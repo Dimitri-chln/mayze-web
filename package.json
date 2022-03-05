@@ -13,7 +13,8 @@
     "dotenv": "^8.2.0",
     "geoip-lite": "^1.4.2",
     "pg": "^8.5.1",
-    "play-dl": "^1.8.9"
+    "play-dl": "^1.8.9",
+    "ytdl-core": "^4.11.0"
   },
   "engines": {
     "node": "16.x"

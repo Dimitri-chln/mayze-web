@@ -6,17 +6,15 @@ if (searchParams.has('url')) {
 	document.getElementById('download-form-url').value = searchParams.get('url');
 }
 
+const progressSection = document.getElementById('progress-info');
 const downloadButton = document.getElementById('download-form-submit');
-const currentVideo = document.getElementById('current-video');
-const progressBar = document.getElementById('progress-bar');
-const progress = document.getElementById('progress-bar-progress');
 
 downloadButton.addEventListener('click', (event) => {
 	event.preventDefault();
 
 	downloadButton.disabled = true;
 	downloadButton.style.cursor = 'not-allowed';
-	progressBar.style.display = 'flex';
+	document.getElementById('loading').style.display = 'inline-block';
 
 	fetch(
 		`/api/download?token=${getCookie('token')}&url=${
@@ -29,22 +27,58 @@ downloadButton.addEventListener('click', (event) => {
 		const body = await res.json();
 		const downloadId = body.download_id;
 
-		(function update() {
-			fetch(
-				`/api/download?token=${getCookie('token')}&download_id=${downloadId}`,
-				{
-					method: 'GET',
-				},
-			).then(async (res) => {
-				const body = await res.json();
+		fetch(
+			`/api/download?token=${getCookie('token')}&download_id=${downloadId}`,
+			{
+				method: 'GET',
+			},
+		).then(async (res) => {
+			const body = await res.json();
 
-				console.log(body);
+			for (const video of body.videos) {
+				const progressDiv = document.createElement('div');
+				const progressText = document.createElement('p');
+				progressText.classList.add('progress-video');
+				progressText.innerHTML = video.name;
+				progressDiv.appendChild(progressText);
+				const progressBar = document.createElement('div');
+				progressBar.classList.add('progress-bar');
+				const progressBarProgress = document.createElement('div');
+				progressBarProgress.classList.add('progress-bar-progress');
+				progressBar.appendChild(progressBarProgress);
+				progressDiv.appendChild(progressBar);
 
-				currentVideo.innerHTML = body.current_video;
-				progress.style.width = `${body.progress * 100}%`;
+				progressSection.appendChild(progressDiv);
+			}
 
-				if (!body.finished) setTimeout(update, 1_000);
-			});
-		})();
+			document.getElementById('loading').style.display = 'none';
+
+			(function update() {
+				fetch(
+					`/api/download?token=${getCookie('token')}&download_id=${downloadId}`,
+					{
+						method: 'GET',
+					},
+				).then(async (res) => {
+					const body = await res.json();
+
+					for (let i = 0; i < body.videos.length; i++) {
+						const video = body.videos[i];
+						const progress = progressSection.children
+							.item(i)
+							.children.item(1)
+							.children.item(0);
+
+						progress.style.width = `${
+							video.finished ? 100 : Math.round(video.progress * 100)
+						}%`;
+
+						if (video.finished) progress.style.background = '#46e083';
+					}
+
+					if (!body.finished) return setTimeout(update, 1_000);
+				});
+			})();
+		});
 	});
 });
