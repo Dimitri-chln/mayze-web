@@ -12,6 +12,20 @@
 	margin: 1em 0;
 }
 
+#download-form > div {
+	position: relative;
+	display: flex;
+	justify-content: center;
+}
+
+#download-form > div input {
+	margin: 0 1em;
+}
+
+#download-button > input {
+	display: none;
+}
+
 #progress-info {
 	position: relative;
 	top: 2em;

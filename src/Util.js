@@ -29,6 +29,7 @@ class Util {
 	 * @property {string} url The video or playlist URL
 	 * @property {string} filename The local file name
 	 * @property {string} path The local file's path
+	 * @property {string} name The video or playlist name
 	 * @property {DownloadingVideo[]} videos The downloading videos
 	 * @property {boolean} finished Whether the download has finished or not
 	 */

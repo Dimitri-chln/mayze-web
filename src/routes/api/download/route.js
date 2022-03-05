@@ -21,6 +21,7 @@ class Route extends BaseRoute {
 	static async runValid(url, request, response, token) {
 		const youtubeURL = url.searchParams.get('url');
 		const runningDownloadId = url.searchParams.get('download_id');
+		const sendFile = Boolean(url.searchParams.get('download'));
 
 		if (!youtubeURL && !runningDownloadId) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
@@ -33,7 +34,7 @@ class Route extends BaseRoute {
 			return response.end();
 		}
 
-		if (youtubeURL && !runningDownloadId) {
+		if (youtubeURL && !runningDownloadId && !sendFile) {
 			const urlType = await PlayDl.validate(youtubeURL);
 			const downloadId = Util.generateRandomString();
 
@@ -62,6 +63,8 @@ class Route extends BaseRoute {
 					const format = info.formats.find(
 						(f) => f.audioQuality === 'AUDIO_QUALITY_MEDIUM',
 					);
+
+					Util.youtubeDownloads.get(downloadId).name = info.videoDetails.title;
 
 					Util.youtubeDownloads.get(downloadId).videos = [
 						{
@@ -124,6 +127,8 @@ class Route extends BaseRoute {
 					});
 					const dirname = downloadId;
 					Fs.mkdirSync(Path.join(path, dirname));
+
+					Util.youtubeDownloads.get(downloadId).name = playlistInfo.title;
 
 					const videos = await playlistInfo.all_videos();
 
@@ -248,22 +253,11 @@ class Route extends BaseRoute {
 		if (runningDownloadId) {
 			const runningDownload = Util.youtubeDownloads.get(runningDownloadId);
 
-			if (!runningDownload) {
-				response.writeHead(400, { 'Content-Type': 'application/json' });
-				response.write(
-					JSON.stringify({
-						status: 400,
-						message: 'Invalid Download ID',
-					}),
-				);
-				return response.end();
-			}
-
-			if (runningDownload.finished) {
+			if (sendFile) {
 				const fileStat = Fs.statSync(runningDownload.path);
 
 				response.writeHead(200, {
-					'Content-Type': Util.getContentType(runningDownload.path),
+					'Content-Type': 'application/octet-stream',
 					'Content-Length': fileStat.size,
 				});
 
@@ -275,12 +269,25 @@ class Route extends BaseRoute {
 					response.end();
 				});
 			} else {
+				if (!runningDownload) {
+					response.writeHead(400, { 'Content-Type': 'application/json' });
+					response.write(
+						JSON.stringify({
+							status: 400,
+							message: 'Invalid Download ID',
+						}),
+					);
+					return response.end();
+				}
+
 				response.writeHead(200, {
 					'Content-Type': 'application/json',
 				});
 				response.write(
 					JSON.stringify({
 						url: runningDownload.url,
+						name: runningDownload.name,
+						filename: runningDownload.filename,
 						videos: runningDownload.videos,
 						finished: runningDownload.finished,
 					}),

@@ -81,6 +81,12 @@ downloadButton.addEventListener('click', (event) => {
 					}
 
 					if (!body.finished) return setTimeout(update, 1_000);
+
+					const downloadButton = document.getElementById('download-button');
+					downloadButton.href = `${location.origin}/static/downloads/${body.filename}`;
+					downloadButton.download =
+						body.name + body.filename.match(/\.\w+$/)[0];
+					downloadButton.children.item(0).style.display = 'block';
 				});
 			})();
 		});
