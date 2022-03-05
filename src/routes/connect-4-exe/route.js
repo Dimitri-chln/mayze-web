@@ -1,12 +1,12 @@
 const { IncomingMessage, ServerResponse } = require('http');
 const { URL } = require('url');
-const BaseRoute = require('../../../BaseRoute');
+const BaseRoute = require('../../BaseRoute');
 const Util = require('../../Util');
 const Fs = require('fs');
 const Path = require('path');
 
 class Route extends BaseRoute {
-	static path = '/connect4exe';
+	static path = '/connect-4-exe';
 	static requireLogin = true;
 	static requireMember = true;
 
@@ -26,9 +26,7 @@ class Route extends BaseRoute {
 			Path.join(__dirname, '..', '..', 'public', 'static', 'connect-4.zip'),
 		);
 
-		response.writeHead(200, {
-			'Content-Type': 'application/json',
-		});
+		response.writeHead(200);
 		response.write(file);
 		response.end();
 	}

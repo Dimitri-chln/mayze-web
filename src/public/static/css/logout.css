@@ -1,13 +1,28 @@
 body {
-    display: flex;
-    justify-content: center;
-    background-color: #2c2f33;
+	display: flex;
+	justify-content: center;
+	background-color: #2c2f33;
 }
 
-input[type=button] {
+input[type='button'] {
 	-webkit-appearance: none;
 }
 
 #redirect-button {
-    top: 3em;
+	position: relative;
+	background-color: #5865f2;
+	border: solid #404ab3;
+	color: white;
+	top: 3em;
+	height: 3em;
+	border-radius: 3em;
+	padding: 0 1em;
+	font-size: 1em;
+	font-weight: bold;
+	transition-duration: 0.4s;
+}
+
+#redirect-button:hover {
+	background-color: #404ab3;
+	transition-duration: 0.4s;
 }
