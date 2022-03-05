@@ -21,7 +21,6 @@ class Route extends BaseRoute {
 	static async runValid(url, request, response, token) {
 		const youtubeURL = url.searchParams.get('url');
 		const runningDownloadId = url.searchParams.get('download_id');
-		const sendFile = Boolean(url.searchParams.get('download'));
 
 		if (!youtubeURL && !runningDownloadId) {
 			response.writeHead(400, { 'Content-Type': 'application/json' });
@@ -253,47 +252,30 @@ class Route extends BaseRoute {
 		if (runningDownloadId) {
 			const runningDownload = Util.youtubeDownloads.get(runningDownloadId);
 
-			if (sendFile) {
-				const fileStat = Fs.statSync(runningDownload.path);
-
-				response.writeHead(200, {
-					'Content-Type': 'application/octet-stream',
-					'Content-Length': fileStat.size,
-				});
-
-				const readStream = Fs.createReadStream(runningDownload.path);
-				readStream.pipe(response);
-
-				readStream.on('close', () => {
-					Fs.rmSync(runningDownload.path, { force: true });
-					response.end();
-				});
-			} else {
-				if (!runningDownload) {
-					response.writeHead(400, { 'Content-Type': 'application/json' });
-					response.write(
-						JSON.stringify({
-							status: 400,
-							message: 'Invalid Download ID',
-						}),
-					);
-					return response.end();
-				}
-
-				response.writeHead(200, {
-					'Content-Type': 'application/json',
-				});
+			if (!runningDownload) {
+				response.writeHead(400, { 'Content-Type': 'application/json' });
 				response.write(
 					JSON.stringify({
-						url: runningDownload.url,
-						name: runningDownload.name,
-						filename: runningDownload.filename,
-						videos: runningDownload.videos,
-						finished: runningDownload.finished,
+						status: 400,
+						message: 'Invalid Download ID',
 					}),
 				);
-				response.end();
+				return response.end();
 			}
+
+			response.writeHead(200, {
+				'Content-Type': 'application/json',
+			});
+			response.write(
+				JSON.stringify({
+					url: runningDownload.url,
+					name: runningDownload.name,
+					filename: runningDownload.filename,
+					videos: runningDownload.videos,
+					finished: runningDownload.finished,
+				}),
+			);
+			response.end();
 		}
 	}
 }

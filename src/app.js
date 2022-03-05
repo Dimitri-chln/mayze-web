@@ -58,9 +58,11 @@ const httpServer = Http.createServer(
 		} catch (err) {
 			try {
 				const file = Fs.readFileSync('src/public' + url.pathname);
+				const stat = Fs.statSync('src/public' + url.pathname);
 
 				response.writeHead(200, {
 					'Content-Type': Util.getContentType(url.pathname),
+					'Content-Length': stat.size,
 				});
 				response.write(file);
 				response.end();
