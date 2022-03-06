@@ -10,7 +10,9 @@ const { ChildProcess } = require('child_process');
 class Util {
 	static config = require('./config.json');
 
-	/**@type {Pg.Client} */
+	/**
+	 * @type {Pg.Client}
+	 */
 	static database = newDatabaseClient();
 
 	static discord = new Discord.Client({
@@ -123,7 +125,6 @@ class Util {
 	}
 
 	/**
-	 *
 	 * @param {*} token
 	 * @param {*} refresh_token
 	 */

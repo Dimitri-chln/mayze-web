@@ -64,7 +64,6 @@ downloadButton.addEventListener('click', (event) => {
 				).then(async (res) => {
 					if (res.status !== 200) return;
 					const body = await res.json();
-					console.log(body);
 
 					for (let i = 0; i < body.videos.length; i++) {
 						const video = body.videos[i];
