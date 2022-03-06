@@ -25,13 +25,13 @@ class Route extends BaseRoute {
 
 		const data = JSON.parse(Buffer.concat(buffers).toString());
 
-		if (!Util.connectFourGames[token])
-			Util.connectFourGames[token] = {
+		if (!Util.connectFourGames.has(token))
+			Util.connectFourGames.set(token, {
 				token: token,
 				child: childProcess.spawn('connect-4/c4solver.exe', ['-w']),
-			};
+			});
 
-		const connectFourGame = Util.connectFourGames[token];
+		const connectFourGame = Util.connectFourGames.get(token);
 		const positions = [];
 
 		connectFourGame.child.stdout.on('data', (data) => {
