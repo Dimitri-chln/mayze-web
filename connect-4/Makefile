@@ -11,7 +11,7 @@ generator : generator.o
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 generator.o: generator.cpp
-    $(CXX) $(CXXFLAGS) -c $^
+	$(CXX) $(CXXFLAGS) -c $^
 
 .depend : Solver.cpp
 	$(CXX) $(CXXFLAGS) -MM $^ > ./.depend
