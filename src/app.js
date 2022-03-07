@@ -157,22 +157,21 @@ PlayDl.getFreeClientID().then((soundCloudClientId) => {
 
 const childProcess = require('child_process');
 
-const child = childProcess.execFile(
-	'connect-4/c4solver',
-	['-w', '-a'],
-	(err, stdout, stderr) => {
-		if (err) return console.error(err);
-		console.log(`stdout: ${stdout}`);
-		console.log(`stderr: ${stderr}`);
-	},
-);
+const child = childProcess.execFile('connect-4/c4solver', ['-w', '-a']);
 
-child.stdin.write('4');
+const positions = [4, 4, 5, 1];
 
 child.stdout.on('data', (data) => {
-	const items = data.split(' ');
-	console.log(items);
+	const scores = data
+		.trim()
+		.split(' ')
+		.map((score) => parseInt(score));
+
+	console.log(scores);
+
+	if (positions.length) {
+		child.stdin.end(positions.shift().toString());
+	}
 });
 
-child.stdin.write('5');
-child.stdin.end();
+child.stdin.end(positions.shift().toString());
