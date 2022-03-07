@@ -2,11 +2,15 @@ import { getCookie } from '../modules/cookie.mjs';
 import Rack from '../modules/rack.mjs';
 
 const htmlRack = document.getElementById('rack').children.item(0);
+const scoresTable = document.getElementById('scores').children.item(0);
 const restartButton = document.getElementById('restart-button');
 const rack = new Rack();
 
 for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 	const column = htmlRack.appendChild(document.createElement('tr'));
+
+	const scoreCell = document.createElement('td');
+	scoreCell.children.item(0).children.item(0).appendChild(scoreCell);
 
 	for (let rowIndex = 0; rowIndex < 6; rowIndex++) {
 		column.appendChild(document.createElement('td'));
@@ -32,7 +36,10 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			).then(async (res) => {
 				const body = await res.json();
 
-				console.log(body);
+				for (let i = 0; i < body.scores.length; i++) {
+					scoresTable.children.item(i).innerHTML = body.scores[i];
+				}
+
 				rack.playable = true;
 			});
 		} catch (err) {
