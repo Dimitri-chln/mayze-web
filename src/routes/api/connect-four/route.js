@@ -28,7 +28,7 @@ class Route extends BaseRoute {
 		if (!Util.connectFourGames.has(token))
 			Util.connectFourGames.set(token, {
 				token: token,
-				child: childProcess.spawn('connect-4/c4solver.exe', ['-w', '-a']),
+				child: childProcess.spawn('connect-4/c4solver', ['-w', '-a']),
 			});
 
 		const connectFourGame = Util.connectFourGames.get(token);
