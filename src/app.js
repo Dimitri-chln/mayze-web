@@ -157,7 +157,7 @@ PlayDl.getFreeClientID().then((soundCloudClientId) => {
 
 const childProcess = require('child_process');
 
-const child = childProcess.spawn('connect-4/c4solver', ['-w', '-a']);
+const child = childProcess.execFile('connect-4/c4solver', ['-w', '-a']);
 
 child.stdin.write('4');
 
