@@ -41,10 +41,18 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				const body = await res.json();
 
 				for (let i = 0; i < body.scores.length; i++) {
-					scoresTable.children
+					const scoreCell = scoresTable.children
 						.item(0)
 						.children.item(0)
-						.children.item(i).innerHTML = body.scores[i];
+						.children.item(i);
+
+					scoreCell.innerHTML = body.scores[i];
+					scoreCell.style.color =
+						body.scores[i] > 0
+							? '#46e083'
+							: body.scores[i] < 0
+							? '#e32817'
+							: '#f2b933';
 				}
 
 				rack.playable = true;
