@@ -175,3 +175,4 @@ child.stdout.on('data', (data) => {
 });
 
 child.stdin.write('5');
+child.stdin.end();
