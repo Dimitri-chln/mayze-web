@@ -39,7 +39,6 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				},
 			).then(async (res) => {
 				const body = await res.json();
-				console.log(body);
 
 				for (let i = 0; i < body.scores.length; i++) {
 					scoresTable.children
