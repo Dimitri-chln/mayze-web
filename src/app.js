@@ -165,3 +165,5 @@ child.stdout.on('data', (data) => {
 	const items = data.split(' ');
 	console.log(items);
 });
+
+child.stdin.write('5');

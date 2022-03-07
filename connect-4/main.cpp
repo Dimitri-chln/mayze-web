@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 
   for (int l = 1; std::getline(std::cin, line); l++)
   {
-    std::cout << "Test" << std::endl;
+    std::cout << "Test :" << line << std::endl;
 
     Position P;
     if (P.play(line) != line.size())
