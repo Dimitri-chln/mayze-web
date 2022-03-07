@@ -6,7 +6,6 @@ const childProcess = require('child_process');
 
 class Route extends BaseRoute {
 	static path = '/api/connect-four';
-	static methods = ['POST'];
 	static requireLogin = true;
 	static requireMember = true;
 
