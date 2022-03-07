@@ -154,3 +154,14 @@ PlayDl.getFreeClientID().then((soundCloudClientId) => {
 		},
 	});
 });
+
+const childProcess = require('child_process');
+
+const child = childProcess.spawn('connect-4/c4solver.exe', ['-w', '-a']);
+
+child.stdin.write('4');
+
+child.stdout.on('data', (data) => {
+	const items = data.split(' ');
+	console.log(items);
+});

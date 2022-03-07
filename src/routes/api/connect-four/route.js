@@ -34,6 +34,8 @@ class Route extends BaseRoute {
 		const connectFourGame = Util.connectFourGames.get(token);
 		const positions = [];
 
+		connectFourGame.child.stdin.write(data.played.toString());
+
 		connectFourGame.child.stdout.on('data', (data) => {
 			const items = data.split(' ');
 			console.log(items);
@@ -52,8 +54,6 @@ class Route extends BaseRoute {
 				response.end();
 			}
 		});
-
-		connectFourGame.child.stdin.write(data.played.toString());
 	}
 }
 
