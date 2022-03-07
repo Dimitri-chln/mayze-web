@@ -44,14 +44,14 @@ class Route extends BaseRoute {
 			response.writeHead(200, { 'Content-Type': 'application/json' });
 			response.write(
 				JSON.stringify({
-					positions: positions,
+					positions: positions.split('').map((p) => parseInt(p)),
 					scores: scores,
 				}),
 			);
 			response.end();
 		});
 
-		child.stdin.end(positions.join(''));
+		child.stdin.end(positions);
 	}
 }
 
