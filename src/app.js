@@ -172,8 +172,6 @@ child.stdout.on('data', (data) => {
 	console.log(scores);
 });
 
-for (const position of positions) {
-	child.stdin.write(position.toString());
-}
+child.stdin.write(positions.join(''));
 
 child.stdin.end();
