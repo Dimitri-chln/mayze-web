@@ -79,9 +79,12 @@ function updateHtmlRack(winner) {
 	}
 
 	if (winner) {
-		document.getElementById('win-text').innerHTML = `${
-			winner === 1 ? 'Rouge' : 'Jaune'
-		} a gagné !`;
+		if (winner === -1)
+			document.getElementById('win-text').innerHTML = 'Égalité !';
+		else
+			document.getElementById('win-text').innerHTML = `${
+				winner === 1 ? 'Rouge' : 'Jaune'
+			} a gagné !`;
 
 		restartButton.style.display = 'block';
 	}

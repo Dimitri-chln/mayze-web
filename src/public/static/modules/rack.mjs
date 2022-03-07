@@ -95,7 +95,7 @@ export default class Rack {
 
 	/**
 	 * Check if someone won
-	 * @returns {?number} The eventual winner
+	 * @returns {?number} The eventual winner or -1 if the game is a draw
 	 */
 	check() {
 		const checkLine = (a, b, c, d) =>
@@ -153,6 +153,8 @@ export default class Rack {
 					)
 				)
 					return this.data[c][r];
+
+		if (this.#row.every((r) => r === 5)) return -1;
 	}
 
 	display() {
