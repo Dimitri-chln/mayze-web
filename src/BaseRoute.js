@@ -125,7 +125,7 @@ class BaseRoute {
 			response.write(
 				JSON.stringify({
 					status: 401,
-					message: 'Unauthorized Access',
+					message: 'Not Authenticated',
 				}),
 			);
 		} else {

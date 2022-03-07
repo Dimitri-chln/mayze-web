@@ -87,7 +87,7 @@ export default class Rack {
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
 		this.#player = this.player === 1 ? 2 : 1;
-		this.#positions.push(column);
+		this.#positions.push(column + 1);
 		this.#winner = this.check();
 
 		return this.winner;

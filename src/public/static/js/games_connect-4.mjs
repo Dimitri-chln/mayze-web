@@ -31,6 +31,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				},
 			).then(async (res) => {
 				const body = await res.json();
+
 				console.log(body);
 				rack.playable = true;
 			});
