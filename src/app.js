@@ -159,9 +159,9 @@ const childProcess = require('child_process');
 
 const child = childProcess.execFile('connect-4/c4solver', ['-w', '-a']);
 
+child.stdin.write('4');
+
 child.stdout.on('data', (data) => {
 	const items = data.split(' ');
 	console.log(items);
 });
-
-child.stdin.write('4');
