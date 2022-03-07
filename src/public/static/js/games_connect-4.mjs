@@ -10,7 +10,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 	const column = htmlRack.appendChild(document.createElement('tr'));
 
 	const scoreCell = document.createElement('td');
-	scoreCell.children.item(0).children.item(0).appendChild(scoreCell);
+	scoresTable.children.item(0).children.item(0).appendChild(scoreCell);
 
 	for (let rowIndex = 0; rowIndex < 6; rowIndex++) {
 		column.appendChild(document.createElement('td'));
