@@ -1,16 +1,20 @@
 import { getCookie } from '../modules/cookie.mjs';
 import Rack from '../modules/rack.mjs';
 
-const htmlRack = document.getElementById('rack').children.item(0);
-const scoresTable = document.getElementById('scores').children.item(0);
+const htmlRack = document.getElementById('rack');
+const scoresTable = document.getElementById('scores');
 const restartButton = document.getElementById('restart-button');
 const rack = new Rack();
 
 for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
-	const column = htmlRack.appendChild(document.createElement('tr'));
+	const column = htmlRack.children
+		.item(0)
+		.appendChild(document.createElement('tr'));
 
-	const scoreCell = document.createElement('td');
-	scoresTable.children.item(0).children.item(0).appendChild(scoreCell);
+	scoresTable.children
+		.item(0)
+		.children.item(0)
+		.appendChild(document.createElement('td'));
 
 	for (let rowIndex = 0; rowIndex < 6; rowIndex++) {
 		column.appendChild(document.createElement('td'));
@@ -37,7 +41,8 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				const body = await res.json();
 
 				for (let i = 0; i < body.scores.length; i++) {
-					scoresTable.children.item(i).innerHTML = body.scores[i];
+					scoresTable.children.item(0).children.item(i).innerHTML =
+						body.scores[i];
 				}
 
 				rack.playable = true;
@@ -51,7 +56,10 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 function updateHtmlRack(winner) {
 	for (let i = 0; i < 7; i++) {
 		for (let j = 0; j < 6; j++) {
-			htmlRack.children.item(i).children.item(5 - j).innerHTML =
+			htmlRack.children
+				.item(0)
+				.children.item(i)
+				.children.item(5 - j).innerHTML =
 				rack.data[i][j] === 1
 					? '<img src="static/images/connect-4-red.png" alt="Red" />'
 					: rack.data[i][j] === 2
