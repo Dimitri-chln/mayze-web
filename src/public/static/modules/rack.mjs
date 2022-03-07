@@ -19,6 +19,10 @@ export default class Rack {
 	 * @type {boolean}
 	 */
 	#playable;
+	/**
+	 * @type {number[]}
+	 */
+	#positions;
 
 	constructor() {
 		this.#data = [];
@@ -26,6 +30,7 @@ export default class Rack {
 		this.#player = 1;
 		this.#winner = null;
 		this.#playable = true;
+		this.#positions = [];
 
 		for (let column = 0; column < 7; column++) {
 			this.#data[column] = [];
@@ -65,6 +70,10 @@ export default class Rack {
 		this.#playable = value;
 	}
 
+	get positions() {
+		return this.#positions;
+	}
+
 	/**
 	 * @param {number} column The column number
 	 * @returns {?number} The eventual winner
@@ -78,8 +87,9 @@ export default class Rack {
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
 		this.#player = this.player === 1 ? 2 : 1;
-
+		this.#positions.push(column);
 		this.#winner = this.check();
+
 		return this.winner;
 	}
 

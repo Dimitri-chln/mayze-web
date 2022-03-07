@@ -22,12 +22,14 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 			if (winner) return;
 
-			fetch(`/api/connect-four?token=${getCookie('token')}`, {
-				method: 'POST',
-				body: JSON.stringify({
-					played: columnIndex,
-				}),
-			}).then(async (res) => {
+			fetch(
+				`/api/connect-four?token=${getCookie(
+					'token',
+				)}?positions=${rack.positions.join('')}`,
+				{
+					method: 'GET',
+				},
+			).then(async (res) => {
 				const body = await res.json();
 				console.log(body);
 				rack.playable = true;

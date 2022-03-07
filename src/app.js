@@ -154,24 +154,3 @@ PlayDl.getFreeClientID().then((soundCloudClientId) => {
 		},
 	});
 });
-
-const childProcess = require('child_process');
-
-const child = childProcess.execFile('connect-4/c4solver', [
-	'-a',
-	'-b',
-	'connect-4/7x6.book',
-]);
-
-const positions = [4, 4, 5, 5, 3, 2, 3, 6];
-
-child.stdout.on('data', (data) => {
-	const scores = data.trim().split(' ');
-	// .map((score) => parseInt(score));
-
-	console.log(scores);
-});
-
-child.stdin.write(positions.join(''));
-
-child.stdin.end();

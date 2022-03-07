@@ -51,17 +51,6 @@ class Util {
 	static youtubeDownloads = new Discord.Collection();
 
 	/**
-	 * @typedef {object} ConnectFourGame
-	 * @property {string} token The user token
-	 * @property {ChildProcess} child The child process
-	 */
-
-	/**
-	 * @type {Discord.Collection<string, ConnectFourGame>}
-	 */
-	static connectFourGames = new Discord.Collection();
-
-	/**
 	 * Get the token from the request cookies
 	 * @param {Http.IncomingMessage} request The request object
 	 */

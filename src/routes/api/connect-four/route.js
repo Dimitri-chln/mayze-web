@@ -17,43 +17,42 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		const buffers = [];
+		const positions = url.searchParams.get('positions');
 
-		for await (const chunk of request) {
-			buffers.push(chunk);
+		if (!positions) {
+			response.writeHead(400, { 'Content-Type': 'application/json' });
+			response.write(
+				JSON.stringify({
+					status: 400,
+					message: 'Bad Request',
+				}),
+			);
+			return response.end();
 		}
 
-		const data = JSON.parse(Buffer.concat(buffers).toString());
+		const child = childProcess.execFile('connect-4/c4solver', [
+			'-a',
+			'-b',
+			'connect-4/7x6.book',
+		]);
 
-		if (!Util.connectFourGames.has(token))
-			Util.connectFourGames.set(token, {
-				token: token,
-				child: childProcess.spawn('connect-4/c4solver', ['-w', '-a']),
-			});
+		child.stdout.on('data', (data) => {
+			const res = data.trim().split(' ');
+			res.shift();
 
-		const connectFourGame = Util.connectFourGames.get(token);
-		const positions = [];
+			const scores = res.map((r) => parseInt(r));
 
-		connectFourGame.child.stdin.write(data.played.toString());
-
-		connectFourGame.child.stdout.on('data', (data) => {
-			const items = data.split(' ');
-			console.log(items);
-
-			positions.push({
-				index: items[0],
-				score: items[1],
-			});
-
-			if (positions.length === 7) {
-				connectFourGame.child.stdout.removeListener('data');
-				console.log(positions);
-
-				response.writeHead(200, { 'Content-Type': 'application/json' });
-				response.write(JSON.stringify(positions));
-				response.end();
-			}
+			response.writeHead(200, { 'Content-Type': 'application/json' });
+			response.write(
+				JSON.stringify({
+					positions: positions,
+					scores: scores,
+				}),
+			);
+			response.end();
 		});
+
+		child.stdin.end(positions.join(''));
 	}
 }
 
