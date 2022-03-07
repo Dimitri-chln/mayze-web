@@ -40,7 +40,7 @@ class Route extends BaseRoute {
 
 			const scores = res
 				.map((s) => parseInt(s))
-				.map((s) => (s === -10_000 ? null : s));
+				.map((s) => (s === -1_000 ? null : s));
 
 			response.writeHead(200, { 'Content-Type': 'application/json' });
 			response.write(
