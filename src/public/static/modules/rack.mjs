@@ -82,7 +82,7 @@ export default class Rack {
 		if (this.winner) throw new Error('Game is over');
 		const row = this.row[column];
 		if (!this.playable) throw new Error('Game is not currently playable');
-		if (row >= 6) throw new Error('Column is filled');
+		if (row > 5) throw new Error('Column is filled');
 
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
@@ -154,7 +154,7 @@ export default class Rack {
 				)
 					return this.data[c][r];
 
-		if (this.#row.every((r) => r === 5)) return -1;
+		if (this.#row.every((r) => r === 6)) return -1;
 	}
 
 	display() {
