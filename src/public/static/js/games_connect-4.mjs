@@ -25,7 +25,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			fetch(
 				`/api/connect-four?token=${getCookie(
 					'token',
-				)}?positions=${rack.positions.join('')}`,
+				)}&positions=${rack.positions.join('')}`,
 				{
 					method: 'GET',
 				},
