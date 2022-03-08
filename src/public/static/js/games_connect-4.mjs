@@ -74,9 +74,9 @@ function updateHtmlRack(winner) {
 				.children.item(i)
 				.children.item(5 - j).innerHTML =
 				rack.data[i][j] === 1
-					? '<img src="static/images/connect-4-red.png" alt="Red" />'
+					? '<div class="red"></div>'
 					: rack.data[i][j] === 2
-					? '<img src="static/images/connect-4-yellow.png" alt="Yellow" />'
+					? '<div class="yellow"></div>'
 					: '';
 		}
 	}

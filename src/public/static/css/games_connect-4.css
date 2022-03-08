@@ -40,6 +40,19 @@
 	border: 2px solid transparent;
 }
 
+.red,
+.yellow {
+	border-radius: 50%;
+}
+
+.red {
+	background-color: red;
+}
+
+.yellow {
+	background-color: yellow;
+}
+
 #grid-info {
 	position: relative;
 	display: flex;
