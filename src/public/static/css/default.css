@@ -41,7 +41,7 @@ input[type='button'] {
 	width: 100%;
 	background-color: #23272a;
 	padding: 0.4em;
-	z-index: 10;
+	z-index: 100;
 }
 
 #banner-main {
@@ -99,7 +99,7 @@ a {
 	background-color: #1a1e20;
 	margin: 0;
 	padding: 0;
-	z-index: 10;
+	z-index: 100;
 }
 
 .banner-category:hover > .scrolling-menu {
@@ -180,6 +180,7 @@ a {
 #loading {
 	display: none;
 	position: fixed;
+	z-index: 100;
 	align-self: center;
 	top: 50%;
 	transform: translateY(-50%);
