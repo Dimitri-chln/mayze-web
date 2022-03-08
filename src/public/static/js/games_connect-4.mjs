@@ -27,8 +27,9 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			const winner = rack.play(columnIndex);
 			rack.playable = false;
 			updateHtmlRack(winner);
-
 			if (winner) return;
+
+			document.getElementById('loading').style.display = 'inline-block';
 
 			fetch(
 				`/api/connect-four?token=${getCookie(
@@ -39,6 +40,8 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				},
 			).then(async (res) => {
 				const body = await res.json();
+
+				document.getElementById('loading').style.display = 'none';
 
 				for (let i = 0; i < body.scores.length; i++) {
 					const scoreCell = scoresTable.children
