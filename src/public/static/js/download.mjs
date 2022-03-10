@@ -25,9 +25,12 @@ downloadButton.addEventListener('click', (event) => {
 		},
 	).then(async (res) => {
 		if (res.status !== 200) {
+			downloadButton.disabled = false;
+			downloadButton.style.cursor = 'auto';
 			document.getElementById('loading').style.display = 'none';
 			return alert('Le lien est invalide');
 		}
+
 		const body = await res.json();
 		const downloadId = body.download_id;
 
@@ -38,9 +41,12 @@ downloadButton.addEventListener('click', (event) => {
 			},
 		).then(async (res) => {
 			if (res.status !== 200) {
+				downloadButton.disabled = false;
+				downloadButton.style.cursor = 'auto';
 				document.getElementById('loading').style.display = 'none';
 				return alert("Quelque chose s'est mal passé en téléchargeant la vidéo");
 			}
+
 			const body = await res.json();
 
 			for (const video of body.videos) {
@@ -69,6 +75,9 @@ downloadButton.addEventListener('click', (event) => {
 					},
 				).then(async (res) => {
 					if (res.status !== 200) {
+						downloadButton.disabled = false;
+						downloadButton.style.cursor = 'auto';
+						document.getElementById('loading').style.display = 'none';
 						return alert(
 							"Quelque chose s'est mal passé en téléchargeant la vidéo",
 						);
