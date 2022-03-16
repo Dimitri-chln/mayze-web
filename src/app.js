@@ -100,8 +100,7 @@ const httpServer = Http.createServer(
 			const geo = GeoIP.lookup(IP);
 
 			if (IP !== '::1') {
-				Util.discord.channels.cache
-					.get('881479629158891540')
+				(await Util.discord.channels.fetch('881479629158891540'))
 					.send(
 						`__Request received:__
 				 - **Path:** \`${url.pathname}\`
