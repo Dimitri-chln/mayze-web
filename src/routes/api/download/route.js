@@ -9,8 +9,8 @@ const ytdl = require('ytdl-core');
 
 class Route extends BaseRoute {
 	static path = '/api/download';
-	static requireLogin = true;
-	static requireMember = true;
+	static loginRequired = true;
+	static memberRequired = true;
 
 	/**
 	 * @param {URL} url

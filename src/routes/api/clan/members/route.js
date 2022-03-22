@@ -7,8 +7,8 @@ const { GuildMember } = require('discord.js');
 class Route extends BaseRoute {
 	static path = '/api/clan/members';
 	static methods = ['GET', 'POST', 'PATCH', 'DELETE'];
-	static requireLogin = true;
-	static requireMember = true;
+	static loginRequired = true;
+	static memberRequired = true;
 
 	/**
 	 * @param {URL} url

@@ -6,7 +6,7 @@ const Axios = require('axios').default;
 
 class Route extends BaseRoute {
 	static path = '/api/discord/user';
-	static requireLogin = true;
+	static loginRequired = true;
 
 	/**
 	 * @param {URL} url

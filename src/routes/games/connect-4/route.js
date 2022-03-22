@@ -2,7 +2,7 @@ const BaseRoute = require('../../../BaseRoute');
 
 class Route extends BaseRoute {
 	static path = '/connect-4';
-	static requireLogin = true;
+	static loginRequired = true;
 }
 
 module.exports = Route;

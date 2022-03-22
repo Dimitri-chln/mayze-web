@@ -7,14 +7,14 @@ const Util = require('./Util');
 class BaseRoute {
 	static path = '/';
 	static methods = ['GET'];
-	static requireLogin = false;
-	static requireMember = false;
+	static loginRequired = false;
+	static memberRequired = false;
 
 	/**
 	 * @param {string} token
 	 */
 	static async fetchMember(token) {
-		if (!this.requireMember) return;
+		if (!this.memberRequired) return;
 
 		const { rows: tokens } = await Util.database.query(
 			'SELECT user_id FROM web_client WHERE token = $1',
@@ -23,31 +23,38 @@ class BaseRoute {
 
 		if (!tokens.length) throw new Error('Not Authenticated');
 
-		const userID = tokens[0].user_id;
-		const member = Util.guild.members.cache.get(userID);
+		const userId = tokens[0].user_id;
 
-		if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID))
-			throw new Error('Unauthorized');
+		if (!Util.guild.members.cache.has(userId)) throw new Error('Unauthorized');
 
-		const { rows: wolvesvilleMembers } = await Util.database.query(
+		const member = Util.guild.members.cache.get(userId);
+
+		const {
+			rows: [wolvesvilleMember],
+		} = await Util.database.query(
 			'SELECT * FROM clan_member WHERE user_id = $1',
 			[member.user.id],
 		);
 
-		const wolvesvilleMember = {
-			/**@type {string} */
-			userId: wolvesvilleMembers[0].user_id,
-			/**@type {string} */
-			username: wolvesvilleMembers[0].username,
-			/**@type {Date} */
-			joinedAt: new Date(wolvesvilleMembers[0].joined_at),
-			/**@type {'MEMBER' | 'CO-LEADER' | 'LEADER'} */
-			rank: ['MEMBER', 'CO-LEADER', 'LEADER'][wolvesvilleMembers[0].rank - 1],
-		};
+		/**
+		 * @typedef {object} WolvesvilleMember
+		 * @property {string} userId The discord user ID of the member
+		 * @property {string} username The wolvesville username of the member
+		 * @property {Date} joinedAt The date the member joined the clan
+		 * @property {'MEMBER' | 'CO-LEADER' | 'LEADER'} rank The rank of the member in the clan
+		 */
 
 		return {
 			discord: member,
-			wolvesville: wolvesvilleMember,
+			/**
+			 * @type {WolvesvilleMember}
+			 */
+			wolvesville: {
+				userId: wolvesvilleMember.user_id,
+				username: wolvesvilleMember.username,
+				joinedAt: new Date(wolvesvilleMember.joined_at),
+				rank: ['MEMBER', 'CO-LEADER', 'LEADER'][wolvesvilleMember.rank - 1],
+			},
 		};
 	}
 
@@ -59,7 +66,7 @@ class BaseRoute {
 		if (!this.methods.includes(request.method.toUpperCase()))
 			return 'METHOD_NOT_ALLOWED';
 
-		if (this.requireLogin) {
+		if (this.loginRequired) {
 			const { rows: tokens } = await Util.database.query(
 				'SELECT user_id FROM web_client WHERE token = $1',
 				[token],
@@ -67,15 +74,15 @@ class BaseRoute {
 
 			if (!tokens.length) return 'NOT_AUTHENTICATED';
 
-			if (this.requireMember) {
-				const userID = tokens[0].user_id;
-				const member = Util.guild.members.cache.get(userID);
+			if (this.memberRequired)
+				return Util.guild.members.cache.has(tokens[0].user_id)
+					? 'VALID'
+					: 'UNAUTHORIZED';
 
-				if (!member || !member.roles.cache.has(Util.config.MEMBER_ROLE_ID))
-					return 'UNAUTHORIZED';
-				else return 'VALID';
-			} else return 'VALID';
-		} else return 'VALID';
+			return 'VALID';
+		}
+
+		return 'VALID';
 	}
 
 	/**
