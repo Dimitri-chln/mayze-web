@@ -5,7 +5,6 @@ const Pg = require('pg');
 const Discord = require('discord.js');
 const Http = require('http');
 const archiver = require('archiver');
-const { ChildProcess } = require('child_process');
 
 class Util {
 	static config = require('./config.json');

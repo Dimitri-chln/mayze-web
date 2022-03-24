@@ -126,7 +126,6 @@ section#clan {
 	display: flex;
 	flex-direction: column;
 	width: 85%;
-	margin: 2em;
 }
 
 article#clan-info h1 {
@@ -147,7 +146,7 @@ div#member-title button {
 	background-color: #23272a;
 	border: 2px solid #1a1e20;
 	border-radius: 2em;
-	margin: 2em 2em;
+	margin: 2em;
 	padding: 1em;
 	cursor: pointer;
 }
@@ -155,12 +154,13 @@ div#member-title button {
 ol#member-list {
 	position: relative;
 	list-style-type: none;
+	padding: 0;
 }
 
 ol#member-list > li {
 	display: flex;
 	justify-content: space-between;
-	margin: 0.5em;
+	margin: 0.5em 0;
 }
 
 ol#member-list li:hover .edit-button {
@@ -170,7 +170,6 @@ ol#member-list li:hover .edit-button {
 .separator {
 	position: relative;
 	height: 2px;
-	left: 1em;
 	background-color: #23272a;
 }
 
@@ -214,7 +213,7 @@ ol#member-list li:hover .edit-button {
 }
 
 .joined-at {
-	padding: 1em 0 1em 0;
+	padding: 1em 0;
 }
 
 /* POP UP FORM */

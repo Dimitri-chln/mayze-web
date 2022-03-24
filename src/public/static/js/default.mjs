@@ -21,6 +21,22 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	parent.prepend(avatarImage);
 });
 
+fetch(
+	`/api/discord/user?token=${getCookie('token')}&user_id=307815349699608577`,
+	{
+		method: 'GET',
+	},
+).then(async (res) => {
+	const user = await res.json();
+	if (!user.id) return;
+
+	const footerDiscord = document.getElementById('footer-discord');
+	footerDiscord.innerHTML = footerDiscord.innerHTML.replace(
+		'Chargement...',
+		user.tag,
+	);
+});
+
 document.getElementById('login-button').addEventListener('click', () => {
 	location.href = `/login?redirect=${location.pathname}`;
 });

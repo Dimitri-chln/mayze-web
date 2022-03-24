@@ -69,7 +69,5 @@ input#restart-button {
 }
 
 a#credits {
-	position: fixed;
-	bottom: 0.5em;
-	right: 0.5em;
+	margin: 1em;
 }
