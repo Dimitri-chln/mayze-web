@@ -1,5 +1,8 @@
 import { getCookie } from '../modules/cookie.mjs';
 
+const scene = document.getElementById('scene');
+const parallaxInstance = new Parallax(scene);
+
 const isMember = document.getElementById('is-member');
 isMember.innerHTML = 'Connexion...';
 

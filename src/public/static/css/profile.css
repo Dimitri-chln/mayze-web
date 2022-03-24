@@ -1,23 +1,24 @@
-#member-title {
+h1#member-title {
 	position: relative;
 	left: 2em;
 	width: fit-content;
 }
 
-#member-info {
+table#member-info {
 	position: relative;
 	align-self: center;
 	width: 85%;
 }
 
-#member-info td {
+table#member-info td {
 	padding: 1em;
+	border: 1px red;
 }
 
-#member-info tr:nth-child(even) {
+table#member-info tr:nth-child(even) {
 	background: #23272a;
 }
 
-#member-info tr:nth-child(odd) {
+table#member-info tr:nth-child(odd) {
 	background: #202427;
 }

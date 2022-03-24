@@ -1,16 +1,20 @@
-#leaderboard-selection {
+div#leaderboard-selection {
 	display: flex;
 	flex-direction: column;
+	width: fit-content;
+	background-color: #23272a;
+	border: 2px solid #1a1e20;
+	border-radius: 1em;
 }
 
-#leaderboard-selection > div {
+div#leaderboard-selection > div {
 	display: flex;
 	align-items: center;
 	font-size: larger;
 	margin: 0.5em;
 }
 
-#leaderboard {
+ol#leaderboard {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -21,28 +25,7 @@
 	padding: 0;
 }
 
-.member {
-	display: flex;
-	flex-direction: row;
-}
-
-.member img {
-	height: 2.2em;
-	border-radius: 1.1em;
-}
-
-#leaderboard li p, span {
-	margin: 0;
-	padding: 0.5em;
-}
-
-.member p {
-	width: auto;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-#leaderboard li {
+ol#leaderboard > li {
 	color: white;
 	font-size: 1.5em;
 	border: 2px solid #1a1e20;
@@ -51,11 +34,33 @@
 	justify-content: space-between;
 }
 
+ol#leaderboard > li p,
+span {
+	margin: 0;
+	padding: 0.5em;
+}
+
+.member {
+	display: flex;
+	flex-direction: row;
+}
+
+.member > img {
+	height: 2.2em;
+	border-radius: 1.1em;
+}
+
+.member > p {
+	width: auto;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .member-stats {
 	display: flex;
 	flex-direction: row;
 }
 
-.member-stats p {
+.member-stats > p {
 	width: 5.7em;
 }

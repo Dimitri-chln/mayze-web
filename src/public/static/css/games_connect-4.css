@@ -1,37 +1,36 @@
-#rack {
+table#rack {
 	position: relative;
 	width: fit-content;
 }
 
-#rack tbody {
-	position: relative;
+table#rack > tbody {
 	display: flex;
 	flex-direction: row;
 }
 
-#rack tr {
+table#rack tr {
 	position: relative;
 	display: flex;
 	flex-direction: column;
 }
 
-#rack tr > td {
+table#rack tr > td {
 	position: relative;
 	width: 4em;
 	height: 4em;
 	border: 2px solid #1a1520;
 }
 
-#rack tr > td > img {
+table#rack tr > td > img {
 	width: 100%;
 	height: 100%;
 }
 
-#scores {
+table#scores {
 	position: relative;
 }
 
-#scores tr > td {
+table#scores tr > td {
 	position: relative;
 	font-size: medium;
 	text-align: center;
@@ -55,16 +54,22 @@
 	background-color: yellow;
 }
 
-#grid-info {
+div#grid-info {
 	position: relative;
 	display: flex;
 }
 
-#win-text {
+p#win-text {
 	font-size: large;
 	margin: 0 1em;
 }
 
-#restart-button {
+input#restart-button {
 	display: none;
+}
+
+a#credits {
+	position: fixed;
+	bottom: 0.5em;
+	right: 0.5em;
 }

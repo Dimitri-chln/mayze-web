@@ -1,6 +1,6 @@
 /* MENU BUTTON */
 
-#menu-toggle {
+div#menu-toggle {
 	display: block;
 	position: fixed;
 	top: 8em;
@@ -10,13 +10,13 @@
 	user-select: none;
 }
 
-#menu-toggle a {
+div#menu-toggle a {
 	text-decoration: none;
 	color: #232323;
 	transition: color 0.3s ease;
 }
 
-#menu-toggle input {
+div#menu-toggle input {
 	display: block;
 	width: 32px;
 	height: 32px;
@@ -32,7 +32,7 @@
 /*
  * Just a quick hamburger
  */
-#menu-toggle span {
+div#menu-toggle span {
 	display: block;
 	width: 33px;
 	height: 4px;
@@ -42,16 +42,15 @@
 	border-radius: 3px;
 	z-index: 1;
 	transform-origin: 4px 0px;
-	transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-		background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-		opacity 0.55s ease;
+	transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+		background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
 }
 
-#menu-toggle span:first-child {
+div#menu-toggle span:first-child {
 	transform-origin: 0% 0%;
 }
 
-#menu-toggle span:nth-last-child(2) {
+div#menu-toggle span:nth-last-child(2) {
 	transform-origin: 0% 100%;
 }
 
@@ -59,7 +58,7 @@
  * Transform all the slices of hamburger
  * into a crossmark.
  */
-#menu-toggle input:checked ~ span {
+div#menu-toggle input:checked ~ span {
 	opacity: 1;
 	transform: rotate(45deg) translate(-2px, -1px);
 }
@@ -67,7 +66,7 @@
 /*
  * But let's hide the middle one.
  */
-#menu-toggle input:checked ~ span:nth-last-child(3) {
+div#menu-toggle input:checked ~ span:nth-last-child(3) {
 	opacity: 0;
 	transform: rotate(0deg) scale(0.2, 0.2);
 }
@@ -75,7 +74,7 @@
 /*
  * Ohyeah and the last one should go the other direction
  */
-#menu-toggle input:checked ~ span:nth-last-child(2) {
+div#menu-toggle input:checked ~ span:nth-last-child(2) {
 	transform: rotate(-45deg) translate(0, -1px);
 }
 
@@ -83,7 +82,7 @@
  * Make this absolute positioned
  * at the top left of the screen
  */
-#menu {
+ul#menu {
 	position: absolute;
 	width: 10em;
 	left: 0.75em;
@@ -97,54 +96,54 @@
 	/* to stop flickering of text in safari */
 	transform-origin: 0% 0%;
 	transform: translate(-100%, 0);
-	transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+	transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
 }
 
-#menu li {
+ul#menu li {
 	padding: 10px 0;
 }
 
-#menu a {
+ul#menu a {
 	font-size: 22px;
 	color: white;
 }
 
-#menu a:hover {
+ul#menu a:hover {
 	color: orange;
 }
 
 /*
  * And let's slide it in from the left
  */
-#menu-toggle input:checked ~ ul {
+ul#menu-toggle input:checked ~ ul {
 	transform: none;
 }
 
 /* END MENU BUTTON */
 
-#clan {
+section#clan {
 	position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 85%;
-    margin: 2em;
+	display: flex;
+	flex-direction: column;
+	width: 85%;
+	margin: 2em;
 }
 
-#stats h1 {
+article#clan-info h1 {
 	font-size: 3em;
 }
 
-#stats p {
+article#clan-info p {
 	font-size: 1em;
 }
 
-#member-title {
+div#member-title {
 	display: flex;
 	font-size: 1.5em;
 }
 
-#member-title button {
-	color:  white;
+div#member-title button {
+	color: white;
 	background-color: #23272a;
 	border: 2px solid #1a1e20;
 	border-radius: 2em;
@@ -153,15 +152,19 @@
 	cursor: pointer;
 }
 
-#member-list {
+ol#member-list {
 	position: relative;
 	list-style-type: none;
 }
 
-#member-list li {
+ol#member-list > li {
 	display: flex;
 	justify-content: space-between;
 	margin: 0.5em;
+}
+
+ol#member-list li:hover .edit-button {
+	display: block;
 }
 
 .separator {
@@ -180,7 +183,9 @@
 	margin: auto;
 }
 
-.leader, .co-leader, .member {
+.leader,
+.co-leader,
+.member {
 	width: 10em;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -200,16 +205,12 @@
 
 .edit-button {
 	display: none;
-	color:  white;
+	color: white;
 	background-color: #23272a;
 	border: 2px solid #1a1e20;
 	border-radius: 1em;
 	margin: 1em 1.5em;
 	cursor: pointer;
-}
-
-#member-list li:hover .edit-button {
-	display: block;
 }
 
 .joined-at {
@@ -219,7 +220,7 @@
 /* POP UP FORM */
 
 /* The popup form - hidden by default */
-#popup-form {
+div#popup-form {
 	display: none;
 	flex-direction: column;
 	position: fixed;
@@ -233,37 +234,41 @@
 	padding: 2em;
 }
 
-#popup-form h1 {
+div#popup-form h1 {
 	margin: 0 0 1em 0;
 }
 
-#popup-form #fields {
+div#popup-form #fields {
 	display: flex;
 	flex-direction: column;
 	margin-bottom: 2em;
 }
-  
+
 /* Full-width input fields */
-#popup-form input[type=text], #popup-form input[type=date], #popup-form select {
+div#popup-form input[type='text'],
+div#popup-form input[type='date'],
+div#popup-form select {
 	padding: 13px;
 	margin: 5px 0 22px 0;
 	border: none;
 	background: #f1f1f1;
 }
-  
+
 /* When the inputs get focus, do something */
-#popup-form input[type=text], #popup-form input[type=date], #popup-form select {
+div#popup-form input[type='text'],
+div#popup-form input[type='date'],
+div#popup-form select {
 	background-color: #ddd;
 	outline: none;
 }
 
-#form-buttons {
+div#form-buttons {
 	display: flex;
 	flex-direction: row;
 }
-  
+
 /* Set a style for the submit/login button */
-#popup-form input[type=button] {
+div#popup-form input[type='button'] {
 	color: white;
 	padding: 16px 20px;
 	border: none;
@@ -271,18 +276,18 @@
 	width: 100%;
 	opacity: 0.8;
 }
-  
+
 /* Add a background color to the buttons */
-#popup-form #cancel-button {
+div#popup-form #cancel-button {
 	background-color: red;
 }
 
-#popup-form #delete-button {
+div#popup-form #delete-button {
 	background-color: grey;
 }
 
-#popup-form #save-button {
-	background-color: #04AA6D;
+div#popup-form #save-button {
+	background-color: #04aa6d;
 }
 
 /* END POP UP FORM */
