@@ -9,6 +9,7 @@ class BaseRoute {
 	static methods = ['GET'];
 	static loginRequired = false;
 	static memberRequired = false;
+	static allowedUserIds = null;
 
 	/**
 	 * @param {string} token
@@ -67,19 +68,27 @@ class BaseRoute {
 			return 'METHOD_NOT_ALLOWED';
 
 		if (this.loginRequired) {
-			const { rows: tokens } = await Util.database.query(
+			const {
+				rows: [tokenData],
+			} = await Util.database.query(
 				'SELECT user_id FROM web_client WHERE token = $1',
 				[token],
 			);
 
-			if (!tokens.length) return 'NOT_AUTHENTICATED';
+			if (!tokenData) return 'NOT_AUTHENTICATED';
 
-			if (this.memberRequired)
-				return Util.guild.members.cache.has(tokens[0].user_id)
-					? 'VALID'
-					: 'UNAUTHORIZED';
+			if (
+				this.memberRequired &&
+				!Util.guild.members.cache.has(tokenData.user_id)
+			)
+				return 'UNAUTHORIZED';
 
-			return 'VALID';
+			if (
+				this.allowedUserIds &&
+				!this.allowedUserIds.includes(tokenData.user_id) &&
+				tokenData.user_id !== Util.config.ONWER_ID
+			)
+				return 'UNAUTHORIZED';
 		}
 
 		return 'VALID';

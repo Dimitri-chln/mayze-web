@@ -246,7 +246,7 @@ class Util {
 function newDatabaseClient() {
 	const connectionString = {
 		connectionString: process.env.DATABASE_URL,
-		ssl: true,
+		ssl: process.env.ENVIRONMENT === 'PRODUCTION',
 	};
 
 	const database = new Pg.Client(connectionString);
