@@ -5,7 +5,6 @@ const translationsSection = document.getElementById('translations');
 
 fetch(`api/translations?token=${getCookie('token')}`).then(async (res) => {
 	const translations = await res.json();
-	console.log(translations);
 
 	addElements(translationsSection, translations, localePicker.value);
 
@@ -25,35 +24,51 @@ fetch(`api/translations?token=${getCookie('token')}`).then(async (res) => {
  */
 function addElements(parent, data, locale, depth = 0) {
 	if (data.default && data.translations) {
+		const group = document.createElement('div');
+		group.classList.add('translations-group');
+		if (depth > 0) group.style.display = 'none';
+		parent.appendChild(group);
+
 		const defaultText = document.createElement('p');
 		defaultText.innerHTML = data.default;
-		parent.appendChild(defaultText);
+		group.appendChild(defaultText);
 
 		const translationText = document.createElement('input');
 		translationText.type = 'text';
 		translationText.placeholder = 'Text translation';
 		translationText.value = data.translations[locale];
-		parent.appendChild(translationText);
+		group.appendChild(translationText);
 	} else {
 		for (const key of Object.keys(data)) {
-			const div = document.createElement('div');
-			div.classList.add('translations-group');
-			if (depth > 0) div.style.display = 'none';
-			parent.appendChild(div);
+			const group = document.createElement('div');
+			group.classList.add('translations-group');
+			if (depth > 0) group.style.display = 'none';
+			parent.appendChild(group);
 
-			const groupName = document.createElement('h2');
+			const groupHeader = document.createElement('div');
+			groupHeader.classList.add('translations-group-header');
+			group.appendChild(groupHeader);
+
+			const groupOpen = document.createElement('div');
+			groupOpen.innerHTML = '>';
+			groupHeader.appendChild(groupOpen);
+
+			const groupName = document.createElement('div');
 			groupName.innerHTML = key.replace(/^./, (a) => a.toUpperCase());
-			div.appendChild(groupName);
+			groupHeader.appendChild(groupName);
 
-			groupName.addEventListener('click', () => {
-				for (const child of div.children) {
-					if (child.tagName.toLowerCase() === 'div')
-						child.style.display =
-							child.style.display === 'none' ? 'block' : 'none';
+			groupHeader.addEventListener('click', () => {
+				const closed = groupOpen.innerHTML === '&gt;';
+
+				groupOpen.innerHTML = closed ? 'v' : '>';
+
+				for (const child of group.children) {
+					if (child.classList.contains('translations-group'))
+						child.style.display = closed ? 'block' : 'none';
 				}
 			});
 
-			addElements(div, data[key], locale, depth + 1);
+			addElements(group, data[key], locale, depth + 1);
 		}
 	}
 }
