@@ -38,7 +38,6 @@ div.translations-group {
 div.translations-group > p {
 	margin: 0.5em;
 	font-size: small;
-	font-style: italic;
 }
 
 div.translations-group > input[type='text'] {
