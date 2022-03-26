@@ -3,7 +3,9 @@ import { getCookie } from '../modules/cookie.mjs';
 const localePicker = document.getElementById('locale-picker');
 const translationsSection = document.getElementById('translations');
 
-fetch(`api/translations?token=${getCookie('token')}`).then(async (res) => {
+fetch(`api/translations?token=${getCookie('token')}`, {
+	method: 'GET',
+}).then(async (res) => {
 	const translations = await res.json();
 
 	addElements(translationsSection, translations, localePicker.value);
@@ -21,8 +23,10 @@ fetch(`api/translations?token=${getCookie('token')}`).then(async (res) => {
  * @param {HTMLElement} parent
  * @param {object} data
  * @param {string} locale
+ * @param {number} [depth]
+ * @param {string} [path]
  */
-function addElements(parent, data, locale, depth = 0) {
+function addElements(parent, data, locale, depth = 0, path = '') {
 	if (data.default && data.translations) {
 		const group = document.createElement('div');
 		group.classList.add('translations-group');
@@ -33,13 +37,33 @@ function addElements(parent, data, locale, depth = 0) {
 		defaultText.innerHTML = data.default;
 		group.appendChild(defaultText);
 
+		const pathHidden = document.createElement('input');
+		pathHidden.type = 'hidden';
+		pathHidden.value = path;
+		group.appendChild(pathHidden);
+
 		const translationText = document.createElement('input');
 		translationText.type = 'text';
 		translationText.placeholder = 'Text translation';
 		translationText.value = data.translations[locale];
 		group.appendChild(translationText);
+
+		translationText.addEventListener('change', () => {
+			const changedText = translationText.previousElementSibling.value;
+
+			fetch(
+				`api/translations?token=${getCookie('token')}&name=${encodeURIComponent(
+					changedText,
+				)}&locale=${locale}&translation=${encodeURIComponent(
+					translationText.value || 'NULL',
+				)}`,
+				{
+					method: 'POST',
+				},
+			);
+		});
 	} else {
-		for (const key of Object.keys(data)) {
+		for (const key of Object.keys(data).sort((a, b) => a.localeCompare(b))) {
 			const group = document.createElement('div');
 			group.classList.add('translations-group');
 			if (depth > 0) group.style.display = 'none';
@@ -68,7 +92,13 @@ function addElements(parent, data, locale, depth = 0) {
 				}
 			});
 
-			addElements(group, data[key], locale, depth + 1);
+			addElements(
+				group,
+				data[key],
+				locale,
+				depth + 1,
+				path ? `${path}.${key}` : key,
+			);
 		}
 	}
 }
