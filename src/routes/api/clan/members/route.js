@@ -236,20 +236,24 @@ function sendUpdate(author, method, searchParams) {
 	Util.discord.channels.cache
 		.get('881512057822933044')
 		.send(
-			`__Dashboard updated:__
-		 - **By:** \`${author.user.tag} (${author.user.id})\`
-		 - **Method:** \`${method}\`
-		 - **Member:** \`${searchParams.get('member')}\`${
+			`
+			__Dashboard updated:__
+		 	- **By:** \`${author.user.tag} (${author.user.id})\`
+		 	- **Method:** \`${method}\`
+		 	- **Member:** \`${searchParams.get('member')}\`${
 				method !== 'DELETE'
 					? `
-		>>> **Username:** \`${searchParams.get('username')}\`
-		**Discord ID:** \`${searchParams.get('user_id')}\`
-		**Joined at:** \`${searchParams.get('joined_at')}\`
-		**Rank:** \`${
-			['Member', 'Co-leader', 'Leader'][parseInt(searchParams.get('rank') - 1)]
-		}\``
+						>>> **Username:** \`${searchParams.get('username')}\`
+						**Discord ID:** \`${searchParams.get('user_id')}\`
+						**Joined at:** \`${searchParams.get('joined_at')}\`
+						**Rank:** \`${
+							['Member', 'Co-leader', 'Leader'][
+								parseInt(searchParams.get('rank') - 1)
+							]
+						}\`
+						`
 					: ''
-			}`.replace(/\t+/g, ''),
+			}`.replace(/\t*/g, ''),
 		)
 		.catch(console.error);
 }

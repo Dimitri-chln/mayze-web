@@ -14,6 +14,23 @@ class BaseRoute {
 	/**
 	 * @param {string} token
 	 */
+	static async fetchUser(token) {
+		const { rows: tokens } = await Util.database.query(
+			'SELECT user_id FROM web_client WHERE token = $1',
+			[token],
+		);
+
+		if (!tokens.length) throw new Error('Not Authenticated');
+
+		const userId = tokens[0].user_id;
+		const user = await Util.discord.users.fetch(userId);
+
+		return user;
+	}
+
+	/**
+	 * @param {string} token
+	 */
 	static async fetchMember(token) {
 		if (!this.memberRequired) return;
 

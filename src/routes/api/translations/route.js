@@ -16,6 +16,8 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
+		const user = await this.fetchUser(token);
+
 		switch (request.method.toUpperCase()) {
 			case 'GET': {
 				const { rows } = await Util.database.query(
@@ -69,6 +71,22 @@ class Route extends BaseRoute {
 					`UPDATE translations SET ${locale} = $1 WHERE name = $2`,
 					[translation === 'NULL' ? null : translation, translationName],
 				);
+
+				Util.discord.channels.cache
+					.get('957380495958765588')
+					.send(
+						`
+						__Translations updated:__
+						- **By:** \`${user.tag} (${user.id})\`
+						- **Name:** \`${translationName}\`
+						- **Locale:** \`${locale}\`
+						- **Translation:**
+						\`\`\`
+						${translation}
+						\`\`\`
+						`.replace(/\t*/g, ''),
+					)
+					.catch(console.error);
 
 				response.writeHead(200, { 'Content-Type': 'application/json' });
 				response.end();
