@@ -13,8 +13,8 @@ const modeSelector = document.getElementById('mode-selector');
 const badMoveRate = document.getElementById('bad-move-rate');
 
 trainingMode.checked = new URLSearchParams(location.search).get('train') == 'true';
-modeSelector.value = new URLSearchParams(location.search).get('mode');
-badMoveRate.value = new URLSearchParams(location.search).get('bad_move');
+modeSelector.value = new URLSearchParams(location.search).get('mode') ?? modeSelector.value;
+badMoveRate.value = new URLSearchParams(location.search).get('bad_move') ?? badMoveRate.value;
 
 const trainingColor = document.getElementById('training-color');
 const badMoveRateText = document.getElementById('bad-move-rate-text');
