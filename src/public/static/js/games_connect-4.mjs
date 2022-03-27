@@ -95,9 +95,11 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			updateHtmlRack(columnIndex, winner);
 
 			if (winner) {
+				restartButton.style.display = 'block';
+
 				if (!trainingPlayer()) return;
 
-				return fetch(
+				fetch(
 					`/api/connect-four?token=${getCookie('token')}&result=${
 						winner === trainingPlayer() ? 'win' : winner === -1 ? 'draw' : 'defeat'
 					}&difficulty=${badMoveRate.value}`,
@@ -105,6 +107,31 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 						method: 'POST',
 					},
 				);
+
+				switch (modeSelector.value) {
+					case 'standard':
+						break;
+					case 'progress':
+						badMoveRate.value =
+							winner === trainingPlayer()
+								? Math.max(badMoveRate.value - 5, 0)
+								: winner === -1
+								? badMoveRate.value
+								: Math.min(badMoveRate.value + 5, 100);
+						break;
+					case 'random':
+						badMoveRate.value = Math.floor(Math.random() * 21) * 5;
+						break;
+				}
+
+				history.replaceState(
+					null,
+					null,
+					`${location.pathname}?train=${trainingMode.checked}&mode=${modeSelector.value}&bad_move=${badMoveRate.value}`,
+				);
+
+				badMoveRateText.innerHTML = badMoveRate.value;
+				return;
 			}
 
 			document.getElementById('loading').style.display = 'inline-block';
@@ -183,34 +210,6 @@ function updateHtmlRack(played, winner) {
 	if (winner) {
 		if (winner === -1) document.getElementById('win-text').innerHTML = 'Égalité !';
 		else document.getElementById('win-text').innerHTML = `${winner === 1 ? 'Rouge' : 'Jaune'} a gagné !`;
-
-		restartButton.style.display = 'block';
-
-		if (!trainingPlayer()) return;
-
-		switch (modeSelector.value) {
-			case 'standard':
-				break;
-			case 'progress':
-				badMoveRate.value =
-					winner === trainingPlayer()
-						? Math.max(badMoveRate.value - 5, 0)
-						: winner === -1
-						? badMoveRate.value
-						: Math.min(badMoveRate.value + 5, 100);
-				break;
-			case 'random':
-				badMoveRate.value = Math.floor(Math.random() * 21) * 5;
-				break;
-		}
-
-		history.replaceState(
-			null,
-			null,
-			`${location.pathname}?train=${trainingMode.checked}&mode=${modeSelector.value}&bad_move=${badMoveRate.value}`,
-		);
-
-		badMoveRateText.innerHTML = badMoveRate.value;
 	}
 }
 
