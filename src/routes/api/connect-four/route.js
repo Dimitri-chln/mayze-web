@@ -28,18 +28,6 @@ class Route extends BaseRoute {
 			return response.end();
 		}
 
-		// temp
-		response.writeHead(200, { 'Content-Type': 'application/json' });
-		response.write(
-			JSON.stringify({
-				positions: positions.split('').map((p) => parseInt(p)),
-				scores: Array.from(Array(7), () =>
-					Math.round((Math.random() - 0.5) * 42),
-				),
-			}),
-		);
-		return response.end();
-
 		const child = childProcess.execFile('connect-4/c4solver', [
 			'-a',
 			'-b',
