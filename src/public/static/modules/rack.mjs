@@ -74,6 +74,10 @@ export default class Rack {
 		return this.#positions;
 	}
 
+	get movesLeft() {
+		return Math.floor((42 - this.positions.length) / 2);
+	}
+
 	/**
 	 * @param {number} column The column number
 	 * @returns {?number} The eventual winner
