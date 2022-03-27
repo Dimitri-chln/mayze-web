@@ -57,12 +57,9 @@ class Route extends BaseRoute {
 				const user = await this.fetchUser(token);
 
 				const result = url.searchParams.get('result');
-				const difficulty = url.searchParams.get('difficulty');
+				const difficulty = parseInt(url.searchParams.get('difficulty'));
 
-				console.log(result);
-				console.log(difficulty);
-
-				if (!result || difficulty) {
+				if (!result || !difficulty) {
 					response.writeHead(400, { 'Content-Type': 'application/json' });
 					response.write(
 						JSON.stringify({
