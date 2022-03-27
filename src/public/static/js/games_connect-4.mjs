@@ -104,6 +104,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 				rack.playable = true;
 
+				// Let the AI play if training mode is enabled
 				if (modeSelector.checked && rack.player !== trainingPlayer()) {
 					console.log(body.scores);
 
@@ -124,6 +125,11 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			console.error(err);
 		}
 	});
+}
+
+if (trainingPlayer() === 2) {
+	const bestColumn = htmlRack.children.item(0).children.item(3);
+	bestColumn.click();
 }
 
 function updateHtmlRack(winner) {
