@@ -92,7 +92,9 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
 					const badColumnIndex =
+						// Check if the AI can win in 1 move
 						body.scores.indexOf(rack.movesLeft) ??
+						// Otherwise choose a move that won't make the opponent win in 1 move
 						shuffle(
 							body.scores
 								.map((score, index) => {
@@ -105,6 +107,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 										column.score !== -rack.movesLeft,
 								),
 						)[0]?.index ??
+						// Otherwise play an empty column
 						body.scores.findIndex((score) => score);
 
 					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
