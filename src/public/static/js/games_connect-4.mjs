@@ -114,10 +114,10 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 					case 'progress':
 						badMoveRate.value =
 							winner === trainingPlayer()
-								? Math.max(badMoveRate.value - 5, 0)
+								? Math.max(parseInt(badMoveRate.value) - 5, 0)
 								: winner === -1
 								? badMoveRate.value
-								: Math.min(badMoveRate.value + 5, 100);
+								: Math.min(parseInt(badMoveRate.value) + 5, 100);
 						break;
 					case 'random':
 						badMoveRate.value = Math.floor(Math.random() * 21) * 5;
