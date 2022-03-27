@@ -8,13 +8,13 @@ const restartButton = document.getElementById('restart-button');
 const rack = new Rack();
 
 const modeSelector = document.getElementById('training-switch');
-const badPlayRate = document.getElementById('bad-play-rate');
+const badMoveRate = document.getElementById('bad-move-rate');
 
 modeSelector.checked = new URLSearchParams(location.search).get('train') == 'true';
-badPlayRate.value = new URLSearchParams(location.search).get('bad_play');
+badMoveRate.value = new URLSearchParams(location.search).get('bad_move');
 
 const trainingColor = document.getElementById('training-color');
-const badPlayRateText = document.getElementById('bad-play-rate-text');
+const badMoveRateText = document.getElementById('bad-move-rate-text');
 
 // Initialize the mode
 scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
@@ -28,12 +28,12 @@ if (modeSelector.checked) {
 }
 
 // Initialize the bad play rate text
-badPlayRateText.innerHTML = badPlayRate.value;
+badMoveRateText.innerHTML = badMoveRate.value;
 
 const trainingPlayer = () => (trainingColor.innerHTML === 'rouge' ? 1 : trainingColor.innerHTML === 'jaune' ? 2 : null);
 
 modeSelector.addEventListener('change', () => {
-	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_play=${badPlayRate.value}`);
+	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_move=${badMoveRate.value}`);
 
 	scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
 
@@ -45,10 +45,10 @@ modeSelector.addEventListener('change', () => {
 	}
 });
 
-badPlayRate.addEventListener('change', () => {
-	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_play=${badPlayRate.value}`);
+badMoveRate.addEventListener('change', () => {
+	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_move=${badMoveRate.value}`);
 
-	badPlayRateText.innerHTML = badPlayRate.value;
+	badMoveRateText.innerHTML = badMoveRate.value;
 });
 
 for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
@@ -117,7 +117,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 						)[0]?.index ??
 						body.scores.findIndex((score) => score);
 
-					const finalColumnIndex = Math.random() < badPlayRate.value / 100 ? badColumnIndex : bestColumnIndex;
+					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
 
 					const finalColumn = htmlRack.children.item(0).children.item(finalColumnIndex);
 
@@ -131,7 +131,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 }
 
 if (trainingPlayer() === 2) {
-	const firstColumnIndex = Math.random() < badPlayRate.value / 100 ? Math.floor(Math.random() * 7) : 3;
+	const firstColumnIndex = Math.random() < badMoveRate.value / 100 ? Math.floor(Math.random() * 7) : 3;
 	const firstColumn = htmlRack.children.item(0).children.item(firstColumnIndex);
 
 	firstColumn.click();
