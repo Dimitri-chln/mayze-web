@@ -89,9 +89,6 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 				// Let the AI play if training mode is enabled
 				if (modeSelector.checked && rack.player !== trainingPlayer()) {
-					console.log(body.scores);
-					console.log(body.scores.map((s) => s ?? -1000));
-
 					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
 					const badColumnIndex =
