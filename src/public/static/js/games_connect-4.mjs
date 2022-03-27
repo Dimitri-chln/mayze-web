@@ -30,11 +30,6 @@ if (trainingMode.checked) {
 	trainingColor.innerHTML = '';
 }
 
-// Initialize the mode
-if (modeSelector.value === 'progress' || modeSelector.value === 'random') {
-	badMoveRate.disabled = true;
-}
-
 // Initialize the bad play rate text
 badMoveRateText.innerHTML = badMoveRate.value;
 
@@ -63,8 +58,6 @@ modeSelector.addEventListener('change', () => {
 		null,
 		`${location.pathname}?train=${trainingMode.checked}&mode=${modeSelector.value}&bad_move=${badMoveRate.value}`,
 	);
-
-	badMoveRate.disabled = modeSelector.value === 'progress' || modeSelector.value === 'random';
 });
 
 badMoveRate.addEventListener('change', () => {
@@ -188,7 +181,6 @@ function updateHtmlRack(played, winner) {
 
 		if (!trainingPlayer()) return;
 
-		badMoveRate.disabled = false;
 		switch (modeSelector.value) {
 			case 'standard':
 				break;
@@ -204,7 +196,6 @@ function updateHtmlRack(played, winner) {
 				badMoveRate.value = Math.floor(Math.random() * 21) * 5;
 				break;
 		}
-		badMoveRate.disabled = true;
 	}
 }
 
