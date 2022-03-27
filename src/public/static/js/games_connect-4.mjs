@@ -1,5 +1,6 @@
 import { getCookie } from '../modules/cookie.mjs';
 import Rack from '../modules/rack.mjs';
+import { shuffle } from '../modules/utils.mjs';
 
 const htmlRack = document.getElementById('rack');
 const scoresTable = document.getElementById('scores');
@@ -106,19 +107,35 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 				// Let the AI play if training mode is enabled
 				if (modeSelector.checked && rack.player !== trainingPlayer()) {
-					console.log(body.scores);
-
 					const bestColumnIndex = body.scores.indexOf(
 						Math.max(...body.scores.map((s) => s ?? -1000)),
 					);
 
-					console.log(bestColumnIndex);
+					const badColumnIndex =
+						shuffle(
+							body.scores
+								.map((score, index) => {
+									return { score, index };
+								})
+								.filter(
+									(column) =>
+										column.score !==
+											Math.max(...body.scores.map((s) => s ?? -1_000)) &&
+										// Do not play a move that would make the AI instantly lose
+										column.score !==
+											Math.floor((-42 + body.positions.length) / 2),
+								),
+						)[0]?.index ?? body.scores.findIndex((score) => score);
 
-					const bestColumn = htmlRack.children
+					// 20% chance to play a bad move
+					const finalColumnIndex =
+						Math.random() < 0.2 ? badColumnIndex : bestColumnIndex;
+
+					const finalColumn = htmlRack.children
 						.item(0)
-						.children.item(bestColumnIndex);
+						.children.item(finalColumnIndex);
 
-					bestColumn.click();
+					finalColumn.click();
 				}
 			});
 		} catch (err) {
