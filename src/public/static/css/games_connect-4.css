@@ -83,11 +83,11 @@ div#grid-info {
 
 p#win-text {
 	font-size: large;
-	margin: 0 1em;
 }
 
 input#restart-button {
 	display: none;
+	margin: 0 1em;
 }
 
 a#credits {

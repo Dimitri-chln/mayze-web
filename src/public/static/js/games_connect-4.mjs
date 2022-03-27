@@ -165,6 +165,6 @@ restartButton.addEventListener('click', () => {
 	location.reload();
 });
 
-restartButton.addEventListener('click', () => {
+statsButton.addEventListener('click', () => {
 	location.pathname += '/stats';
 });
