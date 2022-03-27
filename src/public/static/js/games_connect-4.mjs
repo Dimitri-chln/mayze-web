@@ -12,7 +12,6 @@ const perfectAI = document.getElementById('perfect-ai-switch');
 
 modeSelector.checked =
 	new URLSearchParams(location.search).get('train') == 'true';
-
 perfectAI.checked =
 	new URLSearchParams(location.search).get('perfect_ai') == 'true';
 
@@ -36,13 +35,13 @@ const trainingPlayer = () =>
 		: null;
 
 modeSelector.addEventListener('change', () => {
-	scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
-
 	history.replaceState(
 		null,
 		null,
 		`${location.pathname}?train=${modeSelector.checked}&perfect_ai=${perfectAI.checked}`,
 	);
+
+	scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
 
 	if (modeSelector.checked) {
 		trainingColor.innerHTML = rack.player === 1 ? 'rouge' : 'jaune';
