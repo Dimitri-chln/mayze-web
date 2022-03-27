@@ -106,9 +106,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 						shuffledScores.find((column) => column.score)?.index;
 
 					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
-
 					const finalColumn = htmlRack.children.item(0).children.item(finalColumnIndex);
-
 					finalColumn.click();
 				}
 			});
