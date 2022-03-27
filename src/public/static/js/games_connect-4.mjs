@@ -8,19 +8,21 @@ const restartButton = document.getElementById('restart-button');
 const statsButton = document.getElementById('stats-button');
 const rack = new Rack();
 
-const modeSelector = document.getElementById('training-switch');
+const trainingMode = document.getElementById('training-switch');
+const modeSelector = document.getElementById('mode-selector');
 const badMoveRate = document.getElementById('bad-move-rate');
 
-modeSelector.checked = new URLSearchParams(location.search).get('train') == 'true';
+trainingMode.checked = new URLSearchParams(location.search).get('train') == 'true';
+modeSelector.value = new URLSearchParams(location.search).get('mode');
 badMoveRate.value = new URLSearchParams(location.search).get('bad_move');
 
 const trainingColor = document.getElementById('training-color');
 const badMoveRateText = document.getElementById('bad-move-rate-text');
 
 // Initialize the mode
-scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
+scoresTable.style.opacity = trainingMode.checked ? '0' : '1';
 
-if (modeSelector.checked) {
+if (trainingMode.checked) {
 	const randomPlayer = Math.ceil(Math.random() * 2);
 	trainingColor.innerHTML = randomPlayer === 1 ? 'rouge' : 'jaune';
 	trainingColor.style.color = randomPlayer === 1 ? 'red' : 'yellow';
@@ -28,17 +30,26 @@ if (modeSelector.checked) {
 	trainingColor.innerHTML = '';
 }
 
+// Initialize the mode
+if (modeSelector.value === 'progress' || modeSelector.value === 'random') {
+	badMoveRate.disabled = true;
+}
+
 // Initialize the bad play rate text
 badMoveRateText.innerHTML = badMoveRate.value;
 
 const trainingPlayer = () => (trainingColor.innerHTML === 'rouge' ? 1 : trainingColor.innerHTML === 'jaune' ? 2 : null);
 
-modeSelector.addEventListener('change', () => {
-	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_move=${badMoveRate.value}`);
+trainingMode.addEventListener('change', () => {
+	history.replaceState(
+		null,
+		null,
+		`${location.pathname}?train=${trainingMode.checked}&mode=${modeSelector.value}&bad_move=${badMoveRate.value}`,
+	);
 
-	scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
+	scoresTable.style.opacity = trainingMode.checked ? '0' : '1';
 
-	if (modeSelector.checked) {
+	if (trainingMode.checked) {
 		trainingColor.innerHTML = rack.player === 1 ? 'rouge' : 'jaune';
 		trainingColor.style.color = rack.player === 1 ? 'red' : 'yellow';
 	} else {
@@ -46,8 +57,22 @@ modeSelector.addEventListener('change', () => {
 	}
 });
 
+modeSelector.addEventListener('change', () => {
+	history.replaceState(
+		null,
+		null,
+		`${location.pathname}?train=${trainingMode.checked}&mode=${modeSelector.value}&bad_move=${badMoveRate.value}`,
+	);
+
+	badMoveRate.disabled = modeSelector.value === 'progress' || modeSelector.value === 'random';
+});
+
 badMoveRate.addEventListener('change', () => {
-	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_move=${badMoveRate.value}`);
+	history.replaceState(
+		null,
+		null,
+		`${location.pathname}?train=${trainingMode.checked}&mode=${modeSelector.value}&bad_move=${badMoveRate.value}`,
+	);
 
 	badMoveRateText.innerHTML = badMoveRate.value;
 });
@@ -101,7 +126,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				rack.playable = true;
 
 				// Let the AI play if training mode is enabled
-				if (modeSelector.checked && rack.player !== trainingPlayer()) {
+				if (trainingMode.checked && rack.player !== trainingPlayer()) {
 					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
 					const shuffledScores = shuffle(
@@ -160,6 +185,24 @@ function updateHtmlRack(played, winner) {
 		else document.getElementById('win-text').innerHTML = `${winner === 1 ? 'Rouge' : 'Jaune'} a gagné !`;
 
 		restartButton.style.display = 'block';
+
+		if (!trainingPlayer()) return;
+
+		switch (modeSelector.value) {
+			case 'standard':
+				break;
+			case 'progress':
+				badMoveRate.value =
+					winner === trainingPlayer()
+						? Math.max(badMoveRate.value - 5, 0)
+						: winner === -1
+						? badMoveRate.value
+						: Math.min(badMoveRate.value + 5, 100);
+				break;
+			case 'random':
+				badMoveRate.value = Math.floor(Math.random() * 21) * 5;
+				break;
+		}
 	}
 }
 

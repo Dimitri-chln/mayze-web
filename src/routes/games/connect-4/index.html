@@ -10,13 +10,21 @@
 <!-- MJS end -->
 
 <!-- HTML -->
-<div id="mode-selector">
+<div id="training-mode">
 	<div>
 		<label class="switch">
 			<input type="checkbox" id="training-switch" />
 			<span class="slider round"></span>
 		</label>
 		<label for="training-switch">Entraînement <span id="training-color"></span></label>
+	</div>
+	<div>
+		<label for="mode-selector">Mode</label>
+		<select name="mode-selector" id="mode-selector">
+			<option value="standard" selected>Standard</option>
+			<option value="progress">Progression</option>
+			<option value="random">Aléatoire</option>
+		</select>
 	</div>
 	<div>
 		<label for="bad-move-rate"><span id="bad-move-rate-text">20</span>% de mauvais coups</label>

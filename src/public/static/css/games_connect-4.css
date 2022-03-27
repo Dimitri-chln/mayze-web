@@ -1,16 +1,21 @@
-div#mode-selector {
+div#training-mode {
 	position: relative;
 	display: flex;
 	justify-content: space-between;
 }
 
-div#mode-selector > div {
+div#training-mode > div {
 	display: flex;
 }
 
-div#mode-selector > div > * {
+div#training-mode > div > * {
 	align-self: center;
 	margin: 0 0.5em;
+}
+
+select#mode-selector {
+	padding: 0.5em;
+	border-radius: 1em;
 }
 
 table#rack {
