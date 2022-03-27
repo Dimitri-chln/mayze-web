@@ -59,6 +59,9 @@ class Route extends BaseRoute {
 				const result = url.searchParams.get('result');
 				const difficulty = url.searchParams.get('difficulty');
 
+				console.log(result);
+				console.log(difficulty);
+
 				if (!result || difficulty) {
 					response.writeHead(400, { 'Content-Type': 'application/json' });
 					response.write(
