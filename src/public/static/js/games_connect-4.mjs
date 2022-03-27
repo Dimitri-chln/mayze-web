@@ -66,7 +66,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 			const winner = rack.play(columnIndex);
 			rack.playable = false;
-			updateHtmlRack(winner);
+			updateHtmlRack(columnIndex, winner);
 			if (winner) return;
 
 			document.getElementById('loading').style.display = 'inline-block';
@@ -123,14 +123,22 @@ if (trainingPlayer() === 2) {
 	firstColumn.click();
 }
 
-function updateHtmlRack(winner) {
+/**
+ * @param {number} played
+ * @param {number} winner
+ */
+function updateHtmlRack(played, winner) {
 	for (let i = 0; i < 7; i++) {
 		for (let j = 0; j < 6; j++) {
 			htmlRack.children
 				.item(0)
 				.children.item(i)
 				.children.item(5 - j).innerHTML =
-				rack.data[i][j] === 1 ? '<div class="red"></div>' : rack.data[i][j] === 2 ? '<div class="yellow"></div>' : '';
+				rack.data[i][j] === 1
+					? `<div class="red${i === played && !rack.data[i][j + 1] ? ' last-played' : ''}"></div>`
+					: rack.data[i][j] === 2
+					? `<div class="yellow${i === played && !rack.data[i][j + 1] ? ' last-played' : ''}"></div>`
+					: '';
 		}
 	}
 
