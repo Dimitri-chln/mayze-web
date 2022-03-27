@@ -87,7 +87,7 @@ class Route extends BaseRoute {
 					ON CONFLICT (user_id)
 					DO UPDATE SET
 						stats = jsonb_set(connect_four.stats, '{${difficulty}, played}', ((connect_four.stats -> $3 -> 'played')::int + 1)::text::jsonb),
-						stats = jsonb_set(connect_four.stars, '{${difficulty}, ${result}}', ((connect_four.stats -> $3 -> $4)::int + 1)::text::jsonb)
+						stats = jsonb_set(connect_four.stats, '{${difficulty}, ${result}}', ((connect_four.stats -> $3 -> $4)::int + 1)::text::jsonb)
 					WHERE connect_four.user_id = EXCLUDED.user_id
 					`,
 					[user.id, defaultData, difficulty, result],
