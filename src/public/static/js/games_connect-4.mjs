@@ -166,5 +166,5 @@ restartButton.addEventListener('click', () => {
 });
 
 statsButton.addEventListener('click', () => {
-	location.pathname += '/stats';
+	location.href = '/games/connect-4/stats';
 });
