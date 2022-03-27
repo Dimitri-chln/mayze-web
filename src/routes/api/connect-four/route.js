@@ -28,19 +28,13 @@ class Route extends BaseRoute {
 			return response.end();
 		}
 
-		const child = childProcess.execFile('connect-4/c4solver', [
-			'-a',
-			'-b',
-			'connect-4/7x6.book',
-		]);
+		const child = childProcess.execFile('connect-4/c4solver', ['-a', '-b', 'connect-4/7x6.book']);
 
 		child.stdout.on('data', (data) => {
 			const res = data.trim().split(' ');
 			res.shift();
 
-			const scores = res
-				.map((s) => parseInt(s))
-				.map((s) => (s === -1_000 ? null : s));
+			const scores = res.map((s) => parseInt(s)).map((s) => (s === -1_000 ? null : s));
 
 			response.writeHead(200, { 'Content-Type': 'application/json' });
 			response.write(

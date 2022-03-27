@@ -54,9 +54,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 			fetch(
 				`api/translations?token=${getCookie('token')}&name=${encodeURIComponent(
 					changedText,
-				)}&locale=${locale}&translation=${encodeURIComponent(
-					translationText.value || 'NULL',
-				)}`,
+				)}&locale=${locale}&translation=${encodeURIComponent(translationText.value || 'NULL')}`,
 				{
 					method: 'POST',
 				},
@@ -87,18 +85,11 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 				groupOpen.innerHTML = closed ? 'v' : '>';
 
 				for (const child of group.children) {
-					if (child.classList.contains('translations-group'))
-						child.style.display = closed ? 'block' : 'none';
+					if (child.classList.contains('translations-group')) child.style.display = closed ? 'block' : 'none';
 				}
 			});
 
-			addElements(
-				group,
-				data[key],
-				locale,
-				depth + 1,
-				path ? `${path}.${key}` : key,
-			);
+			addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key);
 		}
 	}
 }

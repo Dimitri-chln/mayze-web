@@ -20,9 +20,7 @@ class Route extends BaseRoute {
 
 		switch (request.method.toUpperCase()) {
 			case 'GET': {
-				const { rows } = await Util.database.query(
-					'SELECT * FROM translations',
-				);
+				const { rows } = await Util.database.query('SELECT * FROM translations');
 
 				const data = {};
 
@@ -38,8 +36,7 @@ class Route extends BaseRoute {
 					object[elements[elements.length - 1]] = {
 						default: row.default,
 						translations: Object.entries(row).reduce((o, value) => {
-							if (value[0] !== 'name' && value[0] !== 'default')
-								o[value[0]] = value[1];
+							if (value[0] !== 'name' && value[0] !== 'default') o[value[0]] = value[1];
 							return o;
 						}, {}),
 					};
@@ -67,10 +64,10 @@ class Route extends BaseRoute {
 					return response.end();
 				}
 
-				await Util.database.query(
-					`UPDATE translations SET ${locale} = $1 WHERE name = $2`,
-					[translation === 'NULL' ? null : translation, translationName],
-				);
+				await Util.database.query(`UPDATE translations SET ${locale} = $1 WHERE name = $2`, [
+					translation === 'NULL' ? null : translation,
+					translationName,
+				]);
 
 				Util.discord.channels.cache
 					.get('957380495958765588')

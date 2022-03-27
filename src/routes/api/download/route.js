@@ -43,15 +43,7 @@ class Route extends BaseRoute {
 				finished: false,
 			});
 
-			const path = Path.join(
-				__dirname,
-				'..',
-				'..',
-				'..',
-				'public',
-				'static',
-				'downloads',
-			);
+			const path = Path.join(__dirname, '..', '..', '..', 'public', 'static', 'downloads');
 
 			let streamError = false;
 
@@ -59,9 +51,7 @@ class Route extends BaseRoute {
 				case 'yt_video': {
 					const info = await ytdl.getInfo(youtubeURL);
 					const filename = `${downloadId}.mp3`;
-					const format = info.formats.find(
-						(f) => f.audioQuality === 'AUDIO_QUALITY_MEDIUM',
-					);
+					const format = info.formats.find((f) => f.audioQuality === 'AUDIO_QUALITY_MEDIUM');
 
 					Util.youtubeDownloads.get(downloadId).name = info.videoDetails.title;
 
@@ -97,10 +87,7 @@ class Route extends BaseRoute {
 
 							Util.youtubeDownloads.get(downloadId).finished = true;
 							Util.youtubeDownloads.get(downloadId).filename = filename;
-							Util.youtubeDownloads.get(downloadId).path = Path.join(
-								path,
-								filename,
-							);
+							Util.youtubeDownloads.get(downloadId).path = Path.join(path, filename);
 						})
 						.on('error', (err) => {
 							Fs.rmSync(Path.join(path, filename), { force: true });
@@ -144,16 +131,10 @@ class Route extends BaseRoute {
 						videos.map((video, videoId) => {
 							return new Promise(async (resolve, reject) => {
 								const info = await ytdl.getInfo(video.url);
-								const filename = `${video.title
-									.replace(/[^\w\s\(\)\[\]-]/g, ' ')
-									.replace(/ +/g, ' ')}.mp3`;
-								const format = info.formats.find(
-									(f) => f.audioQuality === 'AUDIO_QUALITY_MEDIUM',
-								);
+								const filename = `${video.title.replace(/[^\w\s\(\)\[\]-]/g, ' ').replace(/ +/g, ' ')}.mp3`;
+								const format = info.formats.find((f) => f.audioQuality === 'AUDIO_QUALITY_MEDIUM');
 
-								const writeStream = Fs.createWriteStream(
-									Path.join(path, dirname, filename),
-								);
+								const writeStream = Fs.createWriteStream(Path.join(path, dirname, filename));
 								const playStream = ytdl(video.url, {
 									format,
 									requestOptions: {
@@ -168,15 +149,11 @@ class Route extends BaseRoute {
 									.on('data', (chunk) => {
 										downloadedBytes += chunk.length;
 
-										Util.youtubeDownloads.get(downloadId).videos[
-											videoId
-										].progress =
+										Util.youtubeDownloads.get(downloadId).videos[videoId].progress =
 											downloadedBytes / parseInt(format.contentLength);
 									})
 									.on('finish', () => {
-										Util.youtubeDownloads.get(downloadId).videos[
-											videoId
-										].finished = true;
+										Util.youtubeDownloads.get(downloadId).videos[videoId].finished = true;
 
 										resolve();
 									})
@@ -202,10 +179,7 @@ class Route extends BaseRoute {
 							});
 						}),
 					).then(async () => {
-						await Util.zipDirectory(
-							Path.join(path, dirname),
-							`${Path.join(path, dirname)}.zip`,
-						);
+						await Util.zipDirectory(Path.join(path, dirname), `${Path.join(path, dirname)}.zip`);
 
 						Fs.rmSync(Path.join(path, dirname), {
 							recursive: true,
@@ -214,10 +188,7 @@ class Route extends BaseRoute {
 
 						Util.youtubeDownloads.get(downloadId).finished = true;
 						Util.youtubeDownloads.get(downloadId).filename = `${dirname}.zip`;
-						Util.youtubeDownloads.get(downloadId).path = Path.join(
-							path,
-							`${dirname}.zip`,
-						);
+						Util.youtubeDownloads.get(downloadId).path = Path.join(path, `${dirname}.zip`);
 					});
 					break;
 				}

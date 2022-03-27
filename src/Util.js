@@ -101,8 +101,7 @@ class Util {
 	}
 
 	static generateRandomString() {
-		const charList =
-			'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrtsuvwxyz0123456789';
+		const charList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrtsuvwxyz0123456789';
 		let randStr = '';
 
 		for (let i = 0; i < 40; i++) {
@@ -126,20 +125,14 @@ class Util {
 			scope: 'identify',
 		};
 
-		Axios.post(
-			`https://discord.com/api/oauth2/token`,
-			new URLSearchParams(data),
-			{
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
+		Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
 			},
-		)
+		})
 			.then(async (res) => {
 				await this.database.query(
-					`UPDATE web_client SET discord_token = '${
-						res.data.access_token
-					}', expires_at = '${new Date(
+					`UPDATE web_client SET discord_token = '${res.data.access_token}', expires_at = '${new Date(
 						Date.now() + res.data.expires_in * 1000,
 					).toISOString()}' WHERE '${token}' = ANY (mayze_tokens)`,
 				);
@@ -151,14 +144,11 @@ class Util {
 	 * @param {Buffer} incompleteHtml
 	 */
 	static completeHtmlFile(incompleteHtml) {
-		let defaultHtml = Fs.readFileSync(
-			'./src/public/static/html/default.html',
-		).toString();
+		let defaultHtml = Fs.readFileSync('./src/public/static/html/default.html').toString();
 
 		const data = incompleteHtml.toString();
 
-		if (!data.startsWith('<!-- Incomplete file -->'))
-			return Buffer.from(incompleteHtml);
+		if (!data.startsWith('<!-- Incomplete file -->')) return Buffer.from(incompleteHtml);
 
 		const [, css] = data.match(/<!-- CSS -->(.*)<!-- CSS end -->/s) || [];
 		const [, mjs] = data.match(/<!-- MJS -->(.*)<!-- MJS end -->/s) || [];
@@ -166,8 +156,7 @@ class Util {
 
 		if (css) defaultHtml = defaultHtml.replace('<!-- CSS here -->', css.trim());
 		if (mjs) defaultHtml = defaultHtml.replace('<!-- MJS here -->', mjs.trim());
-		if (html)
-			defaultHtml = defaultHtml.replace('<!-- HTML here -->', html.trim());
+		if (html) defaultHtml = defaultHtml.replace('<!-- HTML here -->', html.trim());
 
 		return Buffer.from(defaultHtml);
 	}
@@ -178,10 +167,7 @@ class Util {
 	static addBaseURI(htmlFile) {
 		const data = htmlFile
 			.toString()
-			.replace(
-				'<!-- Base URI -->',
-				`<base href="${process.env.PROTOCOL}://${process.env.HOSTNAME}" />`,
-			);
+			.replace('<!-- Base URI -->', `<base href="${process.env.PROTOCOL}://${process.env.HOSTNAME}" />`);
 
 		return Buffer.from(data);
 	}

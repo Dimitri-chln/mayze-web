@@ -9,8 +9,5 @@ isMember.innerHTML = 'Connexion...';
 fetch(`/api/discord/member?token=${getCookie('token')}`, {
 	method: 'GET',
 }).then(async (res) => {
-	isMember.innerText =
-		res.status === 200
-			? '✨ Tu es membre de Mayze ! ✨'
-			: "Tu n'es pas membre de Mayze";
+	isMember.innerText = res.status === 200 ? '✨ Tu es membre de Mayze ! ✨' : "Tu n'es pas membre de Mayze";
 });

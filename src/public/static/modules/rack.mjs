@@ -82,7 +82,7 @@ export default class Rack {
 		if (this.winner) throw new Error('Game is over');
 		const row = this.row[column];
 		if (!this.playable) throw new Error('Game is not currently playable');
-		if (row > 5) throw new Error('Column is filled');
+		if (row > 5) throw new Error(`Column ${column} is filled`);
 
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
@@ -105,53 +105,25 @@ export default class Rack {
 		// Check going up
 		for (let c = 0; c < 7; c++)
 			for (let r = 0; r < 3; r++)
-				if (
-					checkLine(
-						this.data[c][r],
-						this.data[c][r + 1],
-						this.data[c][r + 2],
-						this.data[c][r + 3],
-					)
-				)
+				if (checkLine(this.data[c][r], this.data[c][r + 1], this.data[c][r + 2], this.data[c][r + 3]))
 					return this.data[c][r];
 
 		// Check going right
 		for (let c = 0; c < 4; c++)
 			for (let r = 0; r < 6; r++)
-				if (
-					checkLine(
-						this.data[c][r],
-						this.data[c + 1][r],
-						this.data[c + 2][r],
-						this.data[c + 3][r],
-					)
-				)
+				if (checkLine(this.data[c][r], this.data[c + 1][r], this.data[c + 2][r], this.data[c + 3][r]))
 					return this.data[c][r];
 
 		// Check going up-right
 		for (let c = 0; c < 4; c++)
 			for (let r = 0; r < 3; r++)
-				if (
-					checkLine(
-						this.data[c][r],
-						this.data[c + 1][r + 1],
-						this.data[c + 2][r + 2],
-						this.data[c + 3][r + 3],
-					)
-				)
+				if (checkLine(this.data[c][r], this.data[c + 1][r + 1], this.data[c + 2][r + 2], this.data[c + 3][r + 3]))
 					return this.data[c][r];
 
 		// Check going up-left
 		for (let c = 0; c < 4; c++)
 			for (let r = 3; r < 6; r++)
-				if (
-					checkLine(
-						this.data[c][r],
-						this.data[c + 1][r - 1],
-						this.data[c + 2][r - 2],
-						this.data[c + 3][r - 3],
-					)
-				)
+				if (checkLine(this.data[c][r], this.data[c + 1][r - 1], this.data[c + 2][r - 2], this.data[c + 3][r - 3]))
 					return this.data[c][r];
 
 		if (this.#row.every((r) => r === 6)) return -1;
@@ -162,12 +134,7 @@ export default class Rack {
 
 		for (let row = 5; row >= 0; row--) {
 			for (let column = 0; column < 7; column++) {
-				output +=
-					this.#data[column][row] === 1
-						? ' O '
-						: this.#data[column][row] === 2
-						? ' X '
-						: ' . ';
+				output += this.#data[column][row] === 1 ? ' O ' : this.#data[column][row] === 2 ? ' X ' : ' . ';
 			}
 
 			output += '\n';

@@ -16,14 +16,9 @@ downloadButton.addEventListener('click', (event) => {
 	downloadButton.style.cursor = 'not-allowed';
 	document.getElementById('loading').style.display = 'inline-block';
 
-	fetch(
-		`/api/download?token=${getCookie('token')}&url=${
-			document.getElementById('download-form-url').value
-		}`,
-		{
-			method: 'GET',
-		},
-	).then(async (res) => {
+	fetch(`/api/download?token=${getCookie('token')}&url=${document.getElementById('download-form-url').value}`, {
+		method: 'GET',
+	}).then(async (res) => {
 		if (res.status !== 200) {
 			downloadButton.disabled = false;
 			downloadButton.style.cursor = 'auto';
@@ -34,12 +29,9 @@ downloadButton.addEventListener('click', (event) => {
 		const body = await res.json();
 		const downloadId = body.download_id;
 
-		fetch(
-			`/api/download?token=${getCookie('token')}&download_id=${downloadId}`,
-			{
-				method: 'GET',
-			},
-		).then(async (res) => {
+		fetch(`/api/download?token=${getCookie('token')}&download_id=${downloadId}`, {
+			method: 'GET',
+		}).then(async (res) => {
 			if (res.status !== 200) {
 				downloadButton.disabled = false;
 				downloadButton.style.cursor = 'auto';
@@ -68,32 +60,22 @@ downloadButton.addEventListener('click', (event) => {
 			document.getElementById('loading').style.display = 'none';
 
 			(function update() {
-				fetch(
-					`/api/download?token=${getCookie('token')}&download_id=${downloadId}`,
-					{
-						method: 'GET',
-					},
-				).then(async (res) => {
+				fetch(`/api/download?token=${getCookie('token')}&download_id=${downloadId}`, {
+					method: 'GET',
+				}).then(async (res) => {
 					if (res.status !== 200) {
 						downloadButton.disabled = false;
 						downloadButton.style.cursor = 'auto';
 						document.getElementById('loading').style.display = 'none';
-						return alert(
-							"Quelque chose s'est mal passé en téléchargeant la vidéo",
-						);
+						return alert("Quelque chose s'est mal passé en téléchargeant la vidéo");
 					}
 					const body = await res.json();
 
 					for (let i = 0; i < body.videos.length; i++) {
 						const video = body.videos[i];
-						const progress = progressSection.children
-							.item(i)
-							.children.item(1)
-							.children.item(0);
+						const progress = progressSection.children.item(i).children.item(1).children.item(0);
 
-						progress.style.width = `${
-							video.finished ? 100 : Math.round(video.progress * 100)
-						}%`;
+						progress.style.width = `${video.finished ? 100 : Math.round(video.progress * 100)}%`;
 
 						if (video.finished) progress.style.background = '#46e083';
 					}
@@ -102,8 +84,7 @@ downloadButton.addEventListener('click', (event) => {
 
 					const downloadButton = document.getElementById('download-button');
 					downloadButton.href = `${location.origin}/static/downloads/${body.filename}`;
-					downloadButton.download =
-						body.name + body.filename.match(/\.\w+$/)[0];
+					downloadButton.download = body.name + body.filename.match(/\.\w+$/)[0];
 					downloadButton.children.item(0).style.display = 'block';
 				});
 			})();

@@ -21,20 +21,14 @@ fetch(`/api/discord/user?token=${getCookie('token')}`, {
 	parent.prepend(avatarImage);
 });
 
-fetch(
-	`/api/discord/user?token=${getCookie('token')}&user_id=307815349699608577`,
-	{
-		method: 'GET',
-	},
-).then(async (res) => {
+fetch(`/api/discord/user?token=${getCookie('token')}&user_id=307815349699608577`, {
+	method: 'GET',
+}).then(async (res) => {
 	const user = await res.json();
 	if (!user.id) return;
 
 	const footerDiscord = document.getElementById('footer-discord');
-	footerDiscord.innerHTML = footerDiscord.innerHTML.replace(
-		'Chargement...',
-		user.tag,
-	);
+	footerDiscord.innerHTML = footerDiscord.innerHTML.replace('Chargement...', user.tag);
 });
 
 document.getElementById('login-button').addEventListener('click', () => {
@@ -47,9 +41,7 @@ if (screen.width < 768) {
 			let display = category.children[1].style.display !== 'block';
 			category.children[1].style.display = display ? 'block' : 'none';
 			category.children[0].style.color = display ? 'orange' : 'white';
-			category.children[0].style.borderBottom = display
-				? '2px solid gold'
-				: 'none';
+			category.children[0].style.borderBottom = display ? '2px solid gold' : 'none';
 		});
 	}
 }

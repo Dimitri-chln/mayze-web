@@ -21,22 +21,17 @@ class Route extends BaseRoute {
 
 		switch (request.method) {
 			case 'GET': {
-				Util.database
-					.query('SELECT * FROM clan_member ORDER BY joined_at ASC')
-					.then(async (res) => {
-						const data = await Promise.all(
-							res.rows.map(async (member) => {
-								if (member.user_id)
-									member.discord_tag = (
-										await Util.discord.users.fetch(member.user_id)
-									).tag;
-								return member;
-							}),
-						);
-						response.writeHead(200, { 'Content-Type': 'application/json' });
-						response.write(JSON.stringify(data));
-						response.end();
-					});
+				Util.database.query('SELECT * FROM clan_member ORDER BY joined_at ASC').then(async (res) => {
+					const data = await Promise.all(
+						res.rows.map(async (member) => {
+							if (member.user_id) member.discord_tag = (await Util.discord.users.fetch(member.user_id)).tag;
+							return member;
+						}),
+					);
+					response.writeHead(200, { 'Content-Type': 'application/json' });
+					response.write(JSON.stringify(data));
+					response.end();
+				});
 				break;
 			}
 
@@ -46,8 +41,7 @@ class Route extends BaseRoute {
 					!validateUsername(url.searchParams.get('username')) ||
 					!url.searchParams.has('joined_at') ||
 					!validateJoinedDate(url.searchParams.get('joined_at')) ||
-					(url.searchParams.has('user_id') &&
-						!validateId(url.searchParams.get('user_id'))) ||
+					(url.searchParams.has('user_id') && !validateId(url.searchParams.get('user_id'))) ||
 					!url.searchParams.has('rank') ||
 					!validateRank(url.searchParams.get('rank'))
 				) {
@@ -64,9 +58,7 @@ class Route extends BaseRoute {
 				if (
 					!member ||
 					!member.discord.roles.cache.some(
-						(r) =>
-							r.id === Util.config.LEADER_ROLE_ID ||
-							r.id === Util.config.CO_LEADER_ROLE_ID,
+						(r) => r.id === Util.config.LEADER_ROLE_ID || r.id === Util.config.CO_LEADER_ROLE_ID,
 					)
 				) {
 					response.writeHead(401, { 'Content-Type': 'application/json' });
@@ -79,17 +71,12 @@ class Route extends BaseRoute {
 					return response.end();
 				}
 
-				await Util.database.query(
-					'INSERT INTO clan_member VALUES ($1, $2, $3, $4)',
-					[
-						url.searchParams.get('username'),
-						`${url.searchParams.get('joined_at')}T12:00:00Z`,
-						url.searchParams.get('user_id')
-							? url.searchParams.get('user_id')
-							: null,
-						url.searchParams.get('rank'),
-					],
-				);
+				await Util.database.query('INSERT INTO clan_member VALUES ($1, $2, $3, $4)', [
+					url.searchParams.get('username'),
+					`${url.searchParams.get('joined_at')}T12:00:00Z`,
+					url.searchParams.get('user_id') ? url.searchParams.get('user_id') : null,
+					url.searchParams.get('rank'),
+				]);
 
 				response.writeHead(200);
 				response.end();
@@ -104,8 +91,7 @@ class Route extends BaseRoute {
 					!validateUsername(url.searchParams.get('username')) ||
 					!url.searchParams.has('joined_at') ||
 					!validateJoinedDate(url.searchParams.get('joined_at')) ||
-					(url.searchParams.has('user_id') &&
-						!validateId(url.searchParams.get('user_id'))) ||
+					(url.searchParams.has('user_id') && !validateId(url.searchParams.get('user_id'))) ||
 					!url.searchParams.has('rank') ||
 					!validateRank(url.searchParams.get('rank')) ||
 					!url.searchParams.has('member') ||
@@ -124,9 +110,7 @@ class Route extends BaseRoute {
 				if (
 					!member ||
 					!member.discord.roles.cache.some(
-						(r) =>
-							r.id === Util.config.LEADER_ROLE_ID ||
-							r.id === Util.config.CO_LEADER_ROLE_ID,
+						(r) => r.id === Util.config.LEADER_ROLE_ID || r.id === Util.config.CO_LEADER_ROLE_ID,
 					)
 				) {
 					response.writeHead(401, { 'Content-Type': 'application/json' });
@@ -143,9 +127,7 @@ class Route extends BaseRoute {
 					'UPDATE clan_member SET username = $1, user_id = $2, joined_at = $3, rank = $4 WHERE username = $5',
 					[
 						url.searchParams.get('username'),
-						url.searchParams.get('user_id')
-							? url.searchParams.get('user_id')
-							: null,
+						url.searchParams.get('user_id') ? url.searchParams.get('user_id') : null,
 						url.searchParams.get('joined_at'),
 						url.searchParams.get('rank'),
 						url.searchParams.get('member'),
@@ -160,10 +142,7 @@ class Route extends BaseRoute {
 			}
 
 			case 'DELETE': {
-				if (
-					!url.searchParams.has('member') ||
-					!validateUsername(url.searchParams.get('member'))
-				) {
+				if (!url.searchParams.has('member') || !validateUsername(url.searchParams.get('member'))) {
 					response.writeHead(400, { 'Content-Type': 'application/json' });
 					response.write(
 						JSON.stringify({
@@ -177,9 +156,7 @@ class Route extends BaseRoute {
 				if (
 					!member ||
 					!member.discord.roles.cache.some(
-						(r) =>
-							r.id === Util.config.LEADER_ROLE_ID ||
-							r.id === Util.config.CO_LEADER_ROLE_ID,
+						(r) => r.id === Util.config.LEADER_ROLE_ID || r.id === Util.config.CO_LEADER_ROLE_ID,
 					)
 				) {
 					response.writeHead(401, { 'Content-Type': 'application/json' });
@@ -192,10 +169,7 @@ class Route extends BaseRoute {
 					return response.end();
 				}
 
-				await Util.database.query(
-					'DELETE FROM clan_member WHERE username = $1',
-					[url.searchParams.get('member')],
-				);
+				await Util.database.query('DELETE FROM clan_member WHERE username = $1', [url.searchParams.get('member')]);
 
 				response.writeHead(200);
 				response.end();
@@ -246,11 +220,7 @@ function sendUpdate(author, method, searchParams) {
 						>>> **Username:** \`${searchParams.get('username')}\`
 						**Discord ID:** \`${searchParams.get('user_id')}\`
 						**Joined at:** \`${searchParams.get('joined_at')}\`
-						**Rank:** \`${
-							['Member', 'Co-leader', 'Leader'][
-								parseInt(searchParams.get('rank') - 1)
-							]
-						}\`
+						**Rank:** \`${['Member', 'Co-leader', 'Leader'][parseInt(searchParams.get('rank') - 1)]}\`
 						`
 					: ''
 			}`.replace(/\t*/g, ''),

@@ -24,9 +24,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 		method: 'GET',
 	}).then(async (res) => {
 		const requestingMember = await res.json();
-		const isCoLeader = ['CO-LEADER', 'LEADER'].includes(
-			requestingMember.wolvesville.rank,
-		);
+		const isCoLeader = ['CO-LEADER', 'LEADER'].includes(requestingMember.wolvesville.rank);
 
 		for (let member of members) {
 			const separator = document.createElement('div');
@@ -36,12 +34,7 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 			const divMember = document.createElement('div');
 			divMember.className = 'member-info';
 			const spanMember = document.createElement('span');
-			spanMember.className =
-				member.rank === 3
-					? 'leader'
-					: member.rank === 2
-					? 'co-leader'
-					: 'member';
+			spanMember.className = member.rank === 3 ? 'leader' : member.rank === 2 ? 'co-leader' : 'member';
 			spanMember.innerHTML = member.username;
 			const spanDiscord = document.createElement('span');
 
@@ -64,21 +57,14 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 				editButton.innerHTML = 'Modifier';
 				editButton.addEventListener('click', () => {
 					document.getElementById('popup-form').style.display = 'block';
-					document.getElementById(
-						'form-title',
-					).innerHTML = `Modifier ${member.username}`;
+					document.getElementById('form-title').innerHTML = `Modifier ${member.username}`;
 					document.getElementById('field-username').value = member.username;
 					document.getElementById('field-username').focus();
 					document.getElementById('field-discord').value = member.user_id || '';
 					document.getElementById('field-joined').min = '2019-07-30';
-					document.getElementById('field-joined').max = new Date()
-						.toISOString()
-						.substring(0, 10);
-					document.getElementById('field-joined').value =
-						member.joined_at.substring(0, 10);
-					document.getElementById('field-rank').options[
-						member.rank - 1
-					].selected = true;
+					document.getElementById('field-joined').max = new Date().toISOString().substring(0, 10);
+					document.getElementById('field-joined').value = member.joined_at.substring(0, 10);
+					document.getElementById('field-rank').options[member.rank - 1].selected = true;
 					document.getElementById('delete-button').style.display = 'block';
 				});
 			}
@@ -109,12 +95,8 @@ fetch(`api/clan/members?token=${getCookie('token')}`, {
 				document.getElementById('field-username').focus();
 				document.getElementById('field-discord').value = '';
 				document.getElementById('field-joined').min = '2019-07-30';
-				document.getElementById('field-joined').max = new Date()
-					.toISOString()
-					.substring(0, 10);
-				document.getElementById('field-joined').value = new Date()
-					.toISOString()
-					.substring(0, 10);
+				document.getElementById('field-joined').max = new Date().toISOString().substring(0, 10);
+				document.getElementById('field-joined').value = new Date().toISOString().substring(0, 10);
 				document.getElementById('field-rank').options[0].selected = true;
 				document.getElementById('delete-button').style.display = 'none';
 			});
@@ -137,12 +119,8 @@ document.getElementById('cancel-button').addEventListener('click', (event) => {
 	event.preventDefault();
 	document.getElementById('popup-form').style.display = 'none';
 });
-document
-	.getElementById('delete-button')
-	.addEventListener('click', (event) => modifyMember(event, 'DELETE'));
-document
-	.getElementById('save-button')
-	.addEventListener('click', (event) => modifyMember(event, 'POST'));
+document.getElementById('delete-button').addEventListener('click', (event) => modifyMember(event, 'DELETE'));
+document.getElementById('save-button').addEventListener('click', (event) => modifyMember(event, 'POST'));
 
 function modifyMember(event, method) {
 	event.preventDefault();
@@ -154,10 +132,7 @@ function modifyMember(event, method) {
 				: 'PATCH'
 			: method;
 
-	let memberName =
-		method !== 'POST'
-			? document.getElementById('form-title').innerHTML.replace('Modifier ', '')
-			: null;
+	let memberName = method !== 'POST' ? document.getElementById('form-title').innerHTML.replace('Modifier ', '') : null;
 	let username = document.getElementById('field-username').value;
 	let userID = document.getElementById('field-discord').value;
 	let joinedAt = document.getElementById('field-joined').value;
@@ -167,17 +142,14 @@ function modifyMember(event, method) {
 	if (userID && !validateId(userID)) return alert("L'ID Discord est invalide");
 
 	fetch(
-		`api/clan/members?token=${getCookie('token')}${
-			memberName ? `&member=${memberName}` : ''
-		}&username=${username}${
+		`api/clan/members?token=${getCookie('token')}${memberName ? `&member=${memberName}` : ''}&username=${username}${
 			userID ? `&user_id=${userID}` : ''
 		}&joined_at=${joinedAt}&rank=${rank}`,
 		{
 			method,
 		},
 	).then(async (res) => {
-		if (res.status !== 200)
-			return alert("Quelque chose s'est mal passé en modifiant les données");
+		if (res.status !== 200) return alert("Quelque chose s'est mal passé en modifiant les données");
 		location.href = '/dashboard';
 	});
 

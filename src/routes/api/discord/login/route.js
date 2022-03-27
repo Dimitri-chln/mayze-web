@@ -35,15 +35,11 @@ class Route extends BaseRoute {
 			scope: 'identify',
 		};
 
-		const res = await Axios.post(
-			`https://discord.com/api/oauth2/token`,
-			new URLSearchParams(data),
-			{
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
+		const res = await Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
 			},
-		).catch((err) => {
+		}).catch((err) => {
 			console.error(err);
 			response.writeHead(400, { 'Content-Type': 'text/html' });
 			return response.end('Error retrieving token');
@@ -69,17 +65,14 @@ class Route extends BaseRoute {
 			],
 		);
 
-		await Util.database.query(
-			'INSERT INTO web_client VALUES ($1, $2, $3, $4, $5, $6)',
-			[
-				token,
-				user.data.id,
-				new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-				res.data.access_token,
-				new Date(Date.now() + res.data.expires_in * 1000).toISOString(),
-				res.data.refresh_token,
-			],
-		);
+		await Util.database.query('INSERT INTO web_client VALUES ($1, $2, $3, $4, $5, $6)', [
+			token,
+			user.data.id,
+			new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+			res.data.access_token,
+			new Date(Date.now() + res.data.expires_in * 1000).toISOString(),
+			res.data.refresh_token,
+		]);
 
 		response.writeHead(200);
 		response.end();

@@ -15,10 +15,7 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static async fetchUser(token) {
-		const { rows: tokens } = await Util.database.query(
-			'SELECT user_id FROM web_client WHERE token = $1',
-			[token],
-		);
+		const { rows: tokens } = await Util.database.query('SELECT user_id FROM web_client WHERE token = $1', [token]);
 
 		if (!tokens.length) throw new Error('Not Authenticated');
 
@@ -34,10 +31,7 @@ class BaseRoute {
 	static async fetchMember(token) {
 		if (!this.memberRequired) return;
 
-		const { rows: tokens } = await Util.database.query(
-			'SELECT user_id FROM web_client WHERE token = $1',
-			[token],
-		);
+		const { rows: tokens } = await Util.database.query('SELECT user_id FROM web_client WHERE token = $1', [token]);
 
 		if (!tokens.length) throw new Error('Not Authenticated');
 
@@ -49,10 +43,7 @@ class BaseRoute {
 
 		const {
 			rows: [wolvesvilleMember],
-		} = await Util.database.query(
-			'SELECT * FROM clan_member WHERE user_id = $1',
-			[member.user.id],
-		);
+		} = await Util.database.query('SELECT * FROM clan_member WHERE user_id = $1', [member.user.id]);
 
 		/**
 		 * @typedef {object} WolvesvilleMember
@@ -81,24 +72,16 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static async _validateRequest(request, token) {
-		if (!this.methods.includes(request.method.toUpperCase()))
-			return 'METHOD_NOT_ALLOWED';
+		if (!this.methods.includes(request.method.toUpperCase())) return 'METHOD_NOT_ALLOWED';
 
 		if (this.loginRequired) {
 			const {
 				rows: [tokenData],
-			} = await Util.database.query(
-				'SELECT user_id FROM web_client WHERE token = $1',
-				[token],
-			);
+			} = await Util.database.query('SELECT user_id FROM web_client WHERE token = $1', [token]);
 
 			if (!tokenData) return 'NOT_AUTHENTICATED';
 
-			if (
-				this.memberRequired &&
-				!Util.guild.members.cache.has(tokenData.user_id)
-			)
-				return 'UNAUTHORIZED';
+			if (this.memberRequired && !Util.guild.members.cache.has(tokenData.user_id)) return 'UNAUTHORIZED';
 
 			if (
 				this.allowedUserIds &&
@@ -118,9 +101,7 @@ class BaseRoute {
 	 * @param {string} token
 	 */
 	static runValid(url, request, response, token) {
-		const file = Fs.readFileSync(
-			Path.join(__dirname, 'routes' + url.pathname, 'index.html'),
-		);
+		const file = Fs.readFileSync(Path.join(__dirname, 'routes' + url.pathname, 'index.html'));
 
 		response.writeHead(200, { 'Content-Type': 'text/html' });
 		response.write(Util.addBaseURI(Util.completeHtmlFile(file)));
@@ -186,9 +167,7 @@ class BaseRoute {
 				}),
 			);
 		} else {
-			const file = Fs.readFileSync(
-				Path.join(__dirname, 'public/static/html/unauthorized.html'),
-			);
+			const file = Fs.readFileSync(Path.join(__dirname, 'public/static/html/unauthorized.html'));
 			response.writeHead(200, { 'Content-Type': 'text/html' });
 			response.write(file);
 		}

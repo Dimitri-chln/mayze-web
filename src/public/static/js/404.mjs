@@ -1,1 +1,1 @@
-document.getElementById('redirect-button').addEventListener('click', () => location.href = '/');
+document.getElementById('redirect-button').addEventListener('click', () => (location.href = '/'));

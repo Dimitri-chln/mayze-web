@@ -17,10 +17,7 @@ class Route extends BaseRoute {
 	static async runValid(url, request, response, token) {
 		const member = await this.fetchMember(token);
 
-		const { rows } = await Util.database.query(
-			'SELECT * FROM level WHERE user_id = $1',
-			[member.discord.user.id],
-		);
+		const { rows } = await Util.database.query('SELECT * FROM level WHERE user_id = $1', [member.discord.user.id]);
 
 		const chatLevel = Util.getLevel(rows[0].chat_xp);
 		const voiceLevel = Util.getLevel(rows[0].voice_xp);

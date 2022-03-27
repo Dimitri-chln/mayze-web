@@ -24,20 +24,14 @@ const LANGUAGE_LIST = {
 
 const httpServer = Http.createServer(
 	/*OPTIONS,*/ async (request, response) => {
-		const url = new Url.URL(
-			request.url,
-			`${process.env.PROTOCOL}://${process.env.HOSTNAME}`,
-		);
+		const url = new Url.URL(request.url, `${process.env.PROTOCOL}://${process.env.HOSTNAME}`);
 		const token = Util.getToken(request);
 
-		const filePath =
-			'./routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
+		const filePath = './routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
 
 		const language =
 			url.searchParams.get('lang') ??
-			Object.keys(LANGUAGE_LIST).find((l) =>
-				LANGUAGE_LIST[l].test(request.headers['accept-language']),
-			) ??
+			Object.keys(LANGUAGE_LIST).find((l) => LANGUAGE_LIST[l].test(request.headers['accept-language'])) ??
 			'fr';
 
 		try {
@@ -78,9 +72,7 @@ const httpServer = Http.createServer(
 						}),
 					);
 				} else {
-					const file404 = Util.addBaseURI(
-						Fs.readFileSync('src/public/static/html/404.html'),
-					);
+					const file404 = Util.addBaseURI(Fs.readFileSync('src/public/static/html/404.html'));
 
 					response.writeHead(404, { 'Content-Type': 'text/html' });
 					response.write(file404);
@@ -89,13 +81,8 @@ const httpServer = Http.createServer(
 			}
 		}
 
-		if (
-			!url.pathname.startsWith('/api') &&
-			!url.pathname.startsWith('/static')
-		) {
-			const parseIP = (req) =>
-				(req.headers['x-forwarded-for'] || '').split(',').shift() ||
-				req.socket.remoteAddress;
+		if (!url.pathname.startsWith('/api') && !url.pathname.startsWith('/static')) {
+			const parseIP = (req) => (req.headers['x-forwarded-for'] || '').split(',').shift() || req.socket.remoteAddress;
 			const IP = parseIP(request);
 			const geo = GeoIP.lookup(IP);
 
@@ -120,25 +107,17 @@ console.log(`Listening on port ${httpServer.address().port}`);
 // Delete the tokens from the database when they expired
 setInterval(
 	() =>
-		Util.database
-			.query(
-				'SELECT token, expires_at, user_id, discord_expires_at FROM web_client',
-			)
-			.then((res) => {
-				for (const row of res.rows) {
-					if (new Date(row.expires_at).valueOf() < Date.now()) {
-						Util.database
-							.query('DELETE FROM web_client WHERE token = $1', [row.token])
-							.catch(console.error);
-					}
-
-					if (new Date(row.discord_expires_at).valueOf() < Date.now()) {
-						Util.database
-							.query('DELETE FROM web_client WHERE user_id = $1', [row.user_id])
-							.catch(console.error);
-					}
+		Util.database.query('SELECT token, expires_at, user_id, discord_expires_at FROM web_client').then((res) => {
+			for (const row of res.rows) {
+				if (new Date(row.expires_at).valueOf() < Date.now()) {
+					Util.database.query('DELETE FROM web_client WHERE token = $1', [row.token]).catch(console.error);
 				}
-			}),
+
+				if (new Date(row.discord_expires_at).valueOf() < Date.now()) {
+					Util.database.query('DELETE FROM web_client WHERE user_id = $1', [row.user_id]).catch(console.error);
+				}
+			}
+		}),
 	60000,
 );
 

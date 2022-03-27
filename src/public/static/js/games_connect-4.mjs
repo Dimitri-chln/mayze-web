@@ -8,16 +8,16 @@ const restartButton = document.getElementById('restart-button');
 const rack = new Rack();
 
 const modeSelector = document.getElementById('training-switch');
-const perfectAI = document.getElementById('perfect-ai-switch');
+const badPlayRate = document.getElementById('bad-play-rate');
 
-modeSelector.checked =
-	new URLSearchParams(location.search).get('train') == 'true';
-perfectAI.checked =
-	new URLSearchParams(location.search).get('perfect_ai') == 'true';
-
-scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
+modeSelector.checked = new URLSearchParams(location.search).get('train') == 'true';
+badPlayRate.value = new URLSearchParams(location.search).get('bad_play');
 
 const trainingColor = document.getElementById('training-color');
+const badPlayRateText = document.getElementById('bad-play-rate-text');
+
+// Initialize the mode
+scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
 
 if (modeSelector.checked) {
 	const randomPlayer = Math.ceil(Math.random() * 2);
@@ -27,19 +27,13 @@ if (modeSelector.checked) {
 	trainingColor.innerHTML = '';
 }
 
-const trainingPlayer = () =>
-	trainingColor.innerHTML === 'rouge'
-		? 1
-		: trainingColor.innerHTML === 'jaune'
-		? 2
-		: null;
+// Initialize the bad play rate text
+badPlayRateText.innerHTML = badPlayRate.value;
+
+const trainingPlayer = () => (trainingColor.innerHTML === 'rouge' ? 1 : trainingColor.innerHTML === 'jaune' ? 2 : null);
 
 modeSelector.addEventListener('change', () => {
-	history.replaceState(
-		null,
-		null,
-		`${location.pathname}?train=${modeSelector.checked}&perfect_ai=${perfectAI.checked}`,
-	);
+	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_play=${badPlayRate.value}`);
 
 	scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
 
@@ -51,23 +45,16 @@ modeSelector.addEventListener('change', () => {
 	}
 });
 
-perfectAI.addEventListener('change', () => {
-	history.replaceState(
-		null,
-		null,
-		`${location.pathname}?train=${modeSelector.checked}&perfect_ai=${perfectAI.checked}`,
-	);
+badPlayRate.addEventListener('change', () => {
+	history.replaceState(null, null, `${location.pathname}?train=${modeSelector.checked}&bad_play=${badPlayRate.value}`);
+
+	badPlayRateText.innerHTML = badPlayRate.value;
 });
 
 for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
-	const column = htmlRack.children
-		.item(0)
-		.appendChild(document.createElement('tr'));
+	const column = htmlRack.children.item(0).appendChild(document.createElement('tr'));
 
-	scoresTable.children
-		.item(0)
-		.children.item(0)
-		.appendChild(document.createElement('td'));
+	scoresTable.children.item(0).children.item(0).appendChild(document.createElement('td'));
 
 	for (let rowIndex = 0; rowIndex < 6; rowIndex++) {
 		column.appendChild(document.createElement('td'));
@@ -84,40 +71,25 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 			document.getElementById('loading').style.display = 'inline-block';
 
-			fetch(
-				`/api/connect-four?token=${getCookie(
-					'token',
-				)}&positions=${rack.positions.join('')}`,
-				{
-					method: 'GET',
-				},
-			).then(async (res) => {
+			fetch(`/api/connect-four?token=${getCookie('token')}&positions=${rack.positions.join('')}`, {
+				method: 'GET',
+			}).then(async (res) => {
 				const body = await res.json();
 
 				document.getElementById('loading').style.display = 'none';
 
 				for (let i = 0; i < body.scores.length; i++) {
-					const scoreCell = scoresTable.children
-						.item(0)
-						.children.item(0)
-						.children.item(i);
+					const scoreCell = scoresTable.children.item(0).children.item(0).children.item(i);
 
 					scoreCell.innerHTML = body.scores[i];
-					scoreCell.style.color =
-						body.scores[i] > 0
-							? '#46e083'
-							: body.scores[i] < 0
-							? '#e32817'
-							: '#f2b933';
+					scoreCell.style.color = body.scores[i] > 0 ? '#46e083' : body.scores[i] < 0 ? '#e32817' : '#f2b933';
 				}
 
 				rack.playable = true;
 
 				// Let the AI play if training mode is enabled
 				if (modeSelector.checked && rack.player !== trainingPlayer()) {
-					const bestColumnIndex = body.scores.indexOf(
-						Math.max(...body.scores.map((s) => s ?? -1000)),
-					);
+					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
 					const badColumnIndex =
 						shuffle(
@@ -127,23 +99,15 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 								})
 								.filter(
 									(column) =>
-										column.score !==
-											Math.max(...body.scores.map((s) => s ?? -1_000)) &&
+										column.score !== Math.max(...body.scores.map((s) => s ?? -1_000)) &&
 										// Do not play a move that would make the AI instantly lose
-										column.score !==
-											Math.floor((-42 + body.positions.length) / 2),
+										column.score !== Math.floor((-42 + body.positions.length) / 2),
 								),
 						)[0]?.index ?? body.scores.findIndex((score) => score);
 
-					// 20% chance to play a bad move
-					const finalColumnIndex =
-						!perfectAI.checked && Math.random() < 0.2
-							? badColumnIndex
-							: bestColumnIndex;
+					const finalColumnIndex = Math.random() < badPlayRate.value / 100 ? badColumnIndex : bestColumnIndex;
 
-					const finalColumn = htmlRack.children
-						.item(0)
-						.children.item(finalColumnIndex);
+					const finalColumn = htmlRack.children.item(0).children.item(finalColumnIndex);
 
 					finalColumn.click();
 				}
@@ -155,9 +119,8 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 }
 
 if (trainingPlayer() === 2) {
-	const firstColumn = htmlRack.children
-		.item(0)
-		.children.item(perfectAI.checked ? 3 : Math.floor(Math.random() * 7));
+	const firstColumnIndex = Math.random() < badPlayRate.value / 100 ? Math.floor(Math.random() * 7) : 3;
+	const firstColumn = htmlRack.children.item(0).children.item(firstColumnIndex);
 
 	firstColumn.click();
 }
@@ -169,21 +132,13 @@ function updateHtmlRack(winner) {
 				.item(0)
 				.children.item(i)
 				.children.item(5 - j).innerHTML =
-				rack.data[i][j] === 1
-					? '<div class="red"></div>'
-					: rack.data[i][j] === 2
-					? '<div class="yellow"></div>'
-					: '';
+				rack.data[i][j] === 1 ? '<div class="red"></div>' : rack.data[i][j] === 2 ? '<div class="yellow"></div>' : '';
 		}
 	}
 
 	if (winner) {
-		if (winner === -1)
-			document.getElementById('win-text').innerHTML = 'Égalité !';
-		else
-			document.getElementById('win-text').innerHTML = `${
-				winner === 1 ? 'Rouge' : 'Jaune'
-			} a gagné !`;
+		if (winner === -1) document.getElementById('win-text').innerHTML = 'Égalité !';
+		else document.getElementById('win-text').innerHTML = `${winner === 1 ? 'Rouge' : 'Jaune'} a gagné !`;
 
 		restartButton.style.display = 'block';
 	}
