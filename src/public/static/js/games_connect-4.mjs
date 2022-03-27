@@ -67,7 +67,17 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			const winner = rack.play(columnIndex);
 			rack.playable = false;
 			updateHtmlRack(columnIndex, winner);
-			if (winner) return;
+
+			if (winner) {
+				return fetch(
+					`/api/connect-four?token=${getCookie('token')}&result=${
+						winner === trainingPlayer() ? 'win' : winner === -1 ? 'draw' : 'defeat'
+					}&difficulty=${badMoveRate.value}`,
+					{
+						method: 'POST',
+					},
+				);
+			}
 
 			document.getElementById('loading').style.display = 'inline-block';
 

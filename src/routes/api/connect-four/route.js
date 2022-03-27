@@ -6,6 +6,7 @@ const childProcess = require('child_process');
 
 class Route extends BaseRoute {
 	static path = '/api/connect-four';
+	static methods = ['GET', 'POST'];
 	static loginRequired = true;
 
 	/**
@@ -15,38 +16,88 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		const positions = url.searchParams.get('positions');
+		switch (request.method.toUpperCase()) {
+			case 'GET': {
+				const positions = url.searchParams.get('positions');
 
-		if (!positions) {
-			response.writeHead(400, { 'Content-Type': 'application/json' });
-			response.write(
-				JSON.stringify({
-					status: 400,
-					message: 'Bad Request',
-				}),
-			);
-			return response.end();
+				if (!positions) {
+					response.writeHead(400, { 'Content-Type': 'application/json' });
+					response.write(
+						JSON.stringify({
+							status: 400,
+							message: 'Bad Request',
+						}),
+					);
+					return response.end();
+				}
+
+				const child = childProcess.execFile('connect-4/c4solver', ['-a', '-b', 'connect-4/7x6.book']);
+
+				child.stdout.on('data', (data) => {
+					const res = data.trim().split(' ');
+					res.shift();
+
+					const scores = res.map((s) => (parseInt(s) === -1000 ? null : parseInt(s)));
+
+					response.writeHead(200, { 'Content-Type': 'application/json' });
+					response.write(
+						JSON.stringify({
+							positions: positions.split('').map((p) => parseInt(p)),
+							scores: scores,
+						}),
+					);
+					response.end();
+				});
+
+				child.stdin.end(positions);
+				break;
+			}
+
+			case 'POST': {
+				const user = await this.fetchUser(token);
+
+				const result = url.searchParams.get('result');
+				const difficulty = url.searchParams.get('difficulty');
+
+				if (!result || difficulty) {
+					response.writeHead(400, { 'Content-Type': 'application/json' });
+					response.write(
+						JSON.stringify({
+							status: 400,
+							message: 'Bad Request',
+						}),
+					);
+					return response.end();
+				}
+
+				const defaultData = Array.from(Array(21), (_, i) => 5 * i).reduce((data, key) => {
+					data[key] = {
+						played: 0,
+						win: 0,
+						defeat: 0,
+						draw: 0,
+					};
+
+					return data;
+				}, {});
+
+				await Util.database.query(
+					`
+					INSERT INTO connect_four VALUES ($1, $1)
+					ON CONFLICT (user_id)
+					DO UPDATE SET
+						stats = jsonb_set(connect_four.stats, '{${difficulty}, played}', ((connect_four.stats -> $3 -> 'played')::int + 1)::text::jsonb),
+						stats = jsonb_set(connect_four.stars, '{${difficulty}, ${result}}', ((connect_four.stats -> 3 -> 4)::int + 1)::text::jsonb)
+					WHERE connect_four.user_id = EXCLUDED.user_id
+					`,
+					[user.id, defaultData, difficulty, result],
+				);
+
+				response.writeHead(200, { 'Content-Type': 'application/json' });
+				response.end();
+				break;
+			}
 		}
-
-		const child = childProcess.execFile('connect-4/c4solver', ['-a', '-b', 'connect-4/7x6.book']);
-
-		child.stdout.on('data', (data) => {
-			const res = data.trim().split(' ');
-			res.shift();
-
-			const scores = res.map((s) => (parseInt(s) === -1000 ? null : parseInt(s)));
-
-			response.writeHead(200, { 'Content-Type': 'application/json' });
-			response.write(
-				JSON.stringify({
-					positions: positions.split('').map((p) => parseInt(p)),
-					scores: scores,
-				}),
-			);
-			response.end();
-		});
-
-		child.stdin.end(positions);
 	}
 }
 
