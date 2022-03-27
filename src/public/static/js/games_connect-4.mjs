@@ -117,6 +117,20 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 						)[0]?.index ??
 						body.scores.findIndex((score) => score);
 
+					console.log(body.scores);
+					console.log(
+						body.scores
+							.map((score, index) => {
+								return { score, index };
+							})
+							.filter(
+								(column) =>
+									// Do not play a move that would make the AI instantly lose
+									column.score !== -rack.movesLeft,
+							),
+					);
+					console.log(badColumnIndex);
+
 					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
 
 					const finalColumn = htmlRack.children.item(0).children.item(finalColumnIndex);
