@@ -105,9 +105,6 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 						// Otherwise play in any column that is not full
 						shuffledScores.find((column) => column.score)?.index;
 
-					console.log(body.scores.indexOf(rack.movesLeft));
-					console.log(badColumnIndex);
-
 					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
 
 					const finalColumn = htmlRack.children.item(0).children.item(finalColumnIndex);
