@@ -71,7 +71,9 @@ div.yellow {
 }
 
 div.last-played {
-	border: 2px solid white;
+	-webkit-box-shadow: inset 4px white;
+	-moz-box-shadow: inset 4px white;
+	box-shadow: inset 4px white;
 }
 
 div#grid-info {
