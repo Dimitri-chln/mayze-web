@@ -156,8 +156,11 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 }
 
 if (trainingPlayer() === 2) {
-	const bestColumn = htmlRack.children.item(0).children.item(3);
-	bestColumn.click();
+	const firstColumn = htmlRack.children
+		.item(0)
+		.children.item(perfectAI.checked ? 3 : Math.floor(Math.random() * 7));
+
+	firstColumn.click();
 }
 
 function updateHtmlRack(winner) {
