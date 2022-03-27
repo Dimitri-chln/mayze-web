@@ -107,8 +107,15 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 										column.score !== -rack.movesLeft,
 								),
 						)[0]?.index ??
-						// Otherwise play an empty column
-						body.scores.findIndex((score) => score);
+						// Otherwise play in any empty column
+						shuffle(
+							body.scores.map((score, index) => {
+								return { score, index };
+							}),
+						).findIndex((score) => score).index;
+
+					console.log(body.scores.indexOf(rack.movesLeft));
+					console.log(badColumnIndex);
 
 					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
 
