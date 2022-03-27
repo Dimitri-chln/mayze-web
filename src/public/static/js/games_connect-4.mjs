@@ -70,6 +70,8 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 			updateHtmlRack(columnIndex, winner);
 
 			if (winner) {
+				if (!trainingPlayer()) return;
+
 				return fetch(
 					`/api/connect-four?token=${getCookie('token')}&result=${
 						winner === trainingPlayer() ? 'win' : winner === -1 ? 'draw' : 'defeat'
