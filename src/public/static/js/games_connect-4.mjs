@@ -91,28 +91,19 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				if (modeSelector.checked && rack.player !== trainingPlayer()) {
 					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
+					const shuffledScores = shuffle(
+						body.scores.map((score, index) => {
+							return { score, index };
+						}),
+					);
+
 					const badColumnIndex =
 						// Check if the AI can win in 1 move
-						body.scores.indexOf(rack.movesLeft) ??
+						shuffledScores.find((column) => column.score === rack.movesLeft)?.index ??
 						// Otherwise choose a move that won't make the opponent win in 1 move
-						shuffle(
-							body.scores
-								.map((score, index) => {
-									return { score, index };
-								})
-								.filter(
-									(column) =>
-										column.score &&
-										// Do not play a move that would make the AI instantly lose
-										column.score !== -rack.movesLeft,
-								),
-						)[0]?.index ??
-						// Otherwise play in any empty column
-						shuffle(
-							body.scores.map((score, index) => {
-								return { score, index };
-							}),
-						).findIndex((score) => score).index;
+						shuffledScores.find((column) => column.score && column.score !== -rack.movesLeft)?.index ??
+						// Otherwise play in any column that is not full
+						shuffledScores.find((column) => column.score)?.index;
 
 					console.log(body.scores.indexOf(rack.movesLeft));
 					console.log(badColumnIndex);
