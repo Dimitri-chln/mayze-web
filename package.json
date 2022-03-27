@@ -1,27 +1,27 @@
 {
-  "name": "mayze-web",
-  "version": "0.0.2",
-  "description": "Pour le meilleur clan!",
-  "main": "src/app.js",
-  "scripts": {
-    "start": "node ."
-  },
-  "dependencies": {
-    "archiver": "^5.3.0",
-    "axios": "^0.21.1",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "geoip-lite": "^1.4.2",
-    "pg": "^8.5.1",
-    "play-dl": "^1.8.9",
-    "ytdl-core": "^4.11.0"
-  },
-  "engines": {
-    "node": "16.x"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Dimitri-chln/mayze-web.git"
-  },
-  "license": "MIT"
+	"name": "mayze-web",
+	"version": "1.0.0",
+	"description": "Pour le meilleur clan!",
+	"main": "src/app.js",
+	"scripts": {
+		"start": "node ."
+	},
+	"dependencies": {
+		"archiver": "^5.3.0",
+		"axios": "^0.21.1",
+		"discord.js": "^12.5.1",
+		"dotenv": "^8.2.0",
+		"geoip-lite": "^1.4.2",
+		"pg": "^8.5.1",
+		"play-dl": "^1.8.9",
+		"ytdl-core": "^4.11.0"
+	},
+	"engines": {
+		"node": "16.x"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Dimitri-chln/mayze-web.git"
+	},
+	"license": "MIT"
 }

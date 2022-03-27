@@ -5,6 +5,7 @@ import { shuffle } from '../modules/utils.mjs';
 const htmlRack = document.getElementById('rack');
 const scoresTable = document.getElementById('scores');
 const restartButton = document.getElementById('restart-button');
+const statsButton = document.getElementById('stats-button');
 const rack = new Rack();
 
 const modeSelector = document.getElementById('training-switch');
@@ -162,4 +163,8 @@ function updateHtmlRack(played, winner) {
 
 restartButton.addEventListener('click', () => {
 	location.reload();
+});
+
+restartButton.addEventListener('click', () => {
+	location.pathname += '/stats';
 });
