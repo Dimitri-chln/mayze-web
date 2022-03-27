@@ -99,23 +99,11 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 								})
 								.filter(
 									(column) =>
-										column.score !== Math.max(...body.scores.map((s) => s ?? -1000)) &&
+										column.score &&
 										// Do not play a move that would make the AI instantly lose
 										column.score !== -rack.movesLeft,
 								),
-						)[0]?.index ??
-						shuffle(
-							body.scores
-								.map((score, index) => {
-									return { score, index };
-								})
-								.filter(
-									(column) =>
-										// Do not play a move that would make the AI instantly lose
-										column.score !== -rack.movesLeft,
-								),
-						)[0]?.index ??
-						body.scores.findIndex((score) => score);
+						)[0]?.index ?? body.scores.findIndex((score) => score);
 
 					console.log(body.scores);
 					console.log(
