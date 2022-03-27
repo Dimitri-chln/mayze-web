@@ -6,6 +6,50 @@ const scoresTable = document.getElementById('scores');
 const restartButton = document.getElementById('restart-button');
 const rack = new Rack();
 
+const modeSelector = document
+	.getElementById('mode-selector')
+	.children.item(0)
+	.children.item(0);
+
+modeSelector.checked =
+	new URLSearchParams(location.search).get('train') == 'true';
+
+scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
+
+const trainingColor = document.getElementById('training-color');
+
+if (modeSelector.checked) {
+	const randomPlayer = Math.ceil(Math.random() * 2);
+	trainingColor.innerHTML = randomPlayer === 1 ? 'rouge' : 'jaune';
+	trainingColor.style.color = randomPlayer === 1 ? 'red' : 'yellow';
+} else {
+	trainingColor.innerHTML = '';
+}
+
+const trainingPlayer = () =>
+	trainingColor.innerHTML === 'rouge'
+		? 1
+		: trainingColor.innerHTML === 'jaune'
+		? 2
+		: null;
+
+modeSelector.addEventListener('change', () => {
+	scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
+
+	history.replaceState(
+		null,
+		null,
+		`${location.pathname}?train=${modeSelector.checked}`,
+	);
+
+	if (modeSelector.checked) {
+		trainingColor.innerHTML = rack.player === 1 ? 'rouge' : 'jaune';
+		trainingColor.style.color = rack.player === 1 ? 'red' : 'yellow';
+	} else {
+		trainingColor.innerHTML = '';
+	}
+});
+
 for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 	const column = htmlRack.children
 		.item(0)
@@ -59,6 +103,22 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				}
 
 				rack.playable = true;
+
+				if (modeSelector.checked && rack.player !== trainingPlayer()) {
+					console.log(body.scores);
+
+					const bestColumnIndex = body.scores.indexOf(
+						Math.max(...body.scores.map((s) => s ?? -1000)),
+					);
+
+					console.log(bestColumnIndex);
+
+					const bestColumn = htmlRack.children
+						.item(0)
+						.children.item(bestColumnIndex);
+
+					bestColumn.click();
+				}
 			});
 		} catch (err) {
 			console.error(err);

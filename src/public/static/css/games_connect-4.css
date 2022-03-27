@@ -1,3 +1,13 @@
+div#mode-selector {
+	position: relative;
+	display: flex;
+}
+
+div#mode-selector > * {
+	align-self: center;
+	margin: 0 0.5em;
+}
+
 table#rack {
 	position: relative;
 	width: fit-content;
