@@ -7,13 +7,14 @@ const scoresTable = document.getElementById('scores');
 const restartButton = document.getElementById('restart-button');
 const rack = new Rack();
 
-const modeSelector = document
-	.getElementById('mode-selector')
-	.children.item(0)
-	.children.item(0);
+const modeSelector = document.getElementById('training-switch');
+const perfectAI = document.getElementById('perfect-ai-switch');
 
 modeSelector.checked =
 	new URLSearchParams(location.search).get('train') == 'true';
+
+perfectAI.checked =
+	new URLSearchParams(location.search).get('perfect_ai') == 'true';
 
 scoresTable.style.opacity = modeSelector.checked ? '0' : '1';
 
@@ -40,7 +41,7 @@ modeSelector.addEventListener('change', () => {
 	history.replaceState(
 		null,
 		null,
-		`${location.pathname}?train=${modeSelector.checked}`,
+		`${location.pathname}?train=${modeSelector.checked}&perfect_ai=${perfectAI.checked}`,
 	);
 
 	if (modeSelector.checked) {
@@ -49,6 +50,14 @@ modeSelector.addEventListener('change', () => {
 	} else {
 		trainingColor.innerHTML = '';
 	}
+});
+
+perfectAI.addEventListener('change', () => {
+	history.replaceState(
+		null,
+		null,
+		`${location.pathname}?train=${modeSelector.checked}&perfect_ai=${perfectAI.checked}`,
+	);
 });
 
 for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
@@ -129,7 +138,9 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 					// 20% chance to play a bad move
 					const finalColumnIndex =
-						Math.random() < 0.2 ? badColumnIndex : bestColumnIndex;
+						!perfectAI.checked && Math.random() < 0.2
+							? badColumnIndex
+							: bestColumnIndex;
 
 					const finalColumn = htmlRack.children
 						.item(0)

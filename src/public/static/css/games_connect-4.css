@@ -1,9 +1,14 @@
 div#mode-selector {
 	position: relative;
 	display: flex;
+	justify-content: space-between;
 }
 
-div#mode-selector > * {
+div#mode-selector > div {
+	display: flex;
+}
+
+div#mode-selector > div > * {
 	align-self: center;
 	margin: 0 0.5em;
 }
@@ -11,6 +16,7 @@ div#mode-selector > * {
 table#rack {
 	position: relative;
 	width: fit-content;
+	margin-top: 1em;
 }
 
 table#rack > tbody {
