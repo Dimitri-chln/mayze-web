@@ -81,6 +81,9 @@ class Route extends BaseRoute {
 					return data;
 				}, {});
 
+				defaultData[difficulty].played = 1;
+				defaultData[difficulty][result] = 1;
+
 				await Util.database.query(
 					`
 					INSERT INTO connect_four VALUES ($1, $2)
