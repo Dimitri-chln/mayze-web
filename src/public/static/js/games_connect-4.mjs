@@ -91,6 +91,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 				if (modeSelector.checked && rack.player !== trainingPlayer()) {
 					console.log(body.scores);
 					console.log(body.scores.map((s) => s ?? -1000));
+					console.log(Math.floor((-42 + body.positions.length) / 2));
 
 					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
