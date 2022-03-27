@@ -92,6 +92,7 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
 
 					const badColumnIndex =
+						body.scores.indexOf(rack.movesLeft) ??
 						shuffle(
 							body.scores
 								.map((score, index) => {
@@ -103,7 +104,8 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 										// Do not play a move that would make the AI instantly lose
 										column.score !== -rack.movesLeft,
 								),
-						)[0]?.index ?? body.scores.findIndex((score) => score);
+						)[0]?.index ??
+						body.scores.findIndex((score) => score);
 
 					const finalColumnIndex = Math.random() < badMoveRate.value / 100 ? badColumnIndex : bestColumnIndex;
 
