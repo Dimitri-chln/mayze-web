@@ -188,6 +188,7 @@ function updateHtmlRack(played, winner) {
 
 		if (!trainingPlayer()) return;
 
+		badMoveRate.disabled = false;
 		switch (modeSelector.value) {
 			case 'standard':
 				break;
@@ -203,6 +204,7 @@ function updateHtmlRack(played, winner) {
 				badMoveRate.value = Math.floor(Math.random() * 21) * 5;
 				break;
 		}
+		badMoveRate.disabled = true;
 	}
 }
 
