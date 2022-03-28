@@ -164,11 +164,14 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 						(column) => column.score === Math.max(...body.scores.map((s) => s ?? -1000)),
 					)?.index;
 
+					console.log(body.scores);
+					console.log(rack.worstScore);
+
 					const badColumnIndex =
 						// Check if the AI can win in 1 move
-						shuffledScores.find((column) => column.score === rack.turnsLeft)?.index ??
-						// Otherwise choose a move that won't make the opponent win in 1 move (hacky solution because the C++ algorithm isn't consistent)
-						shuffledScores.find((column) => column.score && column.score <= -rack.turnsLeft + 1)?.index ??
+						shuffledScores.find((column) => column.score && column.score === rack.bestScore)?.index ??
+						// Otherwise choose a move that won't make the opponent win in 1 move
+						shuffledScores.find((column) => column.score && column.score !== rack.worstScore)?.index ??
 						// Otherwise play in any column that is not full
 						shuffledScores.find((column) => column.score)?.index;
 

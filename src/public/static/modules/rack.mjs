@@ -84,7 +84,15 @@ export default class Rack {
 	}
 
 	get turnsLeft() {
-		return (this.data.length * this.data[0].length) / 2 - this.turn;
+		return 22 - this.#turn;
+	}
+
+	get bestScore() {
+		return 22 - this.turn;
+	}
+
+	get worstScore() {
+		return this.turn - 22;
 	}
 
 	/**
