@@ -36,11 +36,13 @@ div.translations-group {
 }
 
 div.translations-group > p {
-	margin: 0.5em;
+	font-family: consolas;
 	font-size: small;
+	margin: 0.5em;
 }
 
 div.translations-group > input[type='text'] {
+	font-family: consolas;
 	padding: 0.5em;
 	border-radius: 1em;
 	width: 98%;
