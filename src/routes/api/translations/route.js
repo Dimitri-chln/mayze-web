@@ -64,29 +64,48 @@ class Route extends BaseRoute {
 					return response.end();
 				}
 
-				await Util.database.query(`UPDATE translations SET ${locale} = $1 WHERE name = $2`, [
-					translation === 'NULL' ? null : translation,
-					translationName,
-				]);
+				const {
+					rows: [translationData],
+				} = await Util.database.query(`SELECT ${locale} FROM translations WHERE name = $1`, [translationName]);
 
-				Util.discord.channels.cache
-					.get('957380495958765588')
-					.send(
-						`
-						__Translations updated:__
-						- **By:** \`${user.tag} (${user.id})\`
-						- **Name:** \`${translationName}\`
-						- **Locale:** \`${locale}\`
-						- **Translation:**
-						\`\`\`
-						${translation}
-						\`\`\`
-						`.replace(/\t*/g, ''),
-					)
-					.catch(console.error);
+				if (translationData) {
+					await Util.database.query(`UPDATE translations SET ${locale} = $1 WHERE name = $2`, [
+						translation === 'NULL' ? null : translation,
+						translationName,
+					]);
 
-				response.writeHead(200, { 'Content-Type': 'application/json' });
-				response.end();
+					Util.discord.channels.cache
+						.get('957380495958765588')
+						.send(
+							`
+							__Translations updated:__
+							- **By:** \`${user.tag} (${user.id})\`
+							- **Name:** \`${translationName}\`
+							- **Locale:** \`${locale}\`
+							- **Old value:**
+							\`\`\`
+							${translationData[locale]}
+							\`\`\`
+							- **New value:**
+							\`\`\`
+							${translation}
+							\`\`\`
+							`.replace(/\t*/g, ''),
+						)
+						.catch(console.error);
+
+					response.writeHead(200, { 'Content-Type': 'application/json' });
+					response.end();
+				} else {
+					response.writeHead(404, { 'Content-Type': 'application/json' });
+					response.write(
+						JSON.stringify({
+							status: 404,
+							message: 'Not Found',
+						}),
+					);
+					response.end();
+				}
 				break;
 			}
 		}
