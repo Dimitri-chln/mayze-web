@@ -37,19 +37,19 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 		defaultText.innerHTML = data.default;
 		group.appendChild(defaultText);
 
-		const pathHidden = document.createElement('input');
-		pathHidden.type = 'hidden';
-		pathHidden.value = path;
-		group.appendChild(pathHidden);
-
 		const translationText = document.createElement('input');
 		translationText.type = 'text';
 		translationText.placeholder = 'Text translation';
 		translationText.value = data.translations[locale];
 		group.appendChild(translationText);
 
+		const pathHidden = document.createElement('input');
+		pathHidden.type = 'hidden';
+		pathHidden.value = path;
+		group.appendChild(pathHidden);
+
 		translationText.addEventListener('change', () => {
-			const changedText = translationText.previousElementSibling.value;
+			const changedText = translationText.nextElementSibling.value;
 
 			fetch(
 				`api/translations?token=${getCookie('token')}&name=${encodeURIComponent(
