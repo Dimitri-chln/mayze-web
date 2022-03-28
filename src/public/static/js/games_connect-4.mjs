@@ -154,13 +154,18 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 
 				// Let the AI play if training mode is enabled
 				if (trainingMode.checked && rack.player !== trainingPlayer()) {
-					const bestColumnIndex = body.scores.indexOf(Math.max(...body.scores.map((s) => s ?? -1000)));
-
 					const shuffledScores = shuffle(
 						body.scores.map((score, index) => {
 							return { score, index };
 						}),
 					);
+
+					const bestColumnIndex = shuffledScores.find(
+						(column) => column.score === Math.max(...body.scores.map((s) => s ?? -1000)),
+					)?.index;
+
+					console.log(body.scores);
+					console.log(-rack.movesLeft);
 
 					const badColumnIndex =
 						// Check if the AI can win in 1 move
