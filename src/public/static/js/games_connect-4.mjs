@@ -170,8 +170,8 @@ for (let columnIndex = 0; columnIndex < 7; columnIndex++) {
 					const badColumnIndex =
 						// Check if the AI can win in 1 move
 						shuffledScores.find((column) => column.score && column.score === rack.bestScore)?.index ??
-						// Otherwise choose a move that won't make the opponent win in 1 move
-						shuffledScores.find((column) => column.score && column.score !== rack.worstScore)?.index ??
+						// Otherwise choose a move that won't make the opponent win in 2 moves or less
+						shuffledScores.find((column) => column.score && column.score - 2 <= rack.worstScore)?.index ??
 						// Otherwise play in any column that is not full
 						shuffledScores.find((column) => column.score)?.index;
 
