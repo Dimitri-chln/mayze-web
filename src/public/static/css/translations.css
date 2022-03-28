@@ -8,6 +8,7 @@ select#locale-picker {
 section#translations {
 	position: relative;
 	top: 2em;
+	font-family: consolas;
 }
 
 div.translations-group-header {
@@ -36,7 +37,6 @@ div.translations-group {
 }
 
 div.translations-group > p {
-	font-family: consolas;
 	font-size: small;
 	margin: 0.5em;
 }

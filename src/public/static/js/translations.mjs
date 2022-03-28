@@ -76,16 +76,16 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 			groupHeader.appendChild(groupOpen);
 
 			const groupName = document.createElement('div');
-			groupName.innerHTML = key.replace(/^./, (a) => a.toUpperCase());
+			groupName.innerHTML = key;
 			groupHeader.appendChild(groupName);
 
 			groupHeader.addEventListener('click', () => {
-				const closed = groupOpen.innerHTML === '&gt;';
+				const open = groupOpen.innerHTML === '-';
 
-				groupOpen.innerHTML = closed ? 'v' : '>';
+				groupOpen.innerHTML = open ? '>' : '-';
 
 				for (const child of group.children) {
-					if (child.classList.contains('translations-group')) child.style.display = closed ? 'block' : 'none';
+					if (child.classList.contains('translations-group')) child.style.display = open ? 'none' : 'block';
 				}
 			});
 
