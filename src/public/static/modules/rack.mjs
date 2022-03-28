@@ -23,6 +23,10 @@ export default class Rack {
 	 * @type {number[]}
 	 */
 	#positions;
+	/**
+	 * @type {number}
+	 */
+	#turn;
 
 	constructor() {
 		this.#data = [];
@@ -31,6 +35,7 @@ export default class Rack {
 		this.#winner = null;
 		this.#playable = true;
 		this.#positions = [];
+		this.#turn = 1;
 
 		for (let column = 0; column < 7; column++) {
 			this.#data[column] = [];
@@ -74,8 +79,12 @@ export default class Rack {
 		return this.#positions;
 	}
 
-	get movesLeft() {
-		return Math.ceil((42 - this.positions.length) / 2);
+	get turn() {
+		return this.#turn;
+	}
+
+	get turnsLeft() {
+		return this.data.length * this.data[0].length - this.turn;
 	}
 
 	/**
@@ -84,9 +93,12 @@ export default class Rack {
 	 */
 	play(column) {
 		if (this.winner) throw new Error('Game is over');
-		const row = this.row[column];
 		if (!this.playable) throw new Error('Game is not currently playable');
+
+		const row = this.row[column];
 		if (row > 5) throw new Error(`Column ${column} is filled`);
+
+		if (this.player === 2) this.#turn++;
 
 		this.#data[column][row] = this.player;
 		this.#row[column]++;
