@@ -75,7 +75,7 @@ export default class Rack {
 	}
 
 	get movesLeft() {
-		return (42 - this.positions.length - this.player + 1) / 2;
+		return Math.ceil((42 - this.positions.length) / 2);
 	}
 
 	/**
