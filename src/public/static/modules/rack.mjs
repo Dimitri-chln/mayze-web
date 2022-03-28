@@ -84,7 +84,7 @@ export default class Rack {
 	}
 
 	get turnsLeft() {
-		return this.data.length * this.data[0].length - this.turn;
+		return (this.data.length * this.data[0].length) / 2 - this.turn;
 	}
 
 	/**
