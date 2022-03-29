@@ -20,7 +20,7 @@ class Route extends BaseRoute {
 
 		switch (request.method.toUpperCase()) {
 			case 'GET': {
-				const { rows } = await Util.database.query('SELECT * FROM translations');
+				const { rows } = await Util.database.query('SELECT * FROM translations ORDER BY name ASC');
 
 				const data = {};
 

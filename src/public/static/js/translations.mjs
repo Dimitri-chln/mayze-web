@@ -61,7 +61,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 			);
 		});
 	} else {
-		for (const key of Object.keys(data).sort((a, b) => a.localeCompare(b))) {
+		for (const key of Object.keys(data) /*.sort((a, b) => a.localeCompare(b))*/) {
 			const group = document.createElement('div');
 			group.classList.add('translations-group');
 			if (depth > 0) group.style.display = 'none';
