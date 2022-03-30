@@ -7,7 +7,7 @@ class Route extends BaseRoute {
 	static path = '/api/translations';
 	static methods = ['GET', 'POST'];
 	static loginRequired = true;
-	static allowedUserIds = ['463358584583880704'];
+	static allowedUserIds = ['463358584583880704', '701832883236634754'];
 
 	/**
 	 * @param {URL} url
