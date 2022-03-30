@@ -46,4 +46,5 @@ div.translations-group > input[type='text'] {
 	padding: 0.5em;
 	border-radius: 1em;
 	width: 98%;
+	width: -webkit-fill-available;
 }
