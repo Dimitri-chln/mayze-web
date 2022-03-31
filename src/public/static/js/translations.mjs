@@ -34,7 +34,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 		parent.appendChild(group);
 
 		const defaultText = document.createElement('p');
-		defaultText.innerHTML = data.default;
+		defaultText.innerText = data.default;
 		group.appendChild(defaultText);
 
 		const translationText = document.createElement('input');
