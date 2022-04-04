@@ -25,6 +25,7 @@ fetch(`api/translations?token=${getCookie('token')}`, {
  * @param {string} locale
  * @param {number} [depth]
  * @param {string} [path]
+ * @returns {boolean}
  */
 function addElements(parent, data, locale, depth = 0, path = '') {
 	if (data.default && data.translations) {
