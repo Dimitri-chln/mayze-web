@@ -60,6 +60,8 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 				},
 			);
 		});
+
+		return data.translations[locale] === null;
 	} else {
 		for (const key of Object.keys(data) /*.sort((a, b) => a.localeCompare(b))*/) {
 			const group = document.createElement('div');
@@ -89,7 +91,9 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 				}
 			});
 
-			addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key);
+			const hasEmptyFields = addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key);
+			if (hasEmptyFields) group.classList.add('has-empty-fields');
+			return hasEmptyFields;
 		}
 	}
 }
