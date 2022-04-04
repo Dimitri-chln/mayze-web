@@ -61,8 +61,12 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 			);
 		});
 
-		return data.translations[locale] === null;
+		const hasEmptyFields = data.translations[locale] === null;
+		if (hasEmptyFields) group.classList.add('has-empty-fields');
+		return hasEmptyFields;
 	} else {
+		let hasEmptyFields = false;
+
 		for (const key of Object.keys(data) /*.sort((a, b) => a.localeCompare(b))*/) {
 			const group = document.createElement('div');
 			group.classList.add('translations-group');
@@ -91,9 +95,12 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 				}
 			});
 
-			const hasEmptyFields = addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key);
+			hasEmptyFields =
+				addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key) || hasEmptyFields;
+
 			if (hasEmptyFields) group.classList.add('has-empty-fields');
-			return hasEmptyFields;
 		}
+
+		return hasEmptyFields;
 	}
 }
