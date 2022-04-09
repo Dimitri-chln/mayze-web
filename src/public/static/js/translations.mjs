@@ -1,7 +1,8 @@
 import { getCookie } from '../modules/cookie.mjs';
 
 const localePicker = document.getElementById('locale-picker');
-const openCloseAllButton = document.getElementById('open-close-all');
+const openAllButton = document.getElementById('open-all');
+const closeAllButton = document.getElementById('close-all');
 const translationsSection = document.getElementById('translations');
 
 fetch(`api/translations?token=${getCookie('token')}`, {
@@ -21,10 +22,12 @@ fetch(`api/translations?token=${getCookie('token')}`, {
 		addElements(translationsSection, translations, localePicker.value);
 	});
 
-	openCloseAllButton.addEventListener('click', () => {
-		const open = openCloseAllButton.value.startsWith('Close');
-		openCloseAllButton.value = open ? 'Open all sections' : 'Close all sections';
-		for (const child of translationsSection.children) openOrCloseGroup(child, open, true);
+	openAllButton.addEventListener('click', () => {
+		for (const child of translationsSection.children) openOrCloseGroup(child, true, true);
+	});
+
+	closeAllButton.addEventListener('click', () => {
+		for (const child of translationsSection.children) openOrCloseGroup(child, false, true);
 	});
 });
 
@@ -96,7 +99,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 			groupHeader.appendChild(groupName);
 
 			groupHeader.addEventListener('click', () => {
-				const open = groupOpen.innerHTML === '-';
+				const open = groupOpen.innerText === '>';
 				openOrCloseGroup(group, open, false);
 			});
 
@@ -120,11 +123,11 @@ function openOrCloseGroup(group, open = true, recursive = false) {
 	const groupOpen = groupHeader.children.item(0);
 	if (!groupOpen) return;
 
-	groupOpen.innerHTML = open ? '>' : '-';
+	groupOpen.innerText = open ? '-' : '>';
 
 	for (const child of group.children) {
 		if (child.classList.contains('translations-group')) {
-			child.style.display = open ? 'none' : 'block';
+			child.style.display = open ? 'block' : 'none';
 			if (recursive) openOrCloseGroup(child, open, true);
 		}
 	}

@@ -11,10 +11,6 @@ select#locale-picker {
 	border-radius: 3em;
 }
 
-input#open-close-all {
-	position: relative;
-}
-
 section#translations {
 	position: relative;
 	top: 2em;
