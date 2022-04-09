@@ -13,8 +13,6 @@ fetch(`api/translations?token=${getCookie('token')}`, {
 	addElements(translationsSection, translations, localePicker.value);
 
 	localePicker.addEventListener('change', () => {
-		openCloseAllButton.value = 'Open all sections';
-
 		while (translationsSection.firstChild) {
 			translationsSection.removeChild(translationsSection.lastChild);
 		}
