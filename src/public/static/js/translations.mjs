@@ -118,6 +118,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 function openOrCloseGroup(group, open = true, recursive = false) {
 	const groupHeader = group.children.item(0);
 	const groupOpen = groupHeader.children.item(0);
+	if (!groupOpen) return;
 
 	groupOpen.innerHTML = open ? '>' : '-';
 
