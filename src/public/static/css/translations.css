@@ -1,8 +1,18 @@
+div#translations-section-header {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+}
+
 select#locale-picker {
 	position: relative;
-	top: 0.5em;
+	margin: 0 1em;
 	padding: 0.5em;
-	border-radius: 1em;
+	border-radius: 3em;
+}
+
+input#open-close-all {
+	position: relative;
 }
 
 section#translations {

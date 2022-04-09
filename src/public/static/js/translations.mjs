@@ -1,6 +1,7 @@
 import { getCookie } from '../modules/cookie.mjs';
 
 const localePicker = document.getElementById('locale-picker');
+const openCloseAllButton = document.getElementById('open-close-all');
 const translationsSection = document.getElementById('translations');
 
 fetch(`api/translations?token=${getCookie('token')}`, {
@@ -11,11 +12,19 @@ fetch(`api/translations?token=${getCookie('token')}`, {
 	addElements(translationsSection, translations, localePicker.value);
 
 	localePicker.addEventListener('change', () => {
+		openCloseAllButton.value = 'Open all sections';
+
 		while (translationsSection.firstChild) {
 			translationsSection.removeChild(translationsSection.lastChild);
 		}
 
 		addElements(translationsSection, translations, localePicker.value);
+	});
+
+	openCloseAllButton.addEventListener('click', () => {
+		const open = openCloseAllButton.value.startsWith('Close');
+		openCloseAllButton.value = open ? 'Open all sections' : 'Close all sections';
+		for (const child of translationsSection.children) openOrCloseGroup(child, open, true);
 	});
 });
 
@@ -88,12 +97,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 
 			groupHeader.addEventListener('click', () => {
 				const open = groupOpen.innerHTML === '-';
-
-				groupOpen.innerHTML = open ? '>' : '-';
-
-				for (const child of group.children) {
-					if (child.classList.contains('translations-group')) child.style.display = open ? 'none' : 'block';
-				}
+				openOrCloseGroup(group, open, false);
 			});
 
 			hasEmptyFields =
@@ -103,5 +107,24 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 		}
 
 		return hasEmptyFields;
+	}
+}
+
+/**
+ * @param {HTMLElement} group
+ * @param {boolean} open
+ * @param {boolean} recursive
+ */
+function openOrCloseGroup(group, open = true, recursive = false) {
+	const groupHeader = group.children.item(0);
+	const groupOpen = groupHeader.children.item(0);
+
+	groupOpen.innerHTML = open ? '>' : '-';
+
+	for (const child of group.children) {
+		if (child.classList.contains('translations-group')) {
+			child.style.display = open ? 'none' : 'block';
+			if (recursive) openOrCloseGroup(child, open, true);
+		}
 	}
 }
