@@ -1,18 +1,26 @@
-#katex-input {
-	position: relative;
-	width: 100%;
+#edit-button {
+	display: none;
 }
 
-#katex-input-field {
-	resize: vertical;
-	overflow: hidden;
-	font-size: x-large;
+#katex-input {
+	display: none;
+	position: relative;
 	width: 100%;
+	resize: none;
+	overflow: hidden;
+	font-size: large;
 }
 
 #katex-render {
 	position: relative;
 	background: white;
 	color: black;
+	width: 85%;
+	overflow-x: auto;
+	margin: 1em;
 	padding: 0 1em;
+}
+
+#katex-input:placeholder-shown ~ #katex-render {
+	display: none;
 }
