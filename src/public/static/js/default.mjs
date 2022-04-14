@@ -32,7 +32,7 @@ fetch(`/api/discord/user?token=${getCookie('token')}&user_id=307815349699608577`
 });
 
 document.getElementById('login-button').addEventListener('click', () => {
-	location.href = `/login?redirect=${location.pathname}`;
+	location.href = `/login?redirect=${encodeURIComponent(location.href)}`;
 });
 
 if (screen.width < 768) {

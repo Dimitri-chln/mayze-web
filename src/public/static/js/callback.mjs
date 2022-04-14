@@ -18,10 +18,11 @@ if (queryParams.has('code')) {
 			if (res.status === 200) {
 				const callbackLocation = sessionStorage.getItem('callback_location');
 				if (callbackLocation) sessionStorage.removeItem('callback_loaction');
+
 				location.href = callbackLocation || '/';
 			} else {
-				let err = await res.json();
-				alert(`La connexion a échoué\n${err.status} ${err.message}`);
+				const error = await res.json();
+				alert(`La connexion a échoué\n${error.status} ${error.message}`);
 			}
 		});
 	}
