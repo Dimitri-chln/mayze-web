@@ -76,9 +76,9 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 		if (hasEmptyFields) group.classList.add('has-empty-fields');
 		return hasEmptyFields;
 	} else {
-		let hasEmptyFields = false;
-
 		for (const key of Object.keys(data) /*.sort((a, b) => a.localeCompare(b))*/) {
+			let hasEmptyFields = false;
+
 			const group = document.createElement('div');
 			group.classList.add('translations-group');
 			if (depth > 0) group.style.display = 'none';
