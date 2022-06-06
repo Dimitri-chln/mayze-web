@@ -76,9 +76,9 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 		if (hasEmptyFields) group.classList.add('has-empty-fields');
 		return hasEmptyFields;
 	} else {
-		for (const key of Object.keys(data) /*.sort((a, b) => a.localeCompare(b))*/) {
-			let hasEmptyFields = false;
+		let someChildrenHaveEmptyFields = false;
 
+		for (const key of Object.keys(data) /*.sort((a, b) => a.localeCompare(b))*/) {
 			const group = document.createElement('div');
 			group.classList.add('translations-group');
 			if (depth > 0) group.style.display = 'none';
@@ -101,13 +101,13 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 				openOrCloseGroup(group, open, false);
 			});
 
-			hasEmptyFields =
-				addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key) || hasEmptyFields;
+			const thisChildHasEmptyFields = addElements(group, data[key], locale, depth + 1, path ? `${path}.${key}` : key);
+			if (thisChildHasEmptyFields) group.classList.add('has-empty-fields');
 
-			if (hasEmptyFields) group.classList.add('has-empty-fields');
+			someChildrenHaveEmptyFields = someChildrenHaveEmptyFields || thisChildHasEmptyFields;
 		}
 
-		return hasEmptyFields;
+		return someChildrenHaveEmptyFields;
 	}
 }
 
