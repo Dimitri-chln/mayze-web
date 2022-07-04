@@ -24,3 +24,7 @@
 #katex-input:placeholder-shown ~ #katex-render {
 	display: none;
 }
+
+#katex-error {
+	color: #cc0000;
+}
