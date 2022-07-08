@@ -14,20 +14,24 @@ class Route extends BaseRoute {
 	 * @param {ServerResponse} response
 	 * @param {string} token
 	 */
-	static runValid(url, request, response, token) {
-		const LOCALE_LIST = {
-			'463358584583880704': 'nl',
-			'701832883236634754': 'pt-BR',
-		};
-		
-		const {
-			rows: [tokenData],
-		} = await Util.database.query('SELECT user_id FROM web_client WHERE token = $1', [token]);
+	static async runValid(url, request, response, token) {
+		const locale = url.searchParams.get('locale');
 
-		const locale =
-			url.searchParams.get('locale') ??
-			LOCALE_LIST[tokenData.user_id] ??
-			'fr';
+		if (!locale) {
+			const LOCALE_LIST = {
+				'463358584583880704': 'nl',
+				'701832883236634754': 'pt-BR',
+			};
+
+			const { rows: tokens } = await Util.database.query('SELECT user_id FROM web_client WHERE token = $1', [token]);
+			const userId = tokens[0].user_id;
+
+			response.writeHead(307, {
+				Location: `/translations?locale=${LOCALE_LIST[userId]}`,
+			});
+
+			return response.end();
+		}
 
 		const baseFile = Fs.readFileSync(Path.join(__dirname, 'index.html'));
 		const file = Buffer.from(

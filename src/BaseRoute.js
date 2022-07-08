@@ -102,7 +102,7 @@ class BaseRoute {
 	 * @param {ServerResponse} response
 	 * @param {string} token
 	 */
-	static runValid(url, request, response, token) {
+	static async runValid(url, request, response, token) {
 		const file = Fs.readFileSync(Path.join(__dirname, 'routes' + url.pathname, 'index.html'));
 
 		response.writeHead(200, { 'Content-Type': 'text/html' });
@@ -117,7 +117,7 @@ class BaseRoute {
 	 * @param {ServerResponse} response
 	 * @param {string} token
 	 */
-	static runMethodNotAllowed(url, request, response, token) {
+	static async runMethodNotAllowed(url, request, response, token) {
 		response.writeHead(405, { 'Content-Type': 'application/json' });
 		response.write(
 			JSON.stringify({
@@ -135,7 +135,7 @@ class BaseRoute {
 	 * @param {ServerResponse} response
 	 * @param {string} token
 	 */
-	static runNotAuthenticated(url, request, response, token) {
+	static async runNotAuthenticated(url, request, response, token) {
 		if (this.path.startsWith('/api')) {
 			response.writeHead(401, { 'Content-Type': 'application/json' });
 			response.write(
@@ -159,7 +159,7 @@ class BaseRoute {
 	 * @param {ServerResponse} response
 	 * @param {string} token
 	 */
-	static runUnauthorized(url, request, response, token) {
+	static async runUnauthorized(url, request, response, token) {
 		if (this.path.startsWith('/api')) {
 			response.writeHead(401, { 'Content-Type': 'application/json' });
 			response.write(
