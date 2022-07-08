@@ -12,11 +12,6 @@ const PlayDl = require('play-dl');
 
 Util.connectToDiscord();
 
-const LANGUAGE_LIST = {
-	fr: /^fr(?:-fr|-FR)?/,
-	en: /^en(?:-US)?/,
-};
-
 // const OPTIONS = {
 // 	cert: cert,
 // 	key: key,
@@ -28,11 +23,6 @@ const httpServer = Http.createServer(
 		const token = Util.getToken(request);
 
 		const filePath = './routes' + url.pathname + (url.pathname.endsWith('/') ? '' : '/');
-
-		const language =
-			url.searchParams.get('lang') ??
-			Object.keys(LANGUAGE_LIST).find((l) => LANGUAGE_LIST[l].test(request.headers['accept-language'])) ??
-			'fr';
 
 		try {
 			/**@type {typeof Route} */
