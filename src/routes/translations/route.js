@@ -27,7 +27,7 @@ class Route extends BaseRoute {
 			const userId = tokens[0].user_id;
 
 			response.writeHead(307, {
-				Location: `/translations?locale=${encodeURIComponent(LOCALE_LIST[userId])}`,
+				Location: `/translations?locale=${encodeURIComponent(LOCALE_LIST[userId] ?? 'fr')}`,
 			});
 
 			return response.end();
