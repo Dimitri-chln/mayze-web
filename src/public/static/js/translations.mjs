@@ -65,7 +65,7 @@ function addElements(parent, data, locale, depth = 0, path = '') {
 			fetch(
 				`api/translations?token=${getCookie('token')}&name=${encodeURIComponent(
 					changedText,
-				)}&locale=${locale}&translation=${encodeURIComponent(translationText.value || 'NULL')}`,
+				)}&locale=${locale}&translation=${encodeURIComponent(translationText.value || 'null')}`,
 				{
 					method: 'POST',
 				},

@@ -70,7 +70,7 @@ class Route extends BaseRoute {
 
 				if (translationData) {
 					await Util.database.query(`UPDATE translations SET ${locale} = $1 WHERE name = $2`, [
-						translation === 'NULL' ? null : translation,
+						translation === 'null' ? null : translation,
 						translationName,
 					]);
 
