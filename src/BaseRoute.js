@@ -58,12 +58,14 @@ class BaseRoute {
 			/**
 			 * @type {WolvesvilleMember}
 			 */
-			wolvesville: {
-				userId: wolvesvilleMember.user_id,
-				username: wolvesvilleMember.username,
-				joinedAt: new Date(wolvesvilleMember.joined_at),
-				rank: ['MEMBER', 'CO-LEADER', 'LEADER'][wolvesvilleMember.rank - 1],
-			},
+			wolvesville: wolvesvilleMember
+				? {
+						userId: wolvesvilleMember.user_id,
+						username: wolvesvilleMember.username,
+						joinedAt: new Date(wolvesvilleMember.joined_at),
+						rank: ['MEMBER', 'CO-LEADER', 'LEADER'][wolvesvilleMember.rank - 1],
+				  }
+				: null,
 		};
 	}
 
