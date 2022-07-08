@@ -16,15 +16,17 @@ class Route extends BaseRoute {
 	 */
 	static runValid(url, request, response, token) {
 		const LOCALE_LIST = {
-			'fr': /fr/,
-			'en-US': /en/,
-			'de': /de/,
-			'nl': /nl/,
+			'463358584583880704': 'nl',
+			'701832883236634754': 'pt-BR',
 		};
+		
+		const {
+			rows: [tokenData],
+		} = await Util.database.query('SELECT user_id FROM web_client WHERE token = $1', [token]);
 
 		const locale =
 			url.searchParams.get('locale') ??
-			Object.keys(LOCALE_LIST).find((l) => LOCALE_LIST[l].test(request.headers['accept-language'])) ??
+			LOCALE_LIST[tokenData.user_id] ??
 			'fr';
 
 		const baseFile = Fs.readFileSync(Path.join(__dirname, 'index.html'));
