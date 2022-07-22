@@ -159,7 +159,7 @@ function modifyMember(event, method) {
 	}
 
 	function validateId(id) {
-		const regex = /^\d{18}$/;
+		const regex = /^\d{18,20}$/;
 		return regex.test(id);
 	}
 }

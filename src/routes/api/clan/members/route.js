@@ -192,7 +192,7 @@ function validateJoinedDate(date) {
 }
 
 function validateId(id) {
-	const regex = /^\d{18}$/;
+	const regex = /^\d{18,20}$/;
 	return regex.test(id);
 }
 
