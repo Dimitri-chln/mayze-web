@@ -14,7 +14,7 @@ class Route extends BaseRoute {
 	 * @param {string} token
 	 */
 	static async runValid(url, request, response, token) {
-		const text = `{\\huge ${Buffer.from(url.searchParams.get('text'), 'base64').toString()} }`;
+		const text = `{\\huge ${Buffer.from(url.searchParams.get('text') ?? '', 'base64').toString()} }`;
 
 		const htmlRender = `
 			<html>
