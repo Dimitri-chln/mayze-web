@@ -76,7 +76,7 @@ const httpServer = Http.createServer(
 			const IP = parseIP(request);
 			const geo = GeoIP.lookup(IP);
 
-			if (IP !== '::1') {
+			if (geo && IP !== '::1') {
 				(await Util.discord.channels.fetch('881479629158891540'))
 					.send(
 						`__Request received:__
