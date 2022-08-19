@@ -4,13 +4,14 @@ const inputElement = document.getElementById('katex-input');
 const renderDiv = document.getElementById('katex-render');
 const errorElement = document.getElementById('katex-error');
 const editButton = document.getElementById('edit-button');
-const prefilledData = new URLSearchParams(location.search).get('prefill');
+const shareButton = document.getElementById('share-button');
+const prefillData = new URLSearchParams(location.search).get('text');
 
 let lastValidInput = inputElement.value;
 
-if (prefilledData) {
+if (prefillData) {
 	editButton.style.display = 'block';
-	inputElement.value = atob(prefilledData);
+	inputElement.value = atob(prefillData);
 	renderLaTeX();
 } else {
 	inputElement.style.display = 'block';
@@ -22,6 +23,11 @@ editButton.addEventListener('click', () => {
 	editButton.style.display = 'none';
 	inputElement.style.display = 'block';
 	renderLaTeX();
+});
+
+shareButton.addEventListener('click', () => {
+	navigator.clipboard.writeText(`${location.origin}/math/preview${location.search}`);
+	alert('Le lien a été copié !');
 });
 
 function renderLaTeX() {
@@ -48,6 +54,6 @@ function renderLaTeX() {
 	history.replaceState(
 		null,
 		null,
-		inputElement.value ? `${location.pathname}?prefill=${btoa(inputElement.value)}` : location.pathname,
+		inputElement.value ? `${location.pathname}?text=${btoa(inputElement.value)}` : location.pathname,
 	);
 }
