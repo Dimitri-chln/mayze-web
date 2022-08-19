@@ -76,15 +76,20 @@ const httpServer = Http.createServer(
 			const IP = parseIP(request);
 			const geo = GeoIP.lookup(IP);
 
-			if (geo && IP !== '::1') {
+			if (IP !== '::1') {
 				(await Util.discord.channels.fetch('881479629158891540'))
 					.send(
 						`__Request received:__
-				 - **Path:** \`${url.pathname}\`
-				 - **IP:** \`${IP}\`
-				 - **Country:** \`${geo.country || '-'}\`
-				 - **City:** \`${geo.city || '-'}\`
-				 - **Lat. long.:** \`${geo.ll || '-'}\``.replace(/\t/g, ''),
+						 - **Path:** \`${url.pathname}\`
+						 - **IP:** \`${IP}\`
+						 ${
+								geo
+									? ` - **Country:** \`${geo.country || '-'}\`
+							 - **City:** \`${geo.city || '-'}\`
+							 - **Lat. long.:** \`${geo.ll || '-'}\``
+									: ''
+							}
+						`.replace(/\t/g, ''),
 					)
 					.catch(console.error);
 			}
