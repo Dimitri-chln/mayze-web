@@ -34,7 +34,13 @@ class Route extends BaseRoute {
 			</html>
 			`;
 
-		const image = await NodeHTMLToImage({ html: htmlRender, selector: '#screenshot' });
+		const image = await NodeHTMLToImage({
+			puppeteerArgs: {
+				args: ['--no-sandbox'],
+			},
+			html: htmlRender,
+			selector: '#screenshot',
+		});
 
 		response.writeHead(200, { 'Content-Type': 'image/png' });
 		response.write(image);
