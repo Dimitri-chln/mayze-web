@@ -4,7 +4,7 @@ const inputElement = document.getElementById('katex-input');
 const renderDiv = document.getElementById('katex-render');
 const errorElement = document.getElementById('katex-error');
 const editButton = document.getElementById('edit-button');
-const shareButton = document.getElementById('share-button');
+const downloadButton = document.getElementById('download-button');
 const prefillData = new URLSearchParams(location.search).get('text');
 
 let lastValidInput = inputElement.value;
@@ -25,9 +25,14 @@ editButton.addEventListener('click', () => {
 	renderLaTeX();
 });
 
-shareButton.addEventListener('click', () => {
-	navigator.clipboard.writeText(`${location.origin}/math/preview${location.search}`);
-	alert('Le lien a été copié !');
+downloadButton.addEventListener('click', () => {
+	const a = document.createElement('a');
+	a.href = `${location.origin}/math/preview${location.search}`;
+	a.download = 'math.png';
+
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
 });
 
 function renderLaTeX() {
