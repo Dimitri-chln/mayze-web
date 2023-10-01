@@ -93,7 +93,7 @@ const httpServer = Http.createServer(
 			}
 		}
 	},
-).listen(process.env.PORT || 10000);
+).listen(process.env.PORT || 8000);
 
 console.log(`Listening on port ${httpServer.address().port}`);
 
