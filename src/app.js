@@ -5,8 +5,6 @@ const Fs = require('fs');
 const GeoIP = require('geoip-lite');
 const Util = require('./Util');
 const Route = require('./BaseRoute');
-const PlayDl = require('play-dl');
-
 // const cert = Fs.readFileSync('../ssl/cert.pem');
 // const key = Fs.readFileSync('../ssl/key.pem');
 
