@@ -35,7 +35,7 @@ class Route extends BaseRoute {
 			scope: 'identify',
 		};
 
-		const res = await Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
+		const res = await Axios.post(`https://discord.com/api/oauth2/token`, data, {
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
