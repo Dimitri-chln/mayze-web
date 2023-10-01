@@ -8,6 +8,9 @@ const archiver = require('archiver');
 
 class Util {
 	static config = require('./config.json');
+	static baseURL = `${process.env.ENVIRONMENT === 'PRODUCTION' ? 'https' : 'http'}://${
+		process.env.ENVIRONMENT === 'PRODUCTION' ? 'mayze.xyz' : 'localhost'
+	}`;
 
 	/**
 	 * @type {Pg.Client}
@@ -165,9 +168,7 @@ class Util {
 	 * @param {Buffer} htmlFile
 	 */
 	static addBaseURI(htmlFile) {
-		const data = htmlFile
-			.toString()
-			.replace('<!-- Base URI -->', `<base href="${process.env.PROTOCOL}://${process.env.HOSTNAME}" />`);
+		const data = htmlFile.toString().replace('<!-- Base URI -->', `<base href="${this.baseURL}" />`);
 
 		return Buffer.from(data);
 	}
