@@ -4,7 +4,8 @@
 	"description": "Pour le meilleur clan!",
 	"main": "src/app.js",
 	"scripts": {
-		"start": "node ."
+		"start": "node .",
+		"build": "npm install"
 	},
 	"dependencies": {
 		"archiver": "^5.3.0",
