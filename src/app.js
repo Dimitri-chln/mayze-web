@@ -95,7 +95,7 @@ const httpServer = Http.createServer(
 			}
 		}
 	},
-).listen(process.env.PORT || 8000);
+).listen(process.env.PORT || 10000);
 
 console.log(`Listening on port ${httpServer.address().port}`);
 
@@ -115,15 +115,3 @@ setInterval(
 		}),
 	60000,
 );
-
-// Setup play-dl
-PlayDl.getFreeClientID().then((soundCloudClientId) => {
-	PlayDl.setToken({
-		youtube: {
-			cookie: process.env.YOUTUBE_COOKIE,
-		},
-		soundcloud: {
-			client_id: soundCloudClientId,
-		},
-	});
-});

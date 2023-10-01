@@ -16,7 +16,6 @@
 		"katex": "^0.16.0",
 		"node-html-to-image": "^3.2.4",
 		"pg": "^8.5.1",
-		"play-dl": "^1.8.9",
 		"ytdl-core": "^4.11.0"
 	},
 	"engines": {
