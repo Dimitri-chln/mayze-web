@@ -33,11 +33,11 @@ class Route extends BaseRoute {
 			redirect_uri: `${process.env.ENVIRONMENT === 'PRODUCTION' ? 'https' : 'http'}://${
 				process.env.ENVIRONMENT === 'PRODUCTION' ? 'mayze.xyz' : 'localhost'
 			}/callback`,
-			code: url.searchParams.get('code'),
 			scope: 'identify',
+			code: url.searchParams.get('code'),
 		};
 
-		const res = await Axios.post(`https://discord.com/api/oauth2/token`, data, {
+		const res = await Axios.post(`https://discord.com/api/oauth2/token`, new URLSearchParams(data), {
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
