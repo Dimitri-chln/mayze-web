@@ -36,7 +36,7 @@ const httpServer = Http.createServer(
 				response.end();
 			});
 
-			// If the route doesn't exist, try finding a static file
+			// If the route doesn't exist, try finding a public file
 		} catch (err) {
 			try {
 				const file = Fs.readFileSync('src/public' + url.pathname);
@@ -93,7 +93,7 @@ const httpServer = Http.createServer(
 			}
 		}
 	},
-).listen(process.env.PORT || 8000);
+).listen(process.env.PORT || 80);
 
 console.log(`Listening on port ${httpServer.address().port}`);
 
