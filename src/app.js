@@ -95,7 +95,7 @@ const httpServer = Http.createServer(
 	},
 ).listen(process.env.PORT || 80);
 
-console.log(`Listening on port ${httpServer.address().port}`);
+httpServer.on('listening', () => console.log(`Listening on port ${httpServer.address().port}`));
 
 // Delete the tokens from the database when they expired
 setInterval(
